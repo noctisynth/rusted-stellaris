@@ -58,8 +58,9 @@ def check_map(game_dir: Path, name: str, width: int, height: int, count: int, ti
                     and f"Map size: {width}, {height}" in log
                     and f"there are {count} units on this map" in log
                     and "--- setRunning ---" in log.split(f"Mapfile: mods/units/RustedStellarisDev/{name}", 1)[1]
+                    and "selectAnyOnScreenBuilder: found builder" in log.split(f"Mapfile: mods/units/RustedStellarisDev/{name}", 1)[1]
                 ):
-                    print(f"{name}: loaded {width}x{height}, {count} units")
+                    print(f"{name}: loaded {width}x{height}, {count} units, builder found")
                     return
                 if proc.poll() is not None:
                     raise RuntimeError(f"{name}: game exited before map loaded; inspect {stdout} and {stderr}")

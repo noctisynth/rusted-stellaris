@@ -93,6 +93,11 @@ for name, expected in (("rsGenerator", "credits=3"), ("rsTradeHub", "credits=5")
         if production != [expected]:
             ERRORS.append(f"{path.name}: expected native energy-credit production {expected}, got {production}")
 
+if "rsEngineer" in UNITS:
+    path, entries = UNITS["rsEngineer"]
+    if ("core", "isBuilder", "true") not in entries:
+        ERRORS.append(f"{path.name}: engineer must be marked as a builder")
+
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
