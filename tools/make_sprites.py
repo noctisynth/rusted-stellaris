@@ -265,6 +265,19 @@ def juggernaut():
     save("juggernaut", im)
 
 
+def planet_and_colony():
+    im, d = canvas(64)
+    d.ellipse((7, 7, 56, 56), fill="#1E3D68", outline="#8DC7E9", width=3)
+    d.polygon([(16, 25), (27, 16), (35, 23), (47, 18), (43, 32), (31, 34), (25, 46), (15, 39)], fill="#3C7F78")
+    d.arc((1, 19, 62, 46), 5, 175, fill="#B5D9ED", width=2)
+    im.save(OUT / "planet_unclaimed.png")
+    im, d = canvas(48)
+    d.ellipse((3, 3, 44, 44), fill=COLORS["dark"], outline=COLORS["gold"], width=3)
+    d.polygon([(24, 7), (37, 23), (24, 39), (11, 23)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.ellipse((19, 18, 29, 28), fill=COLORS["light"])
+    save("colony", im)
+
+
 def carrier_and_craft():
     im, d = canvas(64)
     d.polygon([(32, 3), (47, 22), (54, 55), (39, 46), (32, 59), (25, 46), (10, 55), (17, 22)], fill=COLORS["hull"], outline=COLORS["edge"])
@@ -330,6 +343,7 @@ if __name__ == "__main__":
     battleship()
     titan()
     juggernaut()
+    planet_and_colony()
     carrier_and_craft()
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")

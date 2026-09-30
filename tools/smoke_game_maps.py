@@ -13,9 +13,9 @@ from time import monotonic, sleep
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / "work"
 MAPS = (
-    ("[p2]Twin_Chokepoints.tmx", 120, 90, 16),
-    ("[p4]Three_Arms.tmx", 140, 140, 30),
-    ("[p8]Shattered_Galaxy.tmx", 180, 180, 60),
+    ("[p2]Twin_Chokepoints.tmx", 120, 90, 19),
+    ("[p4]Three_Arms.tmx", 140, 140, 35),
+    ("[p8]Shattered_Galaxy.tmx", 180, 180, 69),
 )
 
 

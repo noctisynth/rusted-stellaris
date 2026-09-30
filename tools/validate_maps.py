@@ -8,6 +8,7 @@ from xml.etree.ElementTree import parse
 
 ROOT = Path(__file__).resolve().parents[1] / "maps"
 EXPECTED = {"[p2]Twin_Chokepoints.tmx": 2, "[p4]Three_Arms.tmx": 4, "[p8]Shattered_Galaxy.tmx": 8}
+PLANET_COUNT = {2: 3, 4: 5, 8: 9}
 
 
 def layer_values(layer, count):
@@ -37,6 +38,7 @@ for filename, team_count in EXPECTED.items():
     assert layers["Items"].count(5) >= 4 * team_count + 2
     assert layers["Items"].count(38) == (4 if team_count >= 8 else 2)
     assert layers["Units"].count(39) == layers["Items"].count(38)
+    assert layers["Units"].count(40) == PLANET_COUNT[team_count]
     assert all(unit_gid != 39 or layers["Items"][index] == 38 for index, unit_gid in enumerate(layers["Units"]))
     for x, y in spawns:
         nearby = sum(
@@ -61,4 +63,7 @@ for filename, team_count in EXPECTED.items():
         if tileset.attrib["name"] == "Rare deposit markers":
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsRareDeposit"}
-    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits")
+        if tileset.attrib["name"] == "Planet markers":
+            properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
+            assert properties == {"team": "none", "unit": "rsPlanetUnclaimed"}
+    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits, {layers['Units'].count(40)} planets")

@@ -40,6 +40,7 @@ def images():
     d.ellipse((7, 7, 12, 12), fill="#EBCB78")
     rare.save(OUT / "rare-node.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare-spawn.png")
+    Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "planet-spawn.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
@@ -67,6 +68,16 @@ def add_layer(root, name, width, height, values, layer_id):
     SubElement(layer, "data", encoding="base64", compression="gzip").text = encoded(values)
 
 
+def planet_positions(width, height, team_count):
+    cx, cy = width // 2, height // 2
+    if team_count == 2:
+        return [(cx - 18, cy), (cx, cy), (cx + 18, cy)]
+    if team_count == 4:
+        return [(cx, cy), (cx - 28, cy), (cx + 28, cy), (cx, cy - 28), (cx, cy + 28)]
+    return [(cx, cy), (cx - 38, cy), (cx + 38, cy), (cx, cy - 38), (cx, cy + 38),
+            (cx - 28, cy - 28), (cx + 28, cy - 28), (cx - 28, cy + 28), (cx + 28, cy + 28)]
+
+
 def create_map(name, width, height, spawns):
     rng = Random(name)
     root = Element("map", version="1.2", tiledversion="1.2.1", orientation="orthogonal", renderorder="right-down", width=str(width), height=str(height), tilewidth="20", tileheight="20", infinite="0", nextlayerid="4", nextobjectid="2")
@@ -85,6 +96,10 @@ def create_map(name, width, height, spawns):
     rare_tile = SubElement(rare_units, "tile", id="0")
     add_property(rare_tile, "team", "none")
     add_property(rare_tile, "unit", "rsRareDeposit")
+    planet_units = add_tileset(root, 40, "Planet markers", "planet-spawn.png", 1, 1)
+    planet_tile = SubElement(planet_units, "tile", id="0")
+    add_property(planet_tile, "team", "none")
+    add_property(planet_tile, "unit", "rsPlanetUnclaimed")
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -112,6 +127,9 @@ def create_map(name, width, height, spawns):
     for x, y in rare_positions:
         items[y * width + x] = 38
         unit_layer[y * width + x] = 39
+    for x, y in planet_positions(width, height, len(spawns)):
+        assert unit_layer[y * width + x] == 0
+        unit_layer[y * width + x] = 40
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)
