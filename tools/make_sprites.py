@@ -4,6 +4,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris" / "units"
+GENERATED = Path(__file__).resolve().parents[1] / "art" / "generated"
 
 COLORS = {
     "hull": "#718bb1",
@@ -31,6 +32,22 @@ def save(name, image):
                 gray = int(0.22 * r + 0.28 * g + 0.20 * b)
                 pixels[x, y] = (gray + 15, gray + 10, gray + 9, a)
     wreck.save(OUT / f"{name}_dead.png")
+
+
+def generated_sprite(name, size):
+    """Export original generated art at the game's small sprite size."""
+    source = GENERATED / f"{name}-source.png"
+    if not source.is_file():
+        return
+    original = Image.open(source).convert("RGBA")
+    bbox = original.getchannel("A").getbbox()
+    if bbox is None:
+        raise ValueError(f"{source} is fully transparent")
+    art = original.crop(bbox)
+    art.thumbnail((size - 4, size - 4), Image.Resampling.LANCZOS)
+    sprite = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    sprite.alpha_composite(art, ((size - art.width) // 2, (size - art.height) // 2))
+    save(name, sprite)
 
 
 def starbase():
@@ -348,4 +365,8 @@ if __name__ == "__main__":
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
     fortified_starbase("citadel", 3, "#E58CAB")
+    for name, size in (("battleship", 80), ("starbase", 64), ("corvette", 32), ("generator", 48)):
+        generated_sprite(name, size)
+    weapon_variant("corvette", "corvette_kinetic", "#F2C979", [(5, 15, 7, 4), (20, 15, 7, 4)])
+    weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")
