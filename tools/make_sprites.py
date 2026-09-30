@@ -275,6 +275,7 @@ if __name__ == "__main__":
         ("trade_hub", "diamond", "#EACB58"),
         ("defense_platform", "turret", "#79C8EE"),
         ("repair_base", "cross", "#6FCB9A"),
+        ("strategic_extractor", "diamond", "#8BE1BB"),
     ):
         tier2_facility(*args)
     cruiser()

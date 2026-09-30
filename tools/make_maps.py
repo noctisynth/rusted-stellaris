@@ -34,6 +34,11 @@ def images():
     d = ImageDraw.Draw(marker)
     d.ellipse((3, 3, 16, 16), fill="#263e65", outline="#99d9f2", width=2)
     marker.save(OUT / "mineral-node.png")
+    rare = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+    d = ImageDraw.Draw(rare)
+    d.polygon([(10, 1), (18, 10), (10, 18), (2, 10)], fill="#29565D", outline="#8BE1BB")
+    d.ellipse((7, 7, 12, 12), fill="#EBCB78")
+    rare.save(OUT / "rare-node.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
@@ -71,6 +76,8 @@ def create_map(name, width, height, spawns):
             tile = SubElement(units, "tile", id=str(4 * team + kind))
             add_property(tile, "team", team)
             add_property(tile, "unit", unit)
+    rare = add_tileset(root, 38, "Rare deposits", "rare-node.png", 1, 1)
+    add_property(SubElement(rare, "tile", id="0"), "res_pool", "")
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -92,6 +99,11 @@ def create_map(name, width, height, spawns):
     # Neutral central fields create a shared reason to contest the map.
     for x, y in ((width // 2 - 8, height // 2), (width // 2 + 8, height // 2)):
         items[y * width + x] = 5
+    rare_positions = [(width // 2, height // 2 - 12), (width // 2, height // 2 + 12)]
+    if len(spawns) >= 8:
+        rare_positions += [(width // 2 - 16, height // 2), (width // 2 + 16, height // 2)]
+    for x, y in rare_positions:
+        items[y * width + x] = 38
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)
