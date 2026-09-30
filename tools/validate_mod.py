@@ -99,6 +99,25 @@ if "rsEngineer" in UNITS:
         ERRORS.append(f"{path.name}: engineer must be marked as a builder")
     if ("ai", "useAsBuilder", "true") not in entries:
         ERRORS.append(f"{path.name}: AI must use the engineer as a builder")
+    if any(s.startswith("canBuild_") and k == "name" and v == "rsPlanetLab" for s, k, v in entries):
+        ERRORS.append("planet lab must upgrade from the research station")
+
+for name in ("rsStarbase", "rsStarhold", "rsFortress", "rsCitadel"):
+    if name in UNITS:
+        path, entries = UNITS[name]
+        common = (path.parent / "_starbase_tier_common.ini") if name != "rsStarbase" else None
+        effective = entries + (list(fields(common)) if common else [])
+        for key in ("autoRepair", "canRepairUnits", "nanoRange", "nanoRepairSpeed"):
+            if not any(s == "core" and k == key for s, k, _ in effective):
+                ERRORS.append(f"{path.name}: missing fleet repair field {key}")
+
+if "rsResearchStation" in UNITS and "rsPlanetLab" in UNITS:
+    station_actions = {s for s, _, _ in UNITS["rsResearchStation"][1] if s.startswith("action_research")}
+    lab_actions = {s for s, _, _ in UNITS["rsPlanetLab"][1] if s.startswith("action_research")}
+    if station_actions != lab_actions:
+        ERRORS.append("planet lab must retain every research project")
+    if ("action_upgradePlanetLab", "convertTo", "rsPlanetLab") not in UNITS["rsResearchStation"][1]:
+        ERRORS.append("research station must upgrade to planet lab")
 
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
