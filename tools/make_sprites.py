@@ -116,7 +116,16 @@ def outpost():
     save("outpost", im)
 
 
+def destroyer():
+    im, d = canvas(48)
+    d.polygon([(24, 2), (37, 15), (41, 35), (31, 31), (24, 45), (17, 31), (7, 35), (11, 15)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.polygon([(24, 8), (31, 20), (24, 26), (17, 20)], fill=COLORS["dark"], outline=COLORS["light"])
+    d.rectangle((13, 25, 17, 34), fill=COLORS["gold"])
+    d.rectangle((31, 25, 35, 34), fill=COLORS["gold"])
+    save("destroyer", im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
-    for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost):
+    for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
         draw()

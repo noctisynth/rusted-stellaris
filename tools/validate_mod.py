@@ -62,6 +62,8 @@ for name, (path, entries) in UNITS.items():
             for target in (v.strip() for v in value.split(",")):
                 if target.startswith("rs") and target not in UNITS:
                     ERRORS.append(f"{path.name}: unknown unit {target}")
+        if section.startswith("canBuild_") and key == "name" and value.startswith("rs") and value not in UNITS:
+            ERRORS.append(f"{path.name}: unknown unit {value}")
         if section == "core" and key in ("price", "generation_resources") and "=" in value:
             for pair in value.split(","):
                 resource = pair.split("=", 1)[0].strip()
