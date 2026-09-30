@@ -1,6 +1,6 @@
 # rusted-stellaris 设计索引
 
-> 状态：Discovery  
+> 状态：Active
 > 更新：2026-09-30  
 > 作用：记录模组目标、权威文档及设计成熟度
 
@@ -12,13 +12,14 @@
 
 | 文档 | 状态 | 用途 |
 |---|---|---|
-| [完整模组范围](rfcs/0001-complete-mod-scope.md) | Draft RFC | 当前全量设计草案；尚有关键玩法决策待确认 |
+| [完整模组范围](rfcs/0001-complete-mod-scope.md) | Accepted RFC | 完整交付范围与验收标准 |
+| [内容清单](specs/content-roster.md) | Active Spec | 建筑、舰船、阵营和科技的逐项交付清单 |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
 | [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |
 | [本机参考资料](spikes/local-references.md) | 已核对 | 游戏安装、内置示例及已安装模组的位置与可用性 |
 | [实施清单索引](TODO.md) | Discovery | 等范围确认后建立分项清单 |
 
-完整范围仍处于 Draft；已独立确认的基础生产链进入 Active Spec。确认其余范围后，将经济、单位、地图和美术约束拆入 `.agents/specs/`，再建立对应实施清单。
+完整范围已按用户继续完成全部设计预期的要求接受。当前基础生产链和星域地图底稿已有实现，内容清单负责追踪其余交付项。技术可行性未验证的机制要在对应验证记录中保持明确状态。
 
 ## 项目边界
 
