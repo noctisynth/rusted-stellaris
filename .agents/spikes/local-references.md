@@ -162,3 +162,5 @@
 ## 2026-10-01 量子弹弓投送能力初查
 
 本机游戏 1.15 的 `assets/units/experimental_gunship/experimental_gunship.ini` 中，`fireTurretXAtGround` 发射带 `teleportSource: true` 的弹体，作用于发射者自身，射程由炮塔 `limitingRange` 限定；同文件还有 `maxTransportingUnits`。`assets/units/modular_spider/blink.ini` 展示同类定点闪现。原版 `experimental_dropship` 展示运输单位容量与卸载设置。这些证据只支持“某单位载运舰船并将自身闪现”的候选路径，不能证明静态巨构可直接选择一组友军、限制为预设航道出口，再同时传送它们。量子弹弓的阵容选择、出口约束和投送后卸载仍需技术原型与对局实测；在证明前不能把无目标的传送动画或单舰闪现算作设计完成。
+
+[游戏开发者的 1.15 更新公告](https://steamcommunity.com/app/647960/announcements/)还列出 `[action]teleportTo`（单位/标记引用）、`transportTargetNow`、`takeResources_triggerActionForEach`、`sendMessageTo` 与消息数据、`globalSearchForFirstUnit(withTag=...)`。据此可以进一步试验：量子弹弓搜集附近带舰队标签的己方单位，逐个发送同一个预设出口引用，由每艘舰自身执行 `teleportTo`。此组合目前只是由官方字段推导的实现假设；舰队筛选、消息引用、多个出口、碰撞与同步结果都要在隔离原型里验证。
