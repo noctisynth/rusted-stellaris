@@ -97,6 +97,14 @@ if "rsEngineer" in UNITS:
     path, entries = UNITS["rsEngineer"]
     if ("core", "isBuilder", "true") not in entries:
         ERRORS.append(f"{path.name}: engineer must be marked as a builder")
+    if ("ai", "useAsBuilder", "true") not in entries:
+        ERRORS.append(f"{path.name}: AI must use the engineer as a builder")
+
+for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
+    if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
+        ERRORS.append(f"{UNITS[name][0].name}: core AI economy needs positive build priority")
+if "rsFoundry" in UNITS and ("action_smelting", "ai_isHighPriority", "true") not in UNITS["rsFoundry"][1]:
+    ERRORS.append("foundry alloy conversion must be available to AI")
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
