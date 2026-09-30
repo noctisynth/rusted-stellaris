@@ -2,7 +2,7 @@
 
 from pathlib import Path
 from math import atan2, hypot, pi
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageEnhance
 
 OUT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris" / "units"
 GENERATED = Path(__file__).resolve().parents[1] / "art" / "generated"
@@ -77,6 +77,21 @@ def dyson_stages():
                 else:
                     pixels[x, y] = (int(r * brightness), int(g * brightness), int(b * brightness), a)
         save(name, stage)
+
+
+def generator_upgrades():
+    """Mark each generator tier on the same original collector silhouette."""
+    base = source_sprite("generator", 48)
+    for name, brightness, ring_color, ring_size in (
+        ("generator_t2", 1.12, "#6FE3F0", 32),
+        ("generator_t3", 1.27, "#EFC66C", 38),
+    ):
+        sprite = ImageEnhance.Brightness(base).enhance(brightness)
+        draw = ImageDraw.Draw(sprite)
+        inset = (48 - ring_size) // 2
+        draw.arc((inset, inset, 47 - inset, 47 - inset), 5, 175, fill=ring_color, width=2)
+        draw.arc((inset, inset, 47 - inset, 47 - inset), 185, 355, fill=ring_color, width=2)
+        save(name, sprite)
 
 
 def starbase():
@@ -396,6 +411,7 @@ if __name__ == "__main__":
     fortified_starbase("citadel", 3, "#E58CAB")
     for name, size in (("battleship", 80), ("starbase", 64), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("mining_station", 48), ("engineer", 32)):
         generated_sprite(name, size)
+    generator_upgrades()
     weapon_variant("corvette", "corvette_kinetic", "#F2C979", [(5, 15, 7, 4), (20, 15, 7, 4)])
     weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])

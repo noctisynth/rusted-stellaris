@@ -86,7 +86,7 @@ for name, (path, entries) in UNITS.items():
         if re.search(r"(?<![A-Za-z_])energy\s*=", value):
             ERRORS.append(f"{path.name}: obsolete custom energy reference in [{section}] {key}")
 
-for name, expected in (("rsGenerator", "credits=3"), ("rsTradeHub", "credits=5")):
+for name, expected in (("rsGenerator", "credits=3"), ("rsGeneratorT2", "credits=9"), ("rsGeneratorT3", "credits=24"), ("rsTradeHub", "credits=5")):
     if name in UNITS:
         path, entries = UNITS[name]
         production = [v for s, k, v in entries if s == "core" and k == "generation_resources"]
