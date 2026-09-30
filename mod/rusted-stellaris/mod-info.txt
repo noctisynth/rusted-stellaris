@@ -2,4 +2,4 @@
 title: Rusted Stellaris (Development)
 description: An unofficial Stellaris-inspired Rusted Warfare total conversion in development.
 minVersion: v1.15p7
-tags: units, starting-units
+tags: units, starting-units, maps, skirmish

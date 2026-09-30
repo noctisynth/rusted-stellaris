@@ -1,0 +1,113 @@
+"""Generate original symmetric starfield skirmish maps in TMX format."""
+
+from base64 import b64encode
+from gzip import compress
+from pathlib import Path
+from random import Random
+from struct import pack
+from xml.etree.ElementTree import Element, SubElement, ElementTree, indent
+
+from PIL import Image, ImageDraw
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT = ROOT / "maps"
+OUT.mkdir(exist_ok=True)
+
+MAPS = [
+    ("[p2]Twin_Chokepoints", 120, 90, [(18, 45), (101, 45)]),
+    ("[p4]Three_Arms", 140, 140, [(20, 20), (119, 20), (20, 119), (119, 119)]),
+    ("[p8]Shattered_Galaxy", 180, 180, [(22, 22), (89, 18), (157, 22), (161, 89), (157, 157), (89, 161), (22, 157), (18, 89)]),
+]
+
+
+def images():
+    sheet = Image.new("RGBA", (80, 20), "#080e20")
+    draw = ImageDraw.Draw(sheet)
+    for i, c in enumerate(("#080e20", "#0d1630", "#111c38", "#09182c")):
+        x = i * 20
+        draw.rectangle((x, 0, x + 19, 19), fill=c)
+        if i:
+            draw.point((x + 5 + i, 7), fill="#4e6b9c")
+            draw.point((x + 15, 13 - i), fill="#8198bd")
+    sheet.save(OUT / "starfield.png")
+    marker = Image.new("RGBA", (20, 20), (0, 0, 0, 0))
+    d = ImageDraw.Draw(marker)
+    d.ellipse((3, 3, 16, 16), fill="#263e65", outline="#99d9f2", width=2)
+    marker.save(OUT / "mineral-node.png")
+    Image.new("RGBA", (320, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
+
+
+def encoded(values):
+    return "\n   " + b64encode(compress(pack("<" + "I" * len(values), *values))).decode() + "\n  "
+
+
+def add_tileset(root, firstgid, name, image, count, columns):
+    tileset = SubElement(root, "tileset", firstgid=str(firstgid), name=name, tilewidth="20", tileheight="20", tilecount=str(count), columns=str(columns))
+    SubElement(tileset, "image", source=image, width=str(columns * 20), height=str((count // columns) * 20))
+    return tileset
+
+
+def add_property(tile, name, value):
+    props = tile.find("properties")
+    if props is None:
+        props = SubElement(tile, "properties")
+    SubElement(props, "property", name=name, value=str(value))
+
+
+def add_layer(root, name, width, height, values, layer_id):
+    layer = SubElement(root, "layer", id=str(layer_id), name=name, width=str(width), height=str(height))
+    SubElement(layer, "data", encoding="base64", compression="gzip").text = encoded(values)
+
+
+def create_map(name, width, height, spawns):
+    rng = Random(name)
+    root = Element("map", version="1.2", tiledversion="1.2.1", orientation="orthogonal", renderorder="right-down", width=str(width), height=str(height), tilewidth="20", tileheight="20", infinite="0", nextlayerid="4", nextobjectid="2")
+    add_tileset(root, 1, "Starfield", "starfield.png", 4, 4)
+    misc = add_tileset(root, 5, "Mineral nodes", "mineral-node.png", 1, 1)
+    add_property(SubElement(misc, "tile", id="0"), "res_pool", "")
+    units = add_tileset(root, 6, "Starting units", "spawn-tiles.png", 16, 16)
+    for i in range(4):
+        tile = SubElement(units, "tile", id=str(i))
+        add_property(tile, "team", i // 2)
+        add_property(tile, "unit", "commandCenter" if i % 2 == 0 else "builder")
+
+    ground = [1] * (width * height)
+    for y in range(height):
+        for x in range(width):
+            if rng.random() < 0.08:
+                ground[y * width + x] = 2 + rng.randrange(3)
+    items = [0] * (width * height)
+    unit_layer = [0] * (width * height)
+    for team, (x, y) in enumerate(spawns):
+        # Unit tile definitions are team-specific: append them as needed.
+        if team >= 2:
+            for kind in ("commandCenter", "builder"):
+                tile = SubElement(units, "tile", id=str(2 * team + (kind == "builder")))
+                add_property(tile, "team", team)
+                add_property(tile, "unit", kind)
+        unit_layer[y * width + x] = 6 + 2 * team
+        unit_layer[y * width + x + (1 if x < width // 2 else -1)] = 7 + 2 * team
+        for dx, dy in ((-7, -5), (7, -5), (-7, 5), (7, 5)):
+            nx, ny = x + dx, y + dy
+            if 2 <= nx < width - 2 and 2 <= ny < height - 2:
+                items[ny * width + nx] = 5
+    # Neutral central fields create a shared reason to contest the map.
+    for x, y in ((width // 2 - 8, height // 2), (width // 2 + 8, height // 2)):
+        items[y * width + x] = 5
+
+    add_layer(root, "Ground", width, height, ground, 1)
+    add_layer(root, "Items", width, height, items, 2)
+    add_layer(root, "Units", width, height, unit_layer, 3)
+    group = SubElement(root, "objectgroup", id="4", name="Triggers", visible="0")
+    info = SubElement(group, "object", id="1", name="map_info", x="0", y="0", width="100", height="40")
+    props = SubElement(info, "properties")
+    SubElement(props, "property", name="fog", value="map")
+    SubElement(props, "property", name="type", value="Skirmish")
+    indent(root)
+    ElementTree(root).write(OUT / f"{name}.tmx", encoding="utf-8", xml_declaration=True)
+
+
+if __name__ == "__main__":
+    images()
+    for args in MAPS:
+        create_map(*args)

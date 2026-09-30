@@ -14,6 +14,7 @@
 |---|---|---|
 | [完整模组范围](rfcs/0001-complete-mod-scope.md) | Draft RFC | 当前全量设计草案；尚有关键玩法决策待确认 |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
+| [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |
 | [本机参考资料](spikes/local-references.md) | 已核对 | 游戏安装、内置示例及已安装模组的位置与可用性 |
 | [实施清单索引](TODO.md) | Discovery | 等范围确认后建立分项清单 |
 

@@ -30,3 +30,7 @@
 ## 2026-09-30 基础链路载入验证
 
 使用游戏随附的 Java 运行时和 `game-lib.jar;libs/*` 类路径启动。标准输出明确显示 `Rusted Stellaris (Development)` 被加载、`unitCount: 5`，未见单位配置解析错误；游戏版本显示为 `1.15`。受沙箱限制，测试进程无法写游戏目录的 `preferences.ini` 和缓存，这些文件写入异常不属于模组配置错误。尚未验证实际对局中的建造链、战斗和 AI。
+
+## 2026-09-30 星域地图发现验证
+
+将三张 TMX 和对应原创图块加入开发模组副本后，游戏启动日志逐一报告 `Found map`：Twin Chokepoints、Three Arms、Shattered Galaxy。该证据仅证明模组发现地图文件，不证明 TMX 已被完整解析或对局可玩。
