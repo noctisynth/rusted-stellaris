@@ -215,6 +215,25 @@ def swarm_ship():
     save("swarm_ship", im)
 
 
+def weapon_variant(base, name, accent, marks):
+    im = Image.open(OUT / f"{base}.png").convert("RGBA")
+    d = ImageDraw.Draw(im)
+    for x, y, w, h in marks:
+        d.rectangle((x, y, x + w, y + h), fill=accent, outline=COLORS["dark"])
+    save(name, im)
+
+
+def battleship():
+    im, d = canvas(80)
+    d.polygon([(40, 2), (55, 18), (65, 57), (52, 53), (40, 76), (28, 53), (15, 57), (25, 18)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.polygon([(40, 8), (48, 31), (40, 52), (32, 31)], fill=COLORS["dark"], outline=COLORS["light"])
+    d.rectangle((36, 3, 44, 27), fill="#78B8FF")
+    d.rectangle((22, 43, 29, 64), fill=COLORS["gold"])
+    d.rectangle((51, 43, 58, 64), fill=COLORS["gold"])
+    save("battleship", im)
+    weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
@@ -240,3 +259,7 @@ if __name__ == "__main__":
         faction_facility(*args)
     repair_drone()
     swarm_ship()
+    weapon_variant("corvette", "corvette_kinetic", "#F2C979", [(5, 15, 7, 4), (20, 15, 7, 4)])
+    weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
+    weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
+    battleship()
