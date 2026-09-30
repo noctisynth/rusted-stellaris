@@ -16,6 +16,7 @@
 | [内容清单](specs/content-roster.md) | Active Spec | 建筑、舰船、阵营和科技的逐项交付清单 |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
 | [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |
+| [行星与巨像](specs/planets-and-colossus.md) | Active Spec | 行星状态、三种终局武器及验收条件 |
 | [本机参考资料](spikes/local-references.md) | 已核对 | 游戏安装、内置示例及已安装模组的位置与可用性 |
 | [实施清单索引](TODO.md) | Discovery | 等范围确认后建立分项清单 |
 
