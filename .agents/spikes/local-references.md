@@ -114,3 +114,7 @@
 ## 2026-09-30 地图触发能力初查
 
 本机原版任务地图 `l010;[demo]mission_1__-__Dividing_River.tmx` 使用 `unitDetect`、`objective`、`mapText`、`unitAdd` 和 `unitRemove` 对象。其 `map_info` 标为 `type=mission`，胜利条件使用 `requiredObjectives`。目前本项目三张地图标为 `Skirmish`，实载日志报告 `Found 0 map triggers`。这说明任务示例提供了可研究的触发器语法，但不能据此认定多人遭遇战也会执行区域计分或巨像状态触发；需要独立实测地图模式、玩家位与触发器在同一张图上的兼容性。
+
+## 2026-09-30 遭遇战地图触发器隔离测试
+
+从双星咽喉生成两个仅供测试的临时副本，分别保持 `type=Skirmish` 和改为 `type=mission`。加入 `unitDetect` 后，两种模式的本机 1.15 日志均报告 `Found 1 map triggers`；改用无条件 `unitAdd` 后也同样注册。地图均进入 `--- setRunning ---`，但无窗口自动测试等待约 8–12 秒未观察到 `triggerLog:firstActivation` 或探针刷兵消息，即使额外调用 `root.resume()` 也没有可见执行证据。结论仅限于“两种模式均可解析触发器”，不能证明遭遇战区域计分已可执行。临时 TMX 已从游戏开发模组目录移除，正式三张地图未修改。下一步需要在可操作的实际对局中检查触发器是否运行，并验证其与多人胜负条件的关系。
