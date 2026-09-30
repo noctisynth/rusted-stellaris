@@ -55,14 +55,10 @@ def generated_sprite(name, size):
     save(name, source_sprite(name, size))
 
 
-def dyson_stages():
-    """Expose more of the original collector ring at each construction stage."""
-    complete = source_sprite("dyson_sphere", 96)
-    for name, brightness, outer_sector_count in (
-        ("dyson_site", 0.56, 4),
-        ("dyson_frame", 0.78, 8),
-        ("dyson_sphere", 1.0, 16),
-    ):
+def ring_stages(source, names):
+    """Expose more of an original megastructure at each construction stage."""
+    complete = source_sprite(source, 96)
+    for name, brightness, outer_sector_count in zip(names, (0.56, 0.78, 1.0), (4, 8, 16)):
         stage = complete.copy()
         pixels = stage.load()
         for y in range(stage.height):
@@ -77,6 +73,24 @@ def dyson_stages():
                 else:
                     pixels[x, y] = (int(r * brightness), int(g * brightness), int(b * brightness), a)
         save(name, stage)
+
+
+def black_hole_sprite():
+    """Use the original decompressor source's singularity as a map node."""
+    original = Image.open(GENERATED / "matter_decompressor-source.png").convert("RGBA")
+    width, height = original.size
+    radius = min(width, height) // 11
+    center = original.crop((width // 2 - radius, height // 2 - radius,
+                            width // 2 + radius, height // 2 + radius))
+    center.thumbnail((60, 60), Image.Resampling.LANCZOS)
+    sprite = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
+    sprite.alpha_composite(center, ((64 - center.width) // 2, (64 - center.height) // 2))
+    pixels = sprite.load()
+    for y in range(64):
+        for x in range(64):
+            if hypot(x - 31.5, y - 31.5) > 29:
+                pixels[x, y] = (0, 0, 0, 0)
+    sprite.save(OUT / "black_hole.png")
 
 
 def generator_upgrades():
@@ -416,5 +430,7 @@ if __name__ == "__main__":
     weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
-    dyson_stages()
+    ring_stages("dyson_sphere", ("dyson_site", "dyson_frame", "dyson_sphere"))
+    ring_stages("matter_decompressor", ("matter_site", "matter_frame", "matter_decompressor"))
+    black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")

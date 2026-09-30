@@ -15,9 +15,12 @@
 | `generator-source.png` | `generator.png` | 48×48 | 金色反应堆、四组蓝色集能翼 |
 | `mining_station-source.png` | `mining_station.png` | 48×48 | 钻臂与矿物储舱、工业核心 |
 | `dyson_sphere-source.png` | `dyson_site.png`、`dyson_frame.png`、`dyson_sphere.png` | 96×96 | 中央恒星与逐段展开的集能环 |
+| `matter_decompressor-source.png` | `black_hole.png`、`matter_site.png`、`matter_frame.png`、`matter_decompressor.png` | 96×96 | 黑洞节点与逐段建成的采矿环 |
 
 共同提示词约束：原创科幻设计，严格俯视正投影，主体居中，透明背景；蓝灰色金属装甲、青色能量导管和少量暖金色核心；在游戏小尺寸下有可辨认的外形；无场景、文字、标志或水印。其余几张图使用前一张已生成图作为风格参考，但各自保留不同轮廓。`tools/make_sprites.py` 从源图的非透明区域裁切、等比缩小并居中，同时导出灰暗残骸图；动能护卫舰、动能驱逐舰、导弹巡洋舰和导弹战列舰的变体也基于新图导出。
 
 当前仅完成这十一种主体的替换。其他建筑、舰船、阵营外观、炮塔、弹道和音效仍按内容规范继续制作。视觉可读性已在原生贴图尺寸的合成预览中检查；实际对局中的辨识度仍需测试。
 
 戴森球源图另用于三阶段可见建造状态：基址保留四段外环，框架保留八段，完成体展示完整环；阶段颜色也逐步增强。三种游戏贴图和各自残骸均由 `tools/make_sprites.py` 导出。
+
+物质解压器源图以相同方法导出基址、框架、完成体与残骸；黑洞节点从中央区域另行裁切。游戏内节点占位和三阶段辨识度仍需对局观察。

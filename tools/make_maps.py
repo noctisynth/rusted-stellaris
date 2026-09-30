@@ -41,6 +41,7 @@ def images():
     rare.save(OUT / "rare-node.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare-spawn.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "planet-spawn.png")
+    Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "black-hole-spawn.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
@@ -78,6 +79,13 @@ def planet_positions(width, height, team_count):
             (cx - 28, cy - 28), (cx + 28, cy - 28), (cx - 28, cy + 28), (cx + 28, cy + 28)]
 
 
+def black_hole_positions(width, height, team_count):
+    cx, cy = width // 2, height // 2
+    if team_count == 2:
+        return [(cx, cy - 24), (cx, cy + 24)]
+    return [(cx + dx, cy + dy) for dx in (-20, 20) for dy in (-20, 20)]
+
+
 def create_map(name, width, height, spawns):
     rng = Random(name)
     root = Element("map", version="1.2", tiledversion="1.2.1", orientation="orthogonal", renderorder="right-down", width=str(width), height=str(height), tilewidth="20", tileheight="20", infinite="0", nextlayerid="4", nextobjectid="2")
@@ -100,6 +108,10 @@ def create_map(name, width, height, spawns):
     planet_tile = SubElement(planet_units, "tile", id="0")
     add_property(planet_tile, "team", "none")
     add_property(planet_tile, "unit", "rsPlanetUnclaimed")
+    black_holes = add_tileset(root, 41, "Black hole markers", "black-hole-spawn.png", 1, 1)
+    black_hole_tile = SubElement(black_holes, "tile", id="0")
+    add_property(black_hole_tile, "team", "none")
+    add_property(black_hole_tile, "unit", "rsBlackHole")
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -130,6 +142,9 @@ def create_map(name, width, height, spawns):
     for x, y in planet_positions(width, height, len(spawns)):
         assert unit_layer[y * width + x] == 0
         unit_layer[y * width + x] = 40
+    for x, y in black_hole_positions(width, height, len(spawns)):
+        assert unit_layer[y * width + x] == 0
+        unit_layer[y * width + x] = 41
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)
