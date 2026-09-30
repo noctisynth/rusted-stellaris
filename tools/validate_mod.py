@@ -29,6 +29,8 @@ def fields(path):
 
 for path in FILES:
     entries = list(fields(path))
+    if any(s == "core" and k == "dont_load" and v.lower() == "true" for s, k, v in entries):
+        continue
     names = [v for s, k, v in entries if s == "core" and k == "name"]
     if len(names) != 1:
         ERRORS.append(f"{path.name}: expected one [core] name")
@@ -51,7 +53,11 @@ else:
 
 for name, (path, entries) in UNITS.items():
     sections = {s for s, _, _ in entries}
-    for required in ("core", "graphics", "attack", "movement"):
+    inherited = [v for s, k, v in entries if s == "core" and k == "copyFrom"]
+    for parent in inherited:
+        if not (path.parent / parent).is_file():
+            ERRORS.append(f"{path.name}: missing copyFrom {parent}")
+    for required in (("core", "graphics") if inherited else ("core", "graphics", "attack", "movement")):
         if required not in sections:
             ERRORS.append(f"{path.name}: missing [{required}]")
     for section, key, value in entries:

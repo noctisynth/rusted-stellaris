@@ -125,7 +125,50 @@ def destroyer():
     save("destroyer", im)
 
 
+def tier2_facility(name, motif, accent):
+    im, d = canvas(48)
+    d.polygon([(24, 3), (42, 12), (45, 34), (31, 44), (16, 44), (3, 34), (6, 12)], fill=COLORS["dark"], outline=COLORS["edge"])
+    d.rectangle((10, 10, 37, 37), outline=COLORS["hull"], width=3)
+    if motif == "bars":
+        for x in (15, 23, 31):
+            d.rectangle((x, 17, x + 3, 32), fill=accent)
+    elif motif == "flame":
+        d.polygon([(24, 9), (31, 22), (27, 34), (19, 34), (16, 23)], fill=accent, outline=COLORS["gold"])
+    elif motif == "orb":
+        d.ellipse((15, 15, 32, 32), fill=accent, outline=COLORS["edge"], width=2)
+        d.line((23, 5, 23, 15), fill=COLORS["gold"], width=2)
+    elif motif == "diamond":
+        d.polygon([(24, 11), (35, 24), (24, 36), (12, 24)], fill=accent, outline=COLORS["gold"])
+    elif motif == "cross":
+        d.rectangle((20, 12, 27, 36), fill=accent)
+        d.rectangle((12, 20, 35, 27), fill=accent)
+    elif motif == "turret":
+        d.ellipse((14, 14, 33, 33), fill=COLORS["hull"], outline=accent, width=2)
+        d.rectangle((20, 4, 27, 20), fill=accent)
+    save(name, im)
+
+
+def cruiser():
+    im, d = canvas(64)
+    d.polygon([(32, 2), (44, 17), (53, 43), (39, 40), (32, 59), (25, 40), (11, 43), (20, 17)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.polygon([(32, 9), (39, 24), (32, 35), (25, 24)], fill=COLORS["dark"], outline=COLORS["light"])
+    d.line((17, 29, 47, 29), fill=COLORS["gold"], width=3)
+    d.rectangle((18, 40, 24, 52), fill=COLORS["light"])
+    d.rectangle((40, 40, 46, 52), fill=COLORS["light"])
+    save("cruiser", im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
         draw()
+    for args in (
+        ("mineral_plant", "bars", "#C46C62"),
+        ("foundry", "flame", "#F47E45"),
+        ("planet_lab", "orb", "#69B8E0"),
+        ("trade_hub", "diamond", "#EACB58"),
+        ("defense_platform", "turret", "#79C8EE"),
+        ("repair_base", "cross", "#6FCB9A"),
+    ):
+        tier2_facility(*args)
+    cruiser()
