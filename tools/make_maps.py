@@ -49,6 +49,8 @@ def encoded(values):
 
 def add_tileset(root, firstgid, name, image, count, columns):
     tileset = SubElement(root, "tileset", firstgid=str(firstgid), name=name, tilewidth="20", tileheight="20", tilecount=str(count), columns=str(columns))
+    props = SubElement(tileset, "properties")
+    SubElement(props, "property", name="embedded_png", value=b64encode((OUT / image).read_bytes()).decode())
     SubElement(tileset, "image", source=image, width=str(columns * 20), height=str((count // columns) * 20))
     return tileset
 

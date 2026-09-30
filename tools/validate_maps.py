@@ -49,6 +49,8 @@ for filename, team_count in EXPECTED.items():
     for tileset in xml.findall("tileset"):
         image = tileset.find("image")
         assert image is not None and (ROOT / image.attrib["source"]).is_file()
+        embedded = [p.attrib["value"] for p in tileset.findall("./properties/property") if p.attrib["name"] == "embedded_png"]
+        assert len(embedded) == 1 and b64decode(embedded[0]) == (ROOT / image.attrib["source"]).read_bytes()
         if tileset.attrib["name"] == "Starting units":
             definitions = {
                 (int(next(p.attrib["value"] for p in tile.findall("./properties/property") if p.attrib["name"] == "team")),
