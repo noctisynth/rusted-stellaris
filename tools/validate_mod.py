@@ -84,6 +84,13 @@ for name, (path, entries) in UNITS.items():
                 if resource not in resources | {"credits"}:
                     ERRORS.append(f"{path.name}: unknown resource {resource}")
 
+for name, expected in (("rsGenerator", "energy=3"), ("rsTradeHub", "energy=5")):
+    if name in UNITS:
+        path, entries = UNITS[name]
+        production = [v for s, k, v in entries if s == "core" and k == "generation_resources"]
+        if production != [expected]:
+            ERRORS.append(f"{path.name}: expected energy-only production {expected}, got {production}")
+
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
