@@ -46,7 +46,7 @@ if RESOURCE_TEMPLATE.is_file():
         for section, _, _ in fields(RESOURCE_TEMPLATE)
         if section.startswith("global_resource_")
     }
-    if resources != {"energy", "minerals", "alloys", "science", "unity", "strategic"}:
+    if resources != {"minerals", "alloys", "science", "unity", "strategic"}:
         ERRORS.append(f"resource template has unexpected resources: {sorted(resources)}")
 else:
     ERRORS.append("missing all-units.template")
@@ -83,13 +83,15 @@ for name, (path, entries) in UNITS.items():
                 resource = pair.split("=", 1)[0].strip()
                 if resource not in resources | {"credits"}:
                     ERRORS.append(f"{path.name}: unknown resource {resource}")
+        if re.search(r"(?<![A-Za-z_])energy\s*=", value):
+            ERRORS.append(f"{path.name}: obsolete custom energy reference in [{section}] {key}")
 
-for name, expected in (("rsGenerator", "energy=3"), ("rsTradeHub", "energy=5")):
+for name, expected in (("rsGenerator", "credits=3"), ("rsTradeHub", "credits=5")):
     if name in UNITS:
         path, entries = UNITS[name]
         production = [v for s, k, v in entries if s == "core" and k == "generation_resources"]
         if production != [expected]:
-            ERRORS.append(f"{path.name}: expected energy-only production {expected}, got {production}")
+            ERRORS.append(f"{path.name}: expected native energy-credit production {expected}, got {production}")
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
