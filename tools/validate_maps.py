@@ -6,10 +6,23 @@ from pathlib import Path
 from struct import unpack
 from xml.etree.ElementTree import parse
 
+from make_maps import PLANET_NAMES, planet_positions
+
 ROOT = Path(__file__).resolve().parents[1] / "maps"
+UNITS = ROOT.parent / "mod" / "rusted-stellaris" / "units"
 EXPECTED = {"[p2]Twin_Chokepoints.tmx": 2, "[p4]Three_Arms.tmx": 4, "[p8]Shattered_Galaxy.tmx": 8}
 PLANET_COUNT = {2: 3, 4: 5, 8: 9}
 BLACK_HOLE_COUNT = {2: 2, 4: 4, 8: 4}
+
+all_planets = [entry for entries in PLANET_NAMES.values() for entry in entries]
+assert len(all_planets) == 17
+assert len({planet_id for planet_id, _ in all_planets}) == len(all_planets)
+assert len({display_name for _, display_name in all_planets}) == len(all_planets)
+for planet_id, display_name in all_planets:
+    source = (UNITS / f"planet_{planet_id.lower()}.ini").read_text(encoding="utf-8")
+    assert f"name: rsPlanet{planet_id}\n" in source
+    assert f"displayText: {display_name}\n" in source
+    assert f"tags: rsPlanetIntact, rsPlanet{planet_id}\n" in source
 
 
 def layer_values(layer, count):
@@ -39,9 +52,12 @@ for filename, team_count in EXPECTED.items():
     assert layers["Items"].count(5) >= 4 * team_count + 2
     assert layers["Items"].count(38) == (4 if team_count >= 8 else 2)
     assert layers["Units"].count(39) == layers["Items"].count(38)
-    assert layers["Units"].count(40) == PLANET_COUNT[team_count]
-    assert layers["Units"].count(41) == BLACK_HOLE_COUNT[team_count]
-    assert layers["Units"].count(42) == 1 and layers["Units"].count(43) == 1
+    assert len(PLANET_NAMES[team_count]) == PLANET_COUNT[team_count]
+    for index, (x, y) in enumerate(planet_positions(width, height, team_count)):
+        assert layers["Units"].count(40 + index) == 1
+        assert layers["Units"][y * width + x] == 40 + index
+    assert layers["Units"].count(49) == BLACK_HOLE_COUNT[team_count]
+    assert layers["Units"].count(50) == 1 and layers["Units"].count(51) == 1
     assert all(unit_gid != 39 or layers["Items"][index] == 38 for index, unit_gid in enumerate(layers["Units"]))
     for x, y in spawns:
         nearby = sum(
@@ -67,8 +83,14 @@ for filename, team_count in EXPECTED.items():
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsRareDeposit"}
         if tileset.attrib["name"] == "Planet markers":
-            properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
-            assert properties == {"team": "none", "unit": "rsPlanetUnclaimed"}
+            definitions = [
+                {p.attrib["name"]: p.attrib["value"] for p in tile.findall("./properties/property")}
+                for tile in tileset.findall("tile")
+            ]
+            assert definitions == [
+                {"team": "none", "unit": f"rsPlanet{planet_id}"}
+                for planet_id, _ in PLANET_NAMES[team_count]
+            ]
         if tileset.attrib["name"] == "Black hole markers":
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsBlackHole"}
@@ -81,4 +103,4 @@ for filename, team_count in EXPECTED.items():
                 {"team": "none", "unit": "rsQuantumExitA"},
                 {"team": "none", "unit": "rsQuantumExitB"},
             ]
-    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits, {layers['Units'].count(40)} planets, {layers['Units'].count(41)} black holes, 2 quantum exits")
+    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits, {PLANET_COUNT[team_count]} named planets, {layers['Units'].count(49)} black holes, 2 quantum exits")

@@ -19,6 +19,15 @@ MAPS = [
     ("[p8]Shattered_Galaxy", 180, 180, [(22, 22), (89, 18), (157, 22), (161, 89), (157, 157), (89, 161), (22, 157), (18, 89)]),
 ]
 
+PLANET_NAMES = {
+    2: [("Twin01", "双星-01 · 晨星"), ("Twin02", "双星-02 · 中庭"), ("Twin03", "双星-03 · 暮星")],
+    4: [("Arms01", "三臂-01 · 核心"), ("Arms02", "三臂-02 · 西环"), ("Arms03", "三臂-03 · 东环"),
+        ("Arms04", "三臂-04 · 北环"), ("Arms05", "三臂-05 · 南环")],
+    8: [("Galaxy01", "破碎-01 · 核心"), ("Galaxy02", "破碎-02 · 西境"), ("Galaxy03", "破碎-03 · 东境"),
+        ("Galaxy04", "破碎-04 · 北境"), ("Galaxy05", "破碎-05 · 南境"), ("Galaxy06", "破碎-06 · 西北"),
+        ("Galaxy07", "破碎-07 · 东北"), ("Galaxy08", "破碎-08 · 西南"), ("Galaxy09", "破碎-09 · 东南")],
+}
+
 
 def images():
     sheet = Image.new("RGBA", (80, 20), "#080e20")
@@ -40,7 +49,7 @@ def images():
     d.ellipse((7, 7, 12, 12), fill="#EBCB78")
     rare.save(OUT / "rare-node.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare-spawn.png")
-    Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "planet-spawn.png")
+    Image.new("RGBA", (20, 180), (0, 0, 0, 0)).save(OUT / "planet-spawn.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "black-hole-spawn.png")
     Image.new("RGBA", (40, 20), (0, 0, 0, 0)).save(OUT / "quantum-exit-spawn.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
@@ -112,15 +121,16 @@ def create_map(name, width, height, spawns):
     rare_tile = SubElement(rare_units, "tile", id="0")
     add_property(rare_tile, "team", "none")
     add_property(rare_tile, "unit", "rsRareDeposit")
-    planet_units = add_tileset(root, 40, "Planet markers", "planet-spawn.png", 1, 1)
-    planet_tile = SubElement(planet_units, "tile", id="0")
-    add_property(planet_tile, "team", "none")
-    add_property(planet_tile, "unit", "rsPlanetUnclaimed")
-    black_holes = add_tileset(root, 41, "Black hole markers", "black-hole-spawn.png", 1, 1)
+    planet_units = add_tileset(root, 40, "Planet markers", "planet-spawn.png", 9, 1)
+    for tile_id, (planet_id, _) in enumerate(PLANET_NAMES[len(spawns)]):
+        planet_tile = SubElement(planet_units, "tile", id=str(tile_id))
+        add_property(planet_tile, "team", "none")
+        add_property(planet_tile, "unit", f"rsPlanet{planet_id}")
+    black_holes = add_tileset(root, 49, "Black hole markers", "black-hole-spawn.png", 1, 1)
     black_hole_tile = SubElement(black_holes, "tile", id="0")
     add_property(black_hole_tile, "team", "none")
     add_property(black_hole_tile, "unit", "rsBlackHole")
-    quantum_exits = add_tileset(root, 42, "Quantum exits", "quantum-exit-spawn.png", 2, 2)
+    quantum_exits = add_tileset(root, 50, "Quantum exits", "quantum-exit-spawn.png", 2, 2)
     for tile_id, unit in enumerate(("rsQuantumExitA", "rsQuantumExitB")):
         tile = SubElement(quantum_exits, "tile", id=str(tile_id))
         add_property(tile, "team", "none")
@@ -152,15 +162,15 @@ def create_map(name, width, height, spawns):
     for x, y in rare_positions:
         items[y * width + x] = 38
         unit_layer[y * width + x] = 39
-    for x, y in planet_positions(width, height, len(spawns)):
+    for index, (x, y) in enumerate(planet_positions(width, height, len(spawns))):
         assert unit_layer[y * width + x] == 0
-        unit_layer[y * width + x] = 40
+        unit_layer[y * width + x] = 40 + index
     for x, y in black_hole_positions(width, height, len(spawns)):
         assert unit_layer[y * width + x] == 0
-        unit_layer[y * width + x] = 41
+        unit_layer[y * width + x] = 49
     for index, (x, y) in enumerate(quantum_exit_positions(width, height, len(spawns))):
         assert unit_layer[y * width + x] == 0
-        unit_layer[y * width + x] = 42 + index
+        unit_layer[y * width + x] = 50 + index
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)
