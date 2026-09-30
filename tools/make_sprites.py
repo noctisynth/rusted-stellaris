@@ -38,7 +38,7 @@ def generated_sprite(name, size):
     """Export original generated art at the game's small sprite size."""
     source = GENERATED / f"{name}-source.png"
     if not source.is_file():
-        return
+        raise FileNotFoundError(f"Missing generated sprite source: {source}")
     original = Image.open(source).convert("RGBA")
     bbox = original.getchannel("A").getbbox()
     if bbox is None:
@@ -365,9 +365,10 @@ if __name__ == "__main__":
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
     fortified_starbase("citadel", 3, "#E58CAB")
-    for name, size in (("battleship", 80), ("starbase", 64), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64)):
+    for name, size in (("battleship", 80), ("starbase", 64), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("mining_station", 48)):
         generated_sprite(name, size)
     weapon_variant("corvette", "corvette_kinetic", "#F2C979", [(5, 15, 7, 4), (20, 15, 7, 4)])
+    weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")
