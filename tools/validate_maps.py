@@ -36,6 +36,8 @@ for filename, team_count in EXPECTED.items():
         spawns.append((index % width, index // width))
     assert layers["Items"].count(5) >= 4 * team_count + 2
     assert layers["Items"].count(38) == (4 if team_count >= 8 else 2)
+    assert layers["Units"].count(39) == layers["Items"].count(38)
+    assert all(unit_gid != 39 or layers["Items"][index] == 38 for index, unit_gid in enumerate(layers["Units"]))
     for x, y in spawns:
         nearby = sum(
             1
@@ -54,4 +56,7 @@ for filename, team_count in EXPECTED.items():
                 for tile in tileset.findall("tile")
             }
             assert definitions == {(team, unit) for team in range(team_count) for unit in ("commandCenter", "builder", "rsScienceShip", "rsCorvette")}
+        if tileset.attrib["name"] == "Rare deposit markers":
+            properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
+            assert properties == {"team": "none", "unit": "rsRareDeposit"}
     print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits")

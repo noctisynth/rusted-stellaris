@@ -298,3 +298,4 @@ if __name__ == "__main__":
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
     fortified_starbase("citadel", 3, "#E58CAB")
+    Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")

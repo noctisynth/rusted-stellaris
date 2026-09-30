@@ -39,6 +39,7 @@ def images():
     d.polygon([(10, 1), (18, 10), (10, 18), (2, 10)], fill="#29565D", outline="#8BE1BB")
     d.ellipse((7, 7, 12, 12), fill="#EBCB78")
     rare.save(OUT / "rare-node.png")
+    Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare-spawn.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
@@ -78,6 +79,10 @@ def create_map(name, width, height, spawns):
             add_property(tile, "unit", unit)
     rare = add_tileset(root, 38, "Rare deposits", "rare-node.png", 1, 1)
     add_property(SubElement(rare, "tile", id="0"), "res_pool", "")
+    rare_units = add_tileset(root, 39, "Rare deposit markers", "rare-spawn.png", 1, 1)
+    rare_tile = SubElement(rare_units, "tile", id="0")
+    add_property(rare_tile, "team", "none")
+    add_property(rare_tile, "unit", "rsRareDeposit")
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -104,6 +109,7 @@ def create_map(name, width, height, spawns):
         rare_positions += [(width // 2 - 16, height // 2), (width // 2 + 16, height // 2)]
     for x, y in rare_positions:
         items[y * width + x] = 38
+        unit_layer[y * width + x] = 39
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)
