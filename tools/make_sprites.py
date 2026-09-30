@@ -432,5 +432,6 @@ if __name__ == "__main__":
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
     ring_stages("dyson_sphere", ("dyson_site", "dyson_frame", "dyson_sphere"))
     ring_stages("matter_decompressor", ("matter_site", "matter_frame", "matter_decompressor"))
+    ring_stages("mega_shipyard", ("mega_shipyard_site", "mega_shipyard_frame", "mega_shipyard"))
     black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")
