@@ -145,6 +145,15 @@ def tier2_facility(name, motif, accent):
     elif motif == "turret":
         d.ellipse((14, 14, 33, 33), fill=COLORS["hull"], outline=accent, width=2)
         d.rectangle((20, 4, 27, 20), fill=accent)
+    elif motif == "missile":
+        d.polygon([(16, 33), (16, 13), (21, 8), (25, 13), (25, 33)], fill=accent, outline=COLORS["gold"])
+        d.polygon([(28, 33), (28, 13), (33, 8), (37, 13), (37, 33)], fill=accent, outline=COLORS["gold"])
+    elif motif == "ion":
+        d.rectangle((20, 4, 28, 31), fill=COLORS["hull"], outline=accent, width=2)
+        d.ellipse((17, 16, 31, 30), fill=accent, outline=COLORS["light"], width=2)
+    elif motif == "shield":
+        d.arc((12, 11, 36, 36), 190, 530, fill=accent, width=4)
+        d.ellipse((19, 19, 29, 29), fill=COLORS["light"])
     save(name, im)
 
 
@@ -276,6 +285,9 @@ if __name__ == "__main__":
         ("defense_platform", "turret", "#79C8EE"),
         ("repair_base", "cross", "#6FCB9A"),
         ("strategic_extractor", "diamond", "#8BE1BB"),
+        ("missile_platform", "missile", "#EEA76B"),
+        ("ion_cannon", "ion", "#91C6FA"),
+        ("shield_generator", "shield", "#8DB5F0"),
     ):
         tier2_facility(*args)
     cruiser()
