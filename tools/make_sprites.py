@@ -181,6 +181,40 @@ def starbase_variant(name, accent):
     save(name, im)
 
 
+def faction_facility(name, accent, motif):
+    im, d = canvas(48)
+    d.ellipse((5, 5, 42, 42), fill=COLORS["dark"], outline=accent, width=3)
+    d.rectangle((14, 14, 33, 33), fill=COLORS["hull"], outline=COLORS["edge"], width=2)
+    if motif == "spokes":
+        for p in ((24, 2, 24, 14), (24, 34, 24, 46), (2, 24, 14, 24), (34, 24, 46, 24)):
+            d.line(p, fill=accent, width=4)
+        d.ellipse((19, 19, 28, 28), fill=COLORS["light"])
+    elif motif == "gears":
+        d.ellipse((17, 17, 30, 30), fill=accent, outline=COLORS["dark"], width=2)
+        for x, y in ((9, 23), (36, 23), (23, 9), (23, 36)):
+            d.rectangle((x, y, x + 3, y + 3), fill=accent)
+    else:
+        d.ellipse((15, 15, 32, 32), fill=accent)
+        d.ellipse((20, 20, 27, 27), fill=COLORS["dark"])
+    save(name, im)
+
+
+def repair_drone():
+    im, d = canvas(32)
+    d.ellipse((7, 7, 24, 24), fill=COLORS["dark"], outline="#EACB58", width=2)
+    d.rectangle((13, 2, 18, 29), fill=COLORS["hull"])
+    d.rectangle((2, 13, 29, 18), fill=COLORS["hull"])
+    d.ellipse((12, 12, 19, 19), fill="#EACB58")
+    save("repair_drone", im)
+
+
+def swarm_ship():
+    im, d = canvas(32)
+    d.polygon([(16, 1), (23, 12), (29, 26), (17, 22), (16, 30), (15, 22), (3, 26), (9, 12)], fill="#4D785C", outline="#A7DE89")
+    d.ellipse((12, 10, 20, 20), fill="#94DC7C", outline=COLORS["dark"], width=2)
+    save("swarm_ship", im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
@@ -198,3 +232,11 @@ if __name__ == "__main__":
     faction_picker()
     starbase_variant("starbase_machine", "#EACB58")
     starbase_variant("starbase_hive", "#8CC871")
+    for args in (
+        ("administration", "#69B8E0", "spokes"),
+        ("assembly", "#EACB58", "gears"),
+        ("hatchery", "#8CC871", "core"),
+    ):
+        faction_facility(*args)
+    repair_drone()
+    swarm_ship()
