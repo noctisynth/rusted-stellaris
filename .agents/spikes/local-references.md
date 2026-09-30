@@ -8,7 +8,7 @@
 - Steam 库：`D:\SteamLibrary`
 - 游戏：`D:\SteamLibrary\steamapps\common\Rusted Warfare`
 - Steam App ID：`647960`
-- 安装清单 build ID：`9902063`。这不等同于游戏内显示的版本号，后续需在游戏界面确认。
+- 安装清单 build ID：`9902063`。现有游戏日志记录的游戏版本为 `1.15`；仍需在游戏界面核对当前启动版本。
 - 内置示例：`assets\builtin_mods\mega_builders`，含 `mod-info.txt`、单位 INI 与贴图。
 - 示例 INI 已确认含 `[core]`、`[graphics]`、建造菜单和替换原版单位的配置。具体机制仍要逐项验证。
 
