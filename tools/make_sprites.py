@@ -158,6 +158,29 @@ def cruiser():
     save("cruiser", im)
 
 
+def faction_picker():
+    im, d = canvas(64)
+    d.ellipse((5, 5, 58, 58), fill=COLORS["dark"], outline=COLORS["edge"], width=4)
+    d.pieslice((13, 13, 50, 50), 210, 330, fill="#69B8E0")
+    d.pieslice((13, 13, 50, 50), 330, 90, fill="#EACB58")
+    d.pieslice((13, 13, 50, 50), 90, 210, fill="#8CC871")
+    d.ellipse((25, 25, 38, 38), fill=COLORS["dark"], outline=COLORS["edge"], width=2)
+    save("faction_picker", im)
+
+
+def starbase_variant(name, accent):
+    im = Image.open(OUT / "starbase.png").convert("RGBA")
+    pixels = im.load()
+    light = tuple(bytes.fromhex(COLORS["light"].lstrip("#")))
+    replacement = tuple(bytes.fromhex(accent.lstrip("#")))
+    for y in range(im.height):
+        for x in range(im.width):
+            r, g, b, a = pixels[x, y]
+            if (r, g, b) == light and a:
+                pixels[x, y] = (*replacement, a)
+    save(name, im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
@@ -172,3 +195,6 @@ if __name__ == "__main__":
     ):
         tier2_facility(*args)
     cruiser()
+    faction_picker()
+    starbase_variant("starbase_machine", "#EACB58")
+    starbase_variant("starbase_hive", "#8CC871")

@@ -34,7 +34,7 @@ def images():
     d = ImageDraw.Draw(marker)
     d.ellipse((3, 3, 16, 16), fill="#263e65", outline="#99d9f2", width=2)
     marker.save(OUT / "mineral-node.png")
-    Image.new("RGBA", (320, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
+    Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
 def encoded(values):
@@ -65,11 +65,12 @@ def create_map(name, width, height, spawns):
     add_tileset(root, 1, "Starfield", "starfield.png", 4, 4)
     misc = add_tileset(root, 5, "Mineral nodes", "mineral-node.png", 1, 1)
     add_property(SubElement(misc, "tile", id="0"), "res_pool", "")
-    units = add_tileset(root, 6, "Starting units", "spawn-tiles.png", 16, 16)
-    for i in range(4):
-        tile = SubElement(units, "tile", id=str(i))
-        add_property(tile, "team", i // 2)
-        add_property(tile, "unit", "commandCenter" if i % 2 == 0 else "builder")
+    units = add_tileset(root, 6, "Starting units", "spawn-tiles.png", 32, 32)
+    for team in range(len(spawns)):
+        for kind, unit in enumerate(("commandCenter", "builder", "rsScienceShip", "rsCorvette")):
+            tile = SubElement(units, "tile", id=str(4 * team + kind))
+            add_property(tile, "team", team)
+            add_property(tile, "unit", unit)
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -79,14 +80,11 @@ def create_map(name, width, height, spawns):
     items = [0] * (width * height)
     unit_layer = [0] * (width * height)
     for team, (x, y) in enumerate(spawns):
-        # Unit tile definitions are team-specific: append them as needed.
-        if team >= 2:
-            for kind in ("commandCenter", "builder"):
-                tile = SubElement(units, "tile", id=str(2 * team + (kind == "builder")))
-                add_property(tile, "team", team)
-                add_property(tile, "unit", kind)
-        unit_layer[y * width + x] = 6 + 2 * team
-        unit_layer[y * width + x + (1 if x < width // 2 else -1)] = 7 + 2 * team
+        unit_layer[y * width + x] = 6 + 4 * team
+        unit_layer[y * width + x + (1 if x < width // 2 else -1)] = 7 + 4 * team
+        unit_layer[(y + 1) * width + x] = 8 + 4 * team
+        for dx, dy in ((-2, -2), (2, -2), (-2, 2), (2, 2)):
+            unit_layer[(y + dy) * width + (x + dx)] = 9 + 4 * team
         for dx, dy in ((-7, -5), (7, -5), (-7, 5), (7, 5)):
             nx, ny = x + dx, y + dy
             if 2 <= nx < width - 2 and 2 <= ny < height - 2:

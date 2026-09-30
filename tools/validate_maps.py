@@ -27,9 +27,11 @@ for filename, team_count in EXPECTED.items():
     assert all(gid in (1, 2, 3, 4) for gid in layers["Ground"])
     spawns = []
     for team in range(team_count):
-        command_gid, builder_gid = 6 + 2 * team, 7 + 2 * team
+        command_gid, builder_gid = 6 + 4 * team, 7 + 4 * team
         assert layers["Units"].count(command_gid) == 1, (filename, team, "command center")
         assert layers["Units"].count(builder_gid) == 1, (filename, team, "builder")
+        assert layers["Units"].count(8 + 4 * team) == 1, (filename, team, "science ship")
+        assert layers["Units"].count(9 + 4 * team) == 4, (filename, team, "corvettes")
         index = layers["Units"].index(command_gid)
         spawns.append((index % width, index // width))
     assert layers["Items"].count(5) >= 4 * team_count + 2
@@ -44,4 +46,11 @@ for filename, team_count in EXPECTED.items():
     for tileset in xml.findall("tileset"):
         image = tileset.find("image")
         assert image is not None and (ROOT / image.attrib["source"]).is_file()
+        if tileset.attrib["name"] == "Starting units":
+            definitions = {
+                (int(next(p.attrib["value"] for p in tile.findall("./properties/property") if p.attrib["name"] == "team")),
+                 next(p.attrib["value"] for p in tile.findall("./properties/property") if p.attrib["name"] == "unit"))
+                for tile in tileset.findall("tile")
+            }
+            assert definitions == {(team, unit) for team in range(team_count) for unit in ("commandCenter", "builder", "rsScienceShip", "rsCorvette")}
     print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} resource pools")

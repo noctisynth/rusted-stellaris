@@ -70,6 +70,8 @@ for name, (path, entries) in UNITS.items():
                     ERRORS.append(f"{path.name}: unknown unit {target}")
         if section.startswith("canBuild_") and key == "name" and value.startswith("rs") and value not in UNITS:
             ERRORS.append(f"{path.name}: unknown unit {value}")
+        if section.startswith("action_") and key == "convertTo" and value.startswith("rs") and value not in UNITS:
+            ERRORS.append(f"{path.name}: unknown conversion target {value}")
         if section == "core" and key in ("price", "generation_resources") and "=" in value:
             for pair in value.split(","):
                 resource = pair.split("=", 1)[0].strip()
@@ -78,6 +80,10 @@ for name, (path, entries) in UNITS.items():
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
+
+overrides = [name for name, (_, entries) in UNITS.items() if ("core", "overrideAndReplace", "commandCenter") in entries]
+if overrides != ["rsFactionPicker"]:
+    ERRORS.append(f"expected only faction picker to replace command center: {overrides}")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)
