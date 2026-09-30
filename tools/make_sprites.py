@@ -254,6 +254,17 @@ def titan():
     save("titan", im)
 
 
+def juggernaut():
+    im, d = canvas(96)
+    d.polygon([(48, 3), (68, 20), (80, 79), (58, 69), (48, 91), (38, 69), (16, 79), (28, 20)], fill=COLORS["dark"], outline=COLORS["edge"])
+    d.rectangle((31, 25, 65, 67), fill=COLORS["hull"], outline=COLORS["gold"], width=3)
+    d.rectangle((37, 31, 59, 62), fill=COLORS["dark"], outline=COLORS["light"], width=2)
+    for x in (21, 69):
+        d.rectangle((x, 41, x + 7, 70), fill=COLORS["hull"], outline=COLORS["gold"], width=2)
+    d.polygon([(48, 8), (55, 27), (48, 35), (41, 27)], fill=COLORS["light"], outline=COLORS["edge"])
+    save("juggernaut", im)
+
+
 def carrier_and_craft():
     im, d = canvas(64)
     d.polygon([(32, 3), (47, 22), (54, 55), (39, 46), (32, 59), (25, 46), (10, 55), (17, 22)], fill=COLORS["hull"], outline=COLORS["edge"])
@@ -318,6 +329,7 @@ if __name__ == "__main__":
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     battleship()
     titan()
+    juggernaut()
     carrier_and_craft()
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
