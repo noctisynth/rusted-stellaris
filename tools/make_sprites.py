@@ -234,6 +234,22 @@ def battleship():
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
 
 
+def carrier_and_craft():
+    im, d = canvas(64)
+    d.polygon([(32, 3), (47, 22), (54, 55), (39, 46), (32, 59), (25, 46), (10, 55), (17, 22)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.rectangle((22, 19, 42, 43), fill=COLORS["dark"], outline=COLORS["gold"], width=2)
+    d.line((32, 19, 32, 43), fill=COLORS["light"], width=3)
+    save("carrier_cruiser", im)
+    im, d = canvas(24)
+    d.polygon([(12, 2), (20, 18), (12, 15), (4, 18)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.rectangle((10, 9, 14, 14), fill=COLORS["light"])
+    save("fighter", im)
+    im, d = canvas(24)
+    d.polygon([(12, 2), (17, 10), (23, 20), (12, 16), (1, 20), (7, 10)], fill=COLORS["dark"], outline=COLORS["gold"])
+    d.ellipse((9, 7, 15, 13), fill="#F2C979")
+    save("strike_craft", im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
@@ -263,3 +279,4 @@ if __name__ == "__main__":
     weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     battleship()
+    carrier_and_craft()
