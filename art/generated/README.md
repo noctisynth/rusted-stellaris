@@ -22,10 +22,11 @@
 | `matter_decompressor-source.png` | `black_hole.png`、`matter_site.png`、`matter_frame.png`、`matter_decompressor.png` | 96×96 | 黑洞节点与逐段建成的采矿环 |
 | `mega_shipyard-source.png` | `mega_shipyard_site.png`、`mega_shipyard_frame.png`、`mega_shipyard.png` | 96×96 | 六角外环、四向船坞吊臂与中央建造泊位 |
 | `science_nexus-source.png` | `science_nexus_site.png`、`science_nexus_frame.png`、`science_nexus.png` | 96×96 | 三向科研翼、中央观测核心与逐段建成的外围支架 |
+| `quantum_catapult-source.png` | `quantum_catapult_site.png`、`quantum_catapult_frame.png`、`quantum_catapult.png`、`quantum_exit.png` | 96×96 / 48×48 | 双弧加速轨、中央发射口与出口导航核心 |
 
 共同提示词约束：原创科幻设计，严格俯视正投影，主体居中，透明背景；蓝灰色金属装甲、青色能量导管和少量暖金色核心；在游戏小尺寸下有可辨认的外形；无场景、文字、标志或水印。其余几张图使用前一张已生成图作为风格参考，但各自保留不同轮廓。`tools/make_sprites.py` 从源图的非透明区域裁切、等比缩小并居中，同时导出灰暗残骸图；动能护卫舰、动能驱逐舰、导弹巡洋舰和导弹战列舰的变体也基于新图导出。
 
-当前完成表中十八种主体的原创源图。其他建筑、舰船、阵营外观、炮塔、弹道和音效仍按内容规范继续制作。视觉可读性已在原生贴图尺寸的合成预览中检查；实际对局中的辨识度仍需测试。
+当前完成表中十九种主体的原创源图。其他建筑、舰船、阵营外观、炮塔、弹道和音效仍按内容规范继续制作。视觉可读性已在原生贴图尺寸的合成预览中检查；实际对局中的辨识度仍需测试。
 
 前哨站与星堡、堡垒、擎天堡垒的源图均由内置 ImageGen 独立生成；现有恒星基地已有原创源图。五级建筑缩为游戏尺寸后并排目视检查了轮廓和等级差异，实际地图背景上的可读性仍待对局观察。
 

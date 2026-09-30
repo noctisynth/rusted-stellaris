@@ -41,6 +41,7 @@ for filename, team_count in EXPECTED.items():
     assert layers["Units"].count(39) == layers["Items"].count(38)
     assert layers["Units"].count(40) == PLANET_COUNT[team_count]
     assert layers["Units"].count(41) == BLACK_HOLE_COUNT[team_count]
+    assert layers["Units"].count(42) == 1 and layers["Units"].count(43) == 1
     assert all(unit_gid != 39 or layers["Items"][index] == 38 for index, unit_gid in enumerate(layers["Units"]))
     for x, y in spawns:
         nearby = sum(
@@ -71,4 +72,13 @@ for filename, team_count in EXPECTED.items():
         if tileset.attrib["name"] == "Black hole markers":
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsBlackHole"}
-    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits, {layers['Units'].count(40)} planets, {layers['Units'].count(41)} black holes")
+        if tileset.attrib["name"] == "Quantum exits":
+            definitions = [
+                {p.attrib["name"]: p.attrib["value"] for p in tile.findall("./properties/property")}
+                for tile in tileset.findall("tile")
+            ]
+            assert definitions == [
+                {"team": "none", "unit": "rsQuantumExitA"},
+                {"team": "none", "unit": "rsQuantumExitB"},
+            ]
+    print(f"{filename}: {team_count} teams, {layers['Items'].count(5)} mineral pools, {layers['Items'].count(38)} rare deposits, {layers['Units'].count(40)} planets, {layers['Units'].count(41)} black holes, 2 quantum exits")

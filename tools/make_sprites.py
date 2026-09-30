@@ -112,6 +112,27 @@ def science_nexus_stages():
         save(name, stage)
 
 
+def quantum_catapult_stages():
+    """Reveal the launch core, one accelerator rail, then both rails."""
+    complete = source_sprite("quantum_catapult", 96)
+    for name, brightness, stage_number in (
+        ("quantum_catapult_site", 0.58, 0),
+        ("quantum_catapult_frame", 0.79, 1),
+        ("quantum_catapult", 1.0, 2),
+    ):
+        stage = ImageEnhance.Brightness(complete).enhance(brightness)
+        pixels = stage.load()
+        for y in range(stage.height):
+            for x in range(stage.width):
+                if stage_number == 0 and (x < 34 or x > 61 or y < 38):
+                    pixels[x, y] = (0, 0, 0, 0)
+                elif stage_number == 1 and x > 57 and y < 69:
+                    pixels[x, y] = (0, 0, 0, 0)
+        save(name, stage)
+    core = complete.crop((32, 35, 64, 67)).resize((48, 48), Image.Resampling.LANCZOS)
+    save("quantum_exit", core)
+
+
 def generator_upgrades():
     """Mark each generator tier on the same original collector silhouette."""
     base = source_sprite("generator", 48)
@@ -453,5 +474,6 @@ if __name__ == "__main__":
     ring_stages("matter_decompressor", ("matter_site", "matter_frame", "matter_decompressor"))
     ring_stages("mega_shipyard", ("mega_shipyard_site", "mega_shipyard_frame", "mega_shipyard"))
     science_nexus_stages()
+    quantum_catapult_stages()
     black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")

@@ -42,6 +42,7 @@ def images():
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare-spawn.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "planet-spawn.png")
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "black-hole-spawn.png")
+    Image.new("RGBA", (40, 20), (0, 0, 0, 0)).save(OUT / "quantum-exit-spawn.png")
     Image.new("RGBA", (640, 20), (0, 0, 0, 0)).save(OUT / "spawn-tiles.png")
 
 
@@ -86,6 +87,13 @@ def black_hole_positions(width, height, team_count):
     return [(cx + dx, cy + dy) for dx in (-20, 20) for dy in (-20, 20)]
 
 
+def quantum_exit_positions(width, height, team_count):
+    if team_count == 2:
+        return [(40, 20), (80, 70)]
+    return [(width // 2, 20 if team_count == 4 else 25),
+            (width // 2, height - (20 if team_count == 4 else 25))]
+
+
 def create_map(name, width, height, spawns):
     rng = Random(name)
     root = Element("map", version="1.2", tiledversion="1.2.1", orientation="orthogonal", renderorder="right-down", width=str(width), height=str(height), tilewidth="20", tileheight="20", infinite="0", nextlayerid="4", nextobjectid="2")
@@ -112,6 +120,11 @@ def create_map(name, width, height, spawns):
     black_hole_tile = SubElement(black_holes, "tile", id="0")
     add_property(black_hole_tile, "team", "none")
     add_property(black_hole_tile, "unit", "rsBlackHole")
+    quantum_exits = add_tileset(root, 42, "Quantum exits", "quantum-exit-spawn.png", 2, 2)
+    for tile_id, unit in enumerate(("rsQuantumExitA", "rsQuantumExitB")):
+        tile = SubElement(quantum_exits, "tile", id=str(tile_id))
+        add_property(tile, "team", "none")
+        add_property(tile, "unit", unit)
 
     ground = [1] * (width * height)
     for y in range(height):
@@ -145,6 +158,9 @@ def create_map(name, width, height, spawns):
     for x, y in black_hole_positions(width, height, len(spawns)):
         assert unit_layer[y * width + x] == 0
         unit_layer[y * width + x] = 41
+    for index, (x, y) in enumerate(quantum_exit_positions(width, height, len(spawns))):
+        assert unit_layer[y * width + x] == 0
+        unit_layer[y * width + x] = 42 + index
 
     add_layer(root, "Ground", width, height, ground, 1)
     add_layer(root, "Items", width, height, items, 2)

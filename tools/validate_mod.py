@@ -132,6 +132,24 @@ if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "
     if ("core", "generation_resources", "science=45") not in complete:
         ERRORS.append("completed science nexus must generate 45 science")
 
+if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFrame", "rsQuantumCatapult")):
+    site = UNITS["rsQuantumCatapultSite"][1]
+    frame = UNITS["rsQuantumCatapultFrame"][1]
+    complete = UNITS["rsQuantumCatapult"][1]
+    if ("action_buildQuantumCatapultFrame", "convertTo", "rsQuantumCatapultFrame") not in site:
+        ERRORS.append("quantum catapult site must convert to frame")
+    if ("action_completeQuantumCatapult", "convertTo", "rsQuantumCatapult") not in frame:
+        ERRORS.append("quantum catapult frame must convert to complete structure")
+    for action, exit_tag in (("launchA", "rsQuantumExitA"), ("launchB", "rsQuantumExitB")):
+        if (f"action_{action}", "takeResources_excludeUnitsWithoutTags", "rsQuantumFleet") not in complete:
+            ERRORS.append(f"quantum catapult {action} must select only fleet units")
+        if (f"hiddenAction_sendToExit{action[-1]}", "sendMessageWithData", f"exit=globalSearchForFirstUnit(withTag='{exit_tag}', relation='any')") not in complete:
+            ERRORS.append(f"quantum catapult {action} must target its map exit")
+    for name in ("rsCorvette", "rsDestroyer"):
+        entries = UNITS[name][1]
+        if ("core", "tags", "rsQuantumFleet") not in entries or ("hiddenAction_receiveQuantumLaunch", "teleportTo", "eventData('exit', type='unit')") not in entries:
+            ERRORS.append(f"{name} must receive quantum launch messages")
+
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
         ERRORS.append(f"{UNITS[name][0].name}: core AI economy needs positive build priority")
