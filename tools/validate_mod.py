@@ -61,6 +61,12 @@ for name, (path, entries) in UNITS.items():
         if required not in sections:
             ERRORS.append(f"{path.name}: missing [{required}]")
     for section, key, value in entries:
+        if section == "core" and key == "techLevel":
+            try:
+                if not 1 <= int(value) <= 3:
+                    ERRORS.append(f"{path.name}: techLevel must be 1-3 in game 1.15")
+            except ValueError:
+                ERRORS.append(f"{path.name}: invalid techLevel {value}")
         if section == "graphics" and key in ("image", "image_wreak"):
             if not (path.parent / value).is_file():
                 ERRORS.append(f"{path.name}: missing sprite {value}")

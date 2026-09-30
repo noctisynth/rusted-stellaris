@@ -250,6 +250,20 @@ def carrier_and_craft():
     save("strike_craft", im)
 
 
+def fortified_starbase(name, ring_count, accent):
+    im, d = canvas(96)
+    d.ellipse((11, 11, 84, 84), fill=COLORS["dark"], outline=COLORS["edge"], width=4)
+    for ring in range(ring_count):
+        inset = 17 + ring * 9
+        d.ellipse((inset, inset, 95 - inset, 95 - inset), outline=accent, width=3)
+    d.rectangle((41, 4, 54, 91), fill=COLORS["hull"], outline=COLORS["edge"], width=2)
+    d.rectangle((4, 41, 91, 54), fill=COLORS["hull"], outline=COLORS["edge"], width=2)
+    d.ellipse((39, 39, 56, 56), fill=COLORS["light"], outline=COLORS["gold"], width=2)
+    for x, y in ((15, 15), (69, 15), (15, 69), (69, 69)):
+        d.rectangle((x, y, x + 11, y + 11), fill=accent, outline=COLORS["dark"], width=2)
+    save(name, im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
     for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost, destroyer):
@@ -280,3 +294,6 @@ if __name__ == "__main__":
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     battleship()
     carrier_and_craft()
+    fortified_starbase("starhold", 1, "#69B8E0")
+    fortified_starbase("fortress", 2, "#F2C979")
+    fortified_starbase("citadel", 3, "#E58CAB")
