@@ -1,0 +1,36 @@
+[global_resource_energy]
+displayName: 能量币
+displayNameShort: 能量
+displayPos: 1
+displayColor: #EACB58
+displayWhenZero: true
+
+[global_resource_minerals]
+displayName: 矿物
+displayPos: 2
+displayColor: #C46C62
+displayWhenZero: true
+
+[global_resource_alloys]
+displayName: 合金
+displayPos: 3
+displayColor: #8199B0
+displayWhenZero: true
+
+[global_resource_science]
+displayName: 科研
+displayPos: 4
+displayColor: #69B8E0
+displayWhenZero: true
+
+[global_resource_unity]
+displayName: 凝聚力
+displayPos: 5
+displayColor: #AA77CD
+displayWhenZero: true
+
+[global_resource_strategic]
+displayName: 战略资源
+displayPos: 6
+displayColor: #6FCB9A
+displayWhenZero: true

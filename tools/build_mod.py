@@ -18,7 +18,8 @@ with ZipFile(DEST, "w", ZIP_DEFLATED) as archive:
 
 with ZipFile(DEST) as archive:
     assert "mod-info.txt" in archive.namelist()
-    assert len([name for name in archive.namelist() if name.endswith(".ini")]) == 5
+    assert "all-units.template" in archive.namelist()
+    assert len([name for name in archive.namelist() if name.endswith(".ini")]) == 9
     assert len([name for name in archive.namelist() if name.endswith(".tmx")]) == 3
 
 print(DEST)

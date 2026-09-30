@@ -80,7 +80,43 @@ def corvette():
     save("corvette", im)
 
 
+def science_ship():
+    im, d = canvas(32)
+    d.polygon([(16, 2), (24, 13), (22, 24), (16, 20), (10, 24), (8, 13)], fill=COLORS["hull"], outline=COLORS["edge"])
+    d.ellipse((12, 8, 20, 16), fill=COLORS["light"])
+    d.line((5, 7, 10, 14), fill=COLORS["gold"], width=2)
+    d.line((27, 7, 22, 14), fill=COLORS["gold"], width=2)
+    save("science_ship", im)
+
+
+def mining_station():
+    im, d = canvas(48)
+    d.polygon([(24, 3), (43, 14), (43, 34), (24, 45), (5, 34), (5, 14)], fill=COLORS["dark"], outline=COLORS["edge"])
+    d.rectangle((15, 15, 33, 33), fill=COLORS["hull"], outline=COLORS["gold"], width=2)
+    for x in (8, 40):
+        d.line((x, 9, x, 39), fill=COLORS["light"], width=3)
+    save("mining_station", im)
+
+
+def research_station():
+    im, d = canvas(48)
+    d.ellipse((7, 7, 40, 40), outline=COLORS["edge"], width=4)
+    d.line((24, 2, 24, 46), fill=COLORS["hull"], width=5)
+    d.line((2, 24, 46, 24), fill=COLORS["hull"], width=5)
+    d.ellipse((17, 17, 31, 31), fill=COLORS["light"], outline=COLORS["gold"], width=2)
+    save("research_station", im)
+
+
+def outpost():
+    im, d = canvas(48)
+    d.ellipse((8, 8, 39, 39), fill=COLORS["dark"], outline=COLORS["edge"], width=3)
+    d.rectangle((20, 2, 28, 46), fill=COLORS["hull"], outline=COLORS["gold"])
+    d.rectangle((2, 20, 46, 28), fill=COLORS["hull"], outline=COLORS["gold"])
+    d.ellipse((19, 19, 29, 29), fill=COLORS["light"])
+    save("outpost", im)
+
+
 if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True)
-    for draw in (starbase, engineer, generator, shipyard, corvette):
+    for draw in (starbase, engineer, generator, shipyard, corvette, science_ship, mining_station, research_station, outpost):
         draw()
