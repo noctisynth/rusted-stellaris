@@ -41,13 +41,16 @@ for path in FILES:
 
 resources = set()
 if RESOURCE_TEMPLATE.is_file():
+    resource_fields = list(fields(RESOURCE_TEMPLATE))
     resources = {
         section.removeprefix("global_resource_")
-        for section, _, _ in fields(RESOURCE_TEMPLATE)
+        for section, _, _ in resource_fields
         if section.startswith("global_resource_")
     }
-    if resources != {"minerals", "alloys", "science", "unity", "strategic"}:
+    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit"}:
         ERRORS.append(f"resource template has unexpected resources: {sorted(resources)}")
+    if ("global_resource_titanPermit", "hidden", "true") not in resource_fields:
+        ERRORS.append("technical titan permit must remain hidden from the resource HUD")
 else:
     ERRORS.append("missing all-units.template")
 
@@ -118,6 +121,18 @@ if "rsResearchStation" in UNITS and "rsPlanetLab" in UNITS:
         ERRORS.append("planet lab must retain every research project")
     if ("action_upgradePlanetLab", "convertTo", "rsPlanetLab") not in UNITS["rsResearchStation"][1]:
         ERRORS.append("research station must upgrade to planet lab")
+
+for name in ("rsResearchStation", "rsPlanetLab"):
+    if name in UNITS and ("action_researchTitan", "addResources", "titanPermit=1") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: titan research must grant one build permit")
+if "rsTitan" in UNITS:
+    titan = UNITS["rsTitan"][1]
+    if ("hiddenAction_returnTitanPermit", "autoTriggerOnEvent", "destroyed") not in titan:
+        ERRORS.append("titan permit return must run on destruction")
+    if ("hiddenAction_returnTitanPermit", "addResources", "titanPermit=1") not in titan:
+        ERRORS.append("titan destruction must return its build permit")
+    if not any(s == "core" and k == "price" and "titanPermit=1" in v for s, k, v in titan):
+        ERRORS.append("titan production must consume its build permit")
 
 if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "rsScienceNexus")):
     site = UNITS["rsScienceNexusSite"][1]

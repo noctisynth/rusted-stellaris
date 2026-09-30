@@ -27,3 +27,7 @@ displayName: 战略资源
 displayPos: 5
 displayColor: #6FCB9A
 displayWhenZero: true
+
+[global_resource_titanPermit]
+displayName: 泰坦建造许可
+hidden: true
