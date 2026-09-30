@@ -93,6 +93,25 @@ def black_hole_sprite():
     sprite.save(OUT / "black_hole.png")
 
 
+def science_nexus_stages():
+    """Reveal the observatory, then two wings, then the full research array."""
+    complete = source_sprite("science_nexus", 96)
+    for name, brightness, stage_number in (
+        ("science_nexus_site", 0.58, 0),
+        ("science_nexus_frame", 0.79, 1),
+        ("science_nexus", 1.0, 2),
+    ):
+        stage = ImageEnhance.Brightness(complete).enhance(brightness)
+        pixels = stage.load()
+        for y in range(stage.height):
+            for x in range(stage.width):
+                if hypot(x - 47.5, y - 47.5) <= 22:
+                    continue
+                if stage_number == 0 or (stage_number == 1 and x > 48 and y > 48):
+                    pixels[x, y] = (0, 0, 0, 0)
+        save(name, stage)
+
+
 def generator_upgrades():
     """Mark each generator tier on the same original collector silhouette."""
     base = source_sprite("generator", 48)
@@ -433,5 +452,6 @@ if __name__ == "__main__":
     ring_stages("dyson_sphere", ("dyson_site", "dyson_frame", "dyson_sphere"))
     ring_stages("matter_decompressor", ("matter_site", "matter_frame", "matter_decompressor"))
     ring_stages("mega_shipyard", ("mega_shipyard_site", "mega_shipyard_frame", "mega_shipyard"))
+    science_nexus_stages()
     black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")

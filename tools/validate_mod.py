@@ -119,6 +119,19 @@ if "rsResearchStation" in UNITS and "rsPlanetLab" in UNITS:
     if ("action_upgradePlanetLab", "convertTo", "rsPlanetLab") not in UNITS["rsResearchStation"][1]:
         ERRORS.append("research station must upgrade to planet lab")
 
+if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "rsScienceNexus")):
+    site = UNITS["rsScienceNexusSite"][1]
+    frame = UNITS["rsScienceNexusFrame"][1]
+    complete = UNITS["rsScienceNexus"][1]
+    if ("action_buildScienceNexusFrame", "convertTo", "rsScienceNexusFrame") not in site:
+        ERRORS.append("science nexus site must convert to frame")
+    if ("action_completeScienceNexus", "convertTo", "rsScienceNexus") not in frame:
+        ERRORS.append("science nexus frame must convert to complete structure")
+    if any(s == "core" and k == "generation_resources" for s, k, _ in site + frame):
+        ERRORS.append("unfinished science nexus must not generate science")
+    if ("core", "generation_resources", "science=45") not in complete:
+        ERRORS.append("completed science nexus must generate 45 science")
+
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
         ERRORS.append(f"{UNITS[name][0].name}: core AI economy needs positive build priority")
