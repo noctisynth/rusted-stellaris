@@ -1,6 +1,7 @@
 """Draw original placeholder sprites for the first playable unit chain."""
 
 from pathlib import Path
+from math import atan2, hypot, pi
 from PIL import Image, ImageDraw
 
 OUT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris" / "units"
@@ -34,8 +35,8 @@ def save(name, image):
     wreck.save(OUT / f"{name}_dead.png")
 
 
-def generated_sprite(name, size):
-    """Export original generated art at the game's small sprite size."""
+def source_sprite(name, size):
+    """Crop original generated art into a centered game-size canvas."""
     source = GENERATED / f"{name}-source.png"
     if not source.is_file():
         raise FileNotFoundError(f"Missing generated sprite source: {source}")
@@ -47,7 +48,35 @@ def generated_sprite(name, size):
     art.thumbnail((size - 4, size - 4), Image.Resampling.LANCZOS)
     sprite = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     sprite.alpha_composite(art, ((size - art.width) // 2, (size - art.height) // 2))
-    save(name, sprite)
+    return sprite
+
+
+def generated_sprite(name, size):
+    save(name, source_sprite(name, size))
+
+
+def dyson_stages():
+    """Expose more of the original collector ring at each construction stage."""
+    complete = source_sprite("dyson_sphere", 96)
+    for name, brightness, outer_sector_count in (
+        ("dyson_site", 0.56, 4),
+        ("dyson_frame", 0.78, 8),
+        ("dyson_sphere", 1.0, 16),
+    ):
+        stage = complete.copy()
+        pixels = stage.load()
+        for y in range(stage.height):
+            for x in range(stage.width):
+                r, g, b, a = pixels[x, y]
+                if not a:
+                    continue
+                distance = hypot(x - 47.5, y - 47.5)
+                sector = int(((atan2(y - 47.5, x - 47.5) + pi) / (2 * pi)) * 16) % 16
+                if distance > 27 and sector % (16 // outer_sector_count) != 0:
+                    pixels[x, y] = (r, g, b, 0)
+                else:
+                    pixels[x, y] = (int(r * brightness), int(g * brightness), int(b * brightness), a)
+        save(name, stage)
 
 
 def starbase():
@@ -371,4 +400,5 @@ if __name__ == "__main__":
     weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
+    dyson_stages()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")

@@ -19,7 +19,9 @@ with ZipFile(DEST, "w", ZIP_DEFLATED) as archive:
 with ZipFile(DEST) as archive:
     assert "mod-info.txt" in archive.namelist()
     assert "all-units.template" in archive.namelist()
-    assert len([name for name in archive.namelist() if name.endswith(".ini") and not Path(name).name.startswith("_")]) == 45
+    source_units = {path.relative_to(SOURCE).as_posix() for path in (SOURCE / "units").glob("*.ini") if not path.name.startswith("_")}
+    archive_units = {name for name in archive.namelist() if name.startswith("units/") and name.endswith(".ini") and not Path(name).name.startswith("_")}
+    assert archive_units == source_units
     assert len([name for name in archive.namelist() if name.endswith(".tmx")]) == 3
 
 print(DEST)
