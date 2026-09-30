@@ -4,7 +4,8 @@ This reads the save's compressed block and validates an object-list candidate
 against increasing game-object IDs. Custom units and the built-in type-2 objects
 observed in project test maps are supported; this is not a general save decoder.
 The optional position view marks a team as unknown when its serialized layout
-differs from the common custom-unit layout.
+differs from the common custom-unit layout. Built-in objects have no decoded
+position, but do not prevent custom-unit positions being inspected.
 """
 
 from argparse import ArgumentParser
@@ -58,15 +59,14 @@ def unit_list(raw: bytes) -> tuple[list[str], int]:
     raise ValueError("no supported ordered game-object list found")
 
 
-def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int | None, float, float]]:
-    """Decode coordinates and common-layout team IDs for custom-only 1.15 maps."""
-    if any(not name.startswith("rs") for name in names):
-        raise ValueError("position decoding requires custom units only")
+def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int | None, float, float] | None]:
+    """Decode custom-unit positions, leaving built-in objects without coordinates."""
+    custom_count = sum(name.startswith("rs") for name in names)
     markers = list(re.finditer(
         rb"\xff\xfe\x00\x00(?:\x3f\x80\x00\x00|\x00\x00\x00\x00)", raw[start:]
     ))
-    if len(markers) != len(names):
-        raise ValueError(f"expected {len(names)} coordinate records, found {len(markers)}")
+    if len(markers) != custom_count:
+        raise ValueError(f"expected {custom_count} custom coordinate records, found {len(markers)}")
     result = []
     for marker in markers:
         pos = start + marker.start()
@@ -76,7 +76,8 @@ def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int |
         if not 0 <= x <= 10000 or not 0 <= y <= 10000:
             raise ValueError("coordinate record failed bounds validation")
         result.append((team if -1 <= team <= 9 else None, x, y))
-    return result
+    records = iter(result)
+    return [next(records) if name.startswith("rs") else None for name in names]
 
 
 def main() -> None:
@@ -94,7 +95,11 @@ def main() -> None:
             positions = unit_positions(raw, names, list_end)
         except ValueError as error:
             parser.error(str(error))
-        for number, (name, (team, x, y)) in enumerate(zip(names, positions), 1):
+        for number, (name, position) in enumerate(zip(names, positions), 1):
+            if position is None:
+                print(f"{number:3}: team= ? x=      ? y=      ? {name}")
+                continue
+            team, x, y = position
             team_label = str(team) if team is not None else "?"
             print(f"{number:3}: team={team_label:>2} x={x:7.1f} y={y:7.1f} {name}")
     elif args.ordered:
