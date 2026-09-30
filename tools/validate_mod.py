@@ -101,9 +101,13 @@ if "rsEngineer" in UNITS:
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
-overrides = [name for name, (_, entries) in UNITS.items() if ("core", "overrideAndReplace", "commandCenter") in entries]
-if overrides != ["rsFactionPicker"]:
-    ERRORS.append(f"expected only faction picker to replace command center: {overrides}")
+overrides = [name for name, (_, entries) in UNITS.items() if any(s == "core" and k == "overrideAndReplace" and v in {"commandCenter", "builder"} for s, k, v in entries)]
+if overrides:
+    ERRORS.append(f"vanilla command center and builder must remain available: {overrides}")
+if "rsFactionPicker" in UNITS and ("core", "builtFrom_1_name", "builder") not in UNITS["rsFactionPicker"][1]:
+    ERRORS.append("faction picker must be buildable by the vanilla builder")
+if "rsEngineer" in UNITS and ("core", "builtFrom_2_name", "commandCenter") not in UNITS["rsEngineer"][1]:
+    ERRORS.append("engineer must be buildable from the vanilla command center")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)

@@ -28,12 +28,12 @@ for filename, team_count in EXPECTED.items():
     assert all(gid in (1, 2, 3, 4) for gid in layers["Ground"])
     spawns = []
     for team in range(team_count):
-        command_gid, builder_gid = 6 + 4 * team, 7 + 4 * team
-        assert layers["Units"].count(command_gid) == 1, (filename, team, "command center")
-        assert layers["Units"].count(builder_gid) == 1, (filename, team, "builder")
+        picker_gid, engineer_gid = 6 + 4 * team, 7 + 4 * team
+        assert layers["Units"].count(picker_gid) == 1, (filename, team, "faction picker")
+        assert layers["Units"].count(engineer_gid) == 1, (filename, team, "engineer")
         assert layers["Units"].count(8 + 4 * team) == 1, (filename, team, "science ship")
         assert layers["Units"].count(9 + 4 * team) == 4, (filename, team, "corvettes")
-        index = layers["Units"].index(command_gid)
+        index = layers["Units"].index(picker_gid)
         spawns.append((index % width, index // width))
     assert layers["Items"].count(5) >= 4 * team_count + 2
     assert layers["Items"].count(38) == (4 if team_count >= 8 else 2)
@@ -59,7 +59,7 @@ for filename, team_count in EXPECTED.items():
                  next(p.attrib["value"] for p in tile.findall("./properties/property") if p.attrib["name"] == "unit"))
                 for tile in tileset.findall("tile")
             }
-            assert definitions == {(team, unit) for team in range(team_count) for unit in ("commandCenter", "builder", "rsScienceShip", "rsCorvette")}
+            assert definitions == {(team, unit) for team in range(team_count) for unit in ("rsFactionPicker", "rsEngineer", "rsScienceShip", "rsCorvette")}
         if tileset.attrib["name"] == "Rare deposit markers":
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsRareDeposit"}
