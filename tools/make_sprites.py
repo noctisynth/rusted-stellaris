@@ -243,6 +243,17 @@ def battleship():
     weapon_variant("battleship", "battleship_missile", "#EEA76B", [(16, 24, 10, 8), (54, 24, 10, 8), (32, 55, 16, 7)])
 
 
+def titan():
+    im, d = canvas(96)
+    d.polygon([(48, 2), (64, 19), (76, 63), (62, 58), (48, 93), (34, 58), (20, 63), (32, 19)], fill=COLORS["dark"], outline=COLORS["edge"])
+    d.polygon([(48, 9), (57, 30), (48, 65), (39, 30)], fill=COLORS["hull"], outline="#B18CFF")
+    d.rectangle((43, 3, 53, 38), fill="#B18CFF", outline=COLORS["edge"])
+    for x in (22, 64):
+        d.rectangle((x, 38, x + 10, 73), fill=COLORS["hull"], outline=COLORS["gold"], width=2)
+    d.ellipse((41, 65, 55, 79), fill=COLORS["light"], outline=COLORS["gold"], width=2)
+    save("titan", im)
+
+
 def carrier_and_craft():
     im, d = canvas(64)
     d.polygon([(32, 3), (47, 22), (54, 55), (39, 46), (32, 59), (25, 46), (10, 55), (17, 22)], fill=COLORS["hull"], outline=COLORS["edge"])
@@ -306,6 +317,7 @@ if __name__ == "__main__":
     weapon_variant("destroyer", "destroyer_kinetic", "#F2C979", [(8, 19, 9, 5), (31, 19, 9, 5)])
     weapon_variant("cruiser", "cruiser_missile", "#EEA76B", [(12, 22, 10, 8), (42, 22, 10, 8)])
     battleship()
+    titan()
     carrier_and_craft()
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
