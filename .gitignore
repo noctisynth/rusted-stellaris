@@ -1,4 +1,5 @@
 build/
+work/
 *.rwmod
 __pycache__/
 *.pyc
