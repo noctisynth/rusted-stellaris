@@ -202,6 +202,21 @@ if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and 
     ERRORS.append("veteran paradox titan must retain titan cap and training tags")
 if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS["rsMegaShipyard"][1]:
     ERRORS.append("mega shipyard must build at double factory speed")
+for site, frame, first_action, final_action in (
+    ("rsDysonSite", "rsDysonFrame", "action_buildDysonFrame", "action_completeDyson"),
+    ("rsMatterSite", "rsMatterFrame", "action_buildMatterFrame", "action_completeMatter"),
+    ("rsMegaShipyardSite", "rsMegaShipyardFrame", "action_buildMegaShipyardFrame", "action_completeMegaShipyard"),
+    ("rsScienceNexusSite", "rsScienceNexusFrame", "action_buildScienceNexusFrame", "action_completeScienceNexus"),
+    ("rsQuantumCatapultSite", "rsQuantumCatapultFrame", "action_buildQuantumCatapultFrame", "action_completeQuantumCatapult"),
+):
+    if site in UNITS and frame in UNITS:
+        site_entries, frame_entries = UNITS[site][1], UNITS[frame][1]
+        if not any(s == "ai" and k == "buildPriority" for s, k, _ in site_entries):
+            ERRORS.append(f"{site} needs AI construction priority")
+        if (first_action, "ai_isHighPriority", "true") not in site_entries or (final_action, "ai_isHighPriority", "true") not in frame_entries:
+            ERRORS.append(f"{site} AI must complete both megastructure stages")
+if "rsStrategicExtractor" in UNITS and not any(s == "ai" and k == "buildPriority" for s, k, _ in UNITS["rsStrategicExtractor"][1]):
+    ERRORS.append("AI must prioritize strategic extraction before megastructure spending")
 if "rsColossus" in UNITS:
     colossus = UNITS["rsColossus"][1]
     for required in (
