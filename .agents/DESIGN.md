@@ -19,6 +19,7 @@
 | [行星与巨像](specs/planets-and-colossus.md) | Active Spec | 行星状态、三种终局武器及验收条件 |
 | [舰队对地与平衡](specs/combat-balance.md) | Active Spec | 轨道轰炸与对原版单位的首轮数值基线 |
 | [本机参考资料](spikes/local-references.md) | 已核对 | 游戏安装、内置示例及已安装模组的位置与可用性 |
+| [舰队学院存档实验](spikes/fleet-academy-save.md) | 已核对 | 动态属性训练导致游戏 1.15 存档失败；后续应改验证可保存的机制 |
 | [实施清单索引](TODO.md) | Discovery | 等范围确认后建立分项清单 |
 
 完整范围已按用户继续完成全部设计预期的要求接受。当前基础生产链和星域地图底稿已有实现，内容清单负责追踪其余交付项。技术可行性未验证的机制要在对应验证记录中保持明确状态。
