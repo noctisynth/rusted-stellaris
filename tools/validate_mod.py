@@ -247,6 +247,20 @@ for source, target, action in (("rsCruiser", "rsCruiserT2", "action_upgradeCruis
         ERRORS.append(f"{target}: missing T2 hull repair")
     if "Battleship" in target and not any(s == "turret_laserDefence" and k == "laserDefenceEnergyUse" for s, k, v in entries):
         ERRORS.append(f"{target}: missing visible native laser defence")
+for name, action in (("rsCruiser", "action_upgradeCruiserT2"), ("rsBattleship", "action_upgradeBattleshipT2")):
+    if (action, "isLocked", "if not self.globalTeamTags(includes='rsTechShields')") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: T2 upgrade must require shield research")
+for name, action in (("rsBattleship", "action_upgradeCruiserT2"), ("rsTitan", "action_upgradeBattleshipT2"), ("rsJuggernaut", "action_upgradeBattleshipT2")):
+    if (action, "isVisible", "false") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: inherited lower-hull upgrade must be hidden")
+if "rsJuggernaut" in UNITS:
+    entries = UNITS["rsJuggernaut"][1]
+    for target in ("rsCruiserT2", "rsCruiserMissileT2", "rsCarrierCruiserT2", "rsBattleshipT2", "rsMissileBattleshipT2"):
+        if not any(s.startswith("canBuild_") and k == "name" and v == target for s, k, v in entries):
+            ERRORS.append(f"rsJuggernaut: missing direct T2 build {target}")
+for name, expected in (("rsCorvette", "1.65"), ("rsDestroyer", "1.55"), ("rsCruiser", "1.45"), ("rsCarrierCruiser", "1.4"), ("rsBattleship", "1.3")):
+    if ("movement", "moveSpeed", expected) not in UNITS[name][1]:
+        ERRORS.append(f"{name}: mixed-fleet speed should be {expected}")
 
 for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoosted", 8, 6), ("rsMiningStationT2", 12, 8), ("rsMiningStationT2Boosted", 12, 12), ("rsMiningStationT3", 16, 16), ("rsMiningStationT3Boosted", 16, 24)):
     if name not in UNITS:
