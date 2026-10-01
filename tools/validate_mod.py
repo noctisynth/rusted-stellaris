@@ -183,6 +183,23 @@ if "rsJuggernaut" in UNITS:
         ERRORS.append("juggernaut production must consume its build permit")
 if "rsJuggernautVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsJuggernaut" in v for s, k, v in UNITS["rsJuggernautVeteran"][1]):
     ERRORS.append("veteran juggernaut must retain unit cap tag")
+for name, upgrade_target in (("rsTitan", "rsParadoxTitan"), ("rsTitanVeteran", "rsParadoxTitanVeteran")):
+    if name in UNITS:
+        entries = UNITS[name][1]
+        if ("action_upgradeParadoxTitan", "convertTo", upgrade_target) not in entries:
+            ERRORS.append(f"{name} must upgrade without losing veteran status")
+if "rsTitan" in UNITS:
+    titan_entries = UNITS["rsTitan"][1]
+    for expected in (("attack", "turretMultiTargeting", "true"), ("turret_2", "canAttackLandUnits", "false"), ("turret_3", "copyFrom", "2"), ("projectile_3", "directDamage", "45")):
+        if expected not in titan_entries:
+            ERRORS.append(f"titan anti-air battery missing {expected}")
+if "rsParadoxTitan" in UNITS:
+    paradox_entries = UNITS["rsParadoxTitan"][1]
+    for expected in (("core", "maxShield", "4500"), ("core", "selfRegenRate", "0.25"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.05"), ("projectile_3", "directDamage", "65"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
+        if expected not in paradox_entries:
+            ERRORS.append(f"paradox titan missing {expected}")
+if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
+    ERRORS.append("veteran paradox titan must retain titan cap and training tags")
 if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS["rsMegaShipyard"][1]:
     ERRORS.append("mega shipyard must build at double factory speed")
 if "rsColossus" in UNITS:
