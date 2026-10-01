@@ -219,6 +219,12 @@
 
 正式实现为 17 个编号行星各配一份已殖民类型，视觉上加金色轨道环。采用 `incompleteBuildings=false`，只认已完成的邻近殖民地；`autoTriggerCheckRate: every8Frames` 减少每帧搜寻。三张专用地图实载 23/41/75 个开局单位，模组静态检查识别 99 个单位。隔离双人图在 `(870,910)` 放置已完成的测试殖民地后，延后存档 `planet-state-probe-v8.rwsave` 显示 `(850,910)` 的 `rsPlanetTwin01Occupied` 为中立队伍 -1，殖民地属于队伍 0。测试殖民地四秒后删除的 `planet-state-probe-v9.rwsave` 则显示同坐标恢复 `rsPlanetTwin01`，队伍仍为 -1。测试地图和自毁动作只存在隔离副本，正式模组没有自毁动作。尚未验证玩家建造中的阶段、资源/分值结算、再次殖民及多人同步；破碎和封存未实现。
 
+## 2026-10-01 巨像定点目标与命中事件原型
+
+开发者的 [1.15 更新公告](https://steamcommunity.com/app/647960/announcements/)列出 `[action]fireTurretXAtGround_withTarget` 和 `autoTriggerOnEvent: tookDamage(withTag=...)`；前者接收单位引用，后者读取弹体标签。在隔离游戏副本加入一次性 `rsColossusProbe`、`rsPlanetTwin01ShatteredProbe` 与临时测试地图，巨像在 `(870,910)`，中立 Twin01 在 `(850,910)`。探针动作使用 `fireTurretXAtGround_withTarget: nearestUnit(withinRange=200, withTag='rsPlanetTwin01', relation='any')`，弹体带 `rsWorldCracker` 标签，行星收到对应 `tookDamage` 后转换。`colossus-probe-v6.rwsave` 显示 Twin01 原址成为 `rsPlanetTwin01ShatteredProbe`，队伍仍为 -1；定点命中和按弹体标签改变单颗编号行星的能力在本机 1.15 成立。
+
+排错记录：探针动作确实触发过，但最初弹体没有导致状态转换；加入 `targetGround: true`、`areaDamage: 1`、`areaRadius: 30`、`areaHitAirAndLandAtSameTime: true` 与 `friendlyFire: true` 后命中。与其相同、仅用相对坐标落点的对照局 `colossus-probe-v5.rwsave` 也成功转换了 Twin01；未开启友军伤害的对照局保留原始行星。由于多个弹体字段同时调整，尚不能把失败唯一归因于其中任意一个字段。该原型未实现玩家点选、45 秒充能/中断、三种正式终局、资源扣费、目标失效、多人同步或对原版地图的限制，不能据此勾选巨像玩法完成。
+
 ## 2026-10-01 量子弹弓实际投送验证
 
 通过游戏自带 `-debug` 本地调试接口在开局约 10 秒后调用 `root.saveGame`，读取隔离副本 `.rwsave` 内长度标记的 gzip 数据块，并核对单位记录中的大端浮点坐标。独立探针地图先验证逐舰筛选：弹弓仍在 `(610,910)`，两艘测试舰由 `(650,910)`、`(670,910)` 到达同一出口两侧约 `(1798,910)`、`(1822,910)`。随后正式模组加入两处中立出口、研究与三阶段结构，三张专用地图以 23/41/75 单位实载，静态配置识别 65 单位。正式单位的隔离地图临时给完成体自动发射并免除费用，出口 A 的两艘 `rsCorvette` 到达 `(799,410)`、`(821,410)`，出口 B 到达 `(1599,1410)`、`(1621,1410)`，弹弓仍在 `(610,910)`。测试仅改动隔离副本，之后恢复正式配置并移除测试地图。存档证实两出口的双舰投送，但没有验证玩家点击、费用、冷却、其它舰型、多人同步及完整对局。
