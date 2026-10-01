@@ -92,7 +92,7 @@ for filename, team_count in EXPECTED.items():
                  next(p.attrib["value"] for p in tile.findall("./properties/property") if p.attrib["name"] == "unit"))
                 for tile in tileset.findall("tile")
             }
-            assert definitions == {(team, unit) for team in range(team_count) for unit in ("rsFactionPicker", "rsEngineer", "rsScienceShip", "rsCorvette")}
+            assert definitions == {(team, unit) for team in range(team_count) for unit in ("rsStarbaseOrigin", "rsEngineer", "rsScienceShip", "rsCorvette")}
         if tileset.attrib["name"] == "Rare deposit markers":
             properties = {p.attrib["name"]: p.attrib["value"] for p in tileset.findall("./tile/properties/property")}
             assert properties == {"team": "none", "unit": "rsRareDeposit"}

@@ -111,7 +111,7 @@ def create_map(name, width, height, spawns):
     add_property(SubElement(misc, "tile", id="0"), "res_pool", "")
     units = add_tileset(root, 6, "Starting units", "spawn-tiles.png", 32, 32)
     for team in range(len(spawns)):
-        for kind, unit in enumerate(("rsFactionPicker", "rsEngineer", "rsScienceShip", "rsCorvette")):
+        for kind, unit in enumerate(("rsStarbaseOrigin", "rsEngineer", "rsScienceShip", "rsCorvette")):
             tile = SubElement(units, "tile", id=str(4 * team + kind))
             add_property(tile, "team", team)
             add_property(tile, "unit", unit)

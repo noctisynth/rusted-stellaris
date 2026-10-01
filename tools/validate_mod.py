@@ -56,7 +56,7 @@ if RESOURCE_TEMPLATE.is_file():
 else:
     ERRORS.append("missing all-units.template")
 
-for filename in ("faction_picker.ini", "starbase.ini", "_starbase_tier_common.ini"):
+for filename in ("pre_ftl_command.ini", "starbase.ini", "_starbase_tier_common.ini"):
     path = ROOT / "units" / filename
     if ("core", "tags", "rsCapital") not in list(fields(path)):
         ERRORS.append(f"{filename}: capital unit chain must retain rsCapital tag")
@@ -110,9 +110,18 @@ for name, expected in (("rsGenerator", "credits=12"), ("rsGeneratorT2", "credits
             ERRORS.append(f"{path.name}: expected native energy-credit production {expected}, got {production}")
 
 if "rsFactionPicker" in UNITS:
-    path, entries = UNITS["rsFactionPicker"]
-    if ("core", "price", "2000") not in entries:
-        ERRORS.append(f"{path.name}: expected affordable native-map entry price of 2000 credits")
+    ERRORS.append("standalone faction picker must not be buildable")
+if "rsPreFtlCommand" in UNITS:
+    path, entries = UNITS["rsPreFtlCommand"]
+    if ("core", "overrideAndReplace", "commandCenter") not in entries:
+        ERRORS.append(f"{path.name}: must replace native command center")
+    if ("core", "canBuild_1_name", "builder") not in entries:
+        ERRORS.append(f"{path.name}: must retain native builder production")
+    for action, target in (("action_regular", "rsStarbase"), ("action_machine", "rsStarbaseMachine"), ("action_hive", "rsStarbaseHive")):
+        if (action, "convertTo", target) not in entries:
+            ERRORS.append(f"{path.name}: missing {action} upgrade")
+if "rsStarbaseOrigin" in UNITS and ("core", "isPickableStartingUnit", "true") not in UNITS["rsStarbaseOrigin"][1]:
+    ERRORS.append("special maps need a stellar starting capital")
 
 if "rsEngineer" in UNITS:
     path, entries = UNITS["rsEngineer"]
@@ -131,6 +140,14 @@ for name in ("rsStarbase", "rsStarhold", "rsFortress", "rsCitadel"):
         for key in ("autoRepair", "canRepairUnits", "nanoRange", "nanoRepairSpeed"):
             if not any(s == "core" and k == key for s, k, _ in effective):
                 ERRORS.append(f"{path.name}: missing fleet repair field {key}")
+        range_value = next((v for s, k, v in entries if s == "core" and k == "nanoRange"), None)
+        if range_value is None and common:
+            range_value = next((v for s, k, v in fields(common) if s == "core" and k == "nanoRange"), None)
+        attack_range = next((v for s, k, v in entries if s == "attack" and k == "maxAttackRange"), None)
+        if attack_range is None and common:
+            attack_range = next((v for s, k, v in fields(common) if s == "attack" and k == "maxAttackRange"), None)
+        if range_value != attack_range:
+            ERRORS.append(f"{path.name}: repair and displayed attack ranges differ")
 
 if "rsResearchStation" in UNITS and "rsPlanetLab" in UNITS:
     station_actions = {s for s, _, _ in UNITS["rsResearchStation"][1] if s.startswith("action_research")}
@@ -204,17 +221,20 @@ if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
         ERRORS.append("mineral plant must boost stations without directly producing minerals")
+if "rsEngineer" in UNITS and not any(
+    s == "canBuild_mineralPlant" and k == "isLocked" and "incompleteBuildings=true" in v
+    for s, k, v in UNITS["rsEngineer"][1]
+):
+    ERRORS.append("mineral plant cap must count unfinished construction")
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
 overrides = [name for name, (_, entries) in UNITS.items() if any(s == "core" and k == "overrideAndReplace" and v in {"commandCenter", "builder"} for s, k, v in entries)]
-if overrides:
-    ERRORS.append(f"vanilla command center and builder must remain available: {overrides}")
-if "rsFactionPicker" in UNITS and ("core", "builtFrom_1_name", "builder") not in UNITS["rsFactionPicker"][1]:
-    ERRORS.append("faction picker must be buildable by the vanilla builder")
+if overrides != ["rsPreFtlCommand"]:
+    ERRORS.append(f"only pre-FTL command may replace a native unit: {overrides}")
 if "rsEngineer" in UNITS and ("core", "builtFrom_2_name", "commandCenter") not in UNITS["rsEngineer"][1]:
-    ERRORS.append("engineer must be buildable from the vanilla command center")
+    ERRORS.append("engineer must be buildable from the pre-FTL command center")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)

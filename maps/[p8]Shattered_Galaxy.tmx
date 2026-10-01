@@ -25,7 +25,7 @@
     <tile id="0">
       <properties>
         <property name="team" value="0" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="1">
@@ -49,7 +49,7 @@
     <tile id="4">
       <properties>
         <property name="team" value="1" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="5">
@@ -73,7 +73,7 @@
     <tile id="8">
       <properties>
         <property name="team" value="2" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="9">
@@ -97,7 +97,7 @@
     <tile id="12">
       <properties>
         <property name="team" value="3" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="13">
@@ -121,7 +121,7 @@
     <tile id="16">
       <properties>
         <property name="team" value="4" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="17">
@@ -145,7 +145,7 @@
     <tile id="20">
       <properties>
         <property name="team" value="5" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="21">
@@ -169,7 +169,7 @@
     <tile id="24">
       <properties>
         <property name="team" value="6" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="25">
@@ -193,7 +193,7 @@
     <tile id="28">
       <properties>
         <property name="team" value="7" />
-        <property name="unit" value="rsFactionPicker" />
+        <property name="unit" value="rsStarbaseOrigin" />
       </properties>
     </tile>
     <tile id="29">
