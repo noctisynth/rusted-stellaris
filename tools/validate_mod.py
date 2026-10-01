@@ -318,6 +318,8 @@ for platform, bridge, action, tech in (
     if platform in UNITS and bridge in UNITS:
         platform_entries = UNITS[platform][1]
         bridge_entries = UNITS[bridge][1]
+        if platform == "rsDefensePlatform" and ("core", "selfRegenRate", "0.10") not in platform_entries:
+            ERRORS.append("defense platform must retain T3 gun turret self repair")
         for key in ("footprint", "constructionFootprint"):
             if ("core", key, "0,0,0,1") not in platform_entries:
                 ERRORS.append(f"{platform} must occupy 1x2")
