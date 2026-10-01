@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import re
+from struct import unpack
 import sys
 
 ROOT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris"
@@ -266,6 +267,23 @@ if "rsPreFtlBuilder" in UNITS:
         ERRORS.append("native builder must convert into an engineer")
 if "rsEngineer" in UNITS and any(s == "core" and k.startswith("builtFrom_") and v == "commandCenter" for s, k, v in UNITS["rsEngineer"][1]):
     ERRORS.append("engineer must only be produced at a starbase or above")
+for sprite_name, world_size in (
+    ("starbase", 64), ("starhold", 96), ("fortress", 96), ("citadel", 96),
+    ("outpost", 48), ("engineer", 32), ("science_ship", 40),
+    ("corvette", 32), ("destroyer", 48), ("cruiser", 64),
+    ("battleship", 80), ("generator", 48), ("mining_station", 48),
+    ("research_station", 48), ("shipyard", 64),
+):
+    path = ROOT / "units" / f"{sprite_name}.png"
+    ini = ROOT / "units" / f"{sprite_name}.ini"
+    if not path.is_file() or not ini.is_file():
+        ERRORS.append(f"missing high-resolution sprite or unit config for {sprite_name}")
+        continue
+    data = path.read_bytes()[:24]
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or min(unpack(">II", data[16:24])) < 500:
+        ERRORS.append(f"{sprite_name}: main sprite must retain high-resolution source detail")
+    if ("graphics", "scaleImagesTo", str(world_size)) not in list(fields(ini)):
+        ERRORS.append(f"{sprite_name}: world size must remain {world_size}")
 for name in ("rsTitan", "rsJuggernaut"):
     if name in UNITS and ("core", "experimental", "true") not in UNITS[name][1]:
         ERRORS.append(f"{name}: fourth-era capital ship must use the native experimental AI category")

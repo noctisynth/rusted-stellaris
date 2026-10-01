@@ -2,6 +2,7 @@
 
 from pathlib import Path
 from math import atan2, hypot, pi
+from shutil import copyfile
 from PIL import Image, ImageDraw, ImageEnhance
 
 OUT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris" / "units"
@@ -497,3 +498,13 @@ if __name__ == "__main__":
     quantum_catapult_stages()
     black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")
+    # Keep high-resolution sources for the main playable silhouettes. The game
+    # sets their world size with scaleImagesTo, avoiding a second enlargement
+    # of tiny exported sprites when the camera is zoomed in.
+    for name in (
+        "starbase", "starhold", "fortress", "citadel", "outpost",
+        "engineer", "science_ship", "corvette", "destroyer", "cruiser",
+        "battleship", "generator", "mining_station", "research_station",
+        "shipyard",
+    ):
+        copyfile(GENERATED / f"{name}-source.png", OUT / f"{name}.png")
