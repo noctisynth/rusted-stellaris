@@ -236,6 +236,11 @@ for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoos
         ERRORS.append(f"missing mining tier {name}")
     elif ("core", "generation_resources", f"credits={credits}, minerals={expected}") not in UNITS[name][1]:
         ERRORS.append(f"{name}: expected credits={credits}, minerals={expected}")
+if "rsCruiserMissile" in UNITS:
+    entries = UNITS["rsCruiserMissile"][1]
+    for expected in (("turret_2", "projectile", "1"), ("projectile_1", "directDamage", "170"), ("projectile_1", "targetSpeed", "7")):
+        if expected not in entries:
+            ERRORS.append(f"missile cruiser must retain its dual fast-missile salvo: {expected}")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
