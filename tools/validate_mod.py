@@ -186,8 +186,24 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
         ERRORS.append(f"{UNITS[name][0].name}: core AI economy needs positive build priority")
-if "rsFoundry" in UNITS and ("action_smelting", "ai_isHighPriority", "true") not in UNITS["rsFoundry"][1]:
-    ERRORS.append("foundry alloy conversion must be available to AI")
+if "rsFoundry" in UNITS:
+    entries = UNITS["rsFoundry"][1]
+    if not any(section == "action_smelting" and key == "autoTrigger" for section, key, _ in entries):
+        ERRORS.append("foundry alloy conversion must be automatic")
+    if ("action_smelting", "addResources", "credits=-1, minerals=-2, alloys=1") not in entries:
+        ERRORS.append("foundry must consume credits and minerals when producing alloys")
+    if ("core", "autoTriggerCooldownTime", "2s") not in entries:
+        ERRORS.append("foundry automatic smelting must run at the designed two-second interval")
+
+for name, expected in (("rsMiningStation", 4), ("rsMiningStationBoosted", 6), ("rsMiningStationT2", 8), ("rsMiningStationT2Boosted", 12), ("rsMiningStationT3", 16), ("rsMiningStationT3Boosted", 24)):
+    if name not in UNITS:
+        ERRORS.append(f"missing mining tier {name}")
+    elif ("core", "generation_resources", f"minerals={expected}") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: expected minerals={expected}")
+if "rsMineralPlant" in UNITS:
+    entries = UNITS["rsMineralPlant"][1]
+    if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
+        ERRORS.append("mineral plant must boost stations without directly producing minerals")
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
