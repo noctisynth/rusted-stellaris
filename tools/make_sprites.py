@@ -501,10 +501,7 @@ if __name__ == "__main__":
     # Keep high-resolution sources for the main playable silhouettes. The game
     # sets their world size with scaleImagesTo, avoiding a second enlargement
     # of tiny exported sprites when the camera is zoomed in.
-    for name in (
-        "starbase", "starhold", "fortress", "citadel", "outpost",
-        "engineer", "science_ship", "corvette", "destroyer", "cruiser",
-        "battleship", "generator", "mining_station", "research_station",
-        "shipyard",
-    ):
-        copyfile(GENERATED / f"{name}-source.png", OUT / f"{name}.png")
+    for source in GENERATED.glob("*-source.png"):
+        target = OUT / f"{source.name.removesuffix('-source.png')}.png"
+        if target.is_file():
+            copyfile(source, target)
