@@ -47,10 +47,12 @@ if RESOURCE_TEMPLATE.is_file():
         for section, _, _ in resource_fields
         if section.startswith("global_resource_")
     }
-    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit"}:
+    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit", "colossusPermit"}:
         ERRORS.append(f"resource template has unexpected resources: {sorted(resources)}")
     if ("global_resource_titanPermit", "hidden", "true") not in resource_fields:
         ERRORS.append("technical titan permit must remain hidden from the resource HUD")
+    if ("global_resource_colossusPermit", "hidden", "true") not in resource_fields:
+        ERRORS.append("technical colossus permit must remain hidden from the resource HUD")
 else:
     ERRORS.append("missing all-units.template")
 
@@ -86,7 +88,10 @@ for name, (path, entries) in UNITS.items():
                 resource = pair.split("=", 1)[0].strip()
                 if resource not in resources | {"credits"}:
                     ERRORS.append(f"{path.name}: unknown resource {resource}")
-        if re.search(r"(?<![A-Za-z_])energy\s*=", value):
+        unit_energy_price = section.startswith("action_") and key == "price" and any(
+            s == "core" and k == "energyMax" for s, k, _ in entries
+        )
+        if re.search(r"(?<![A-Za-z_])energy\s*=", value) and not unit_energy_price:
             ERRORS.append(f"{path.name}: obsolete custom energy reference in [{section}] {key}")
 
 for name, expected in (("rsGenerator", "credits=3"), ("rsGeneratorT2", "credits=9"), ("rsGeneratorT3", "credits=24"), ("rsTradeHub", "credits=5")):
