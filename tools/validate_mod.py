@@ -222,13 +222,16 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
         ERRORS.append(f"{UNITS[name][0].name}: core AI economy needs positive build priority")
-if "rsFoundry" in UNITS:
-    entries = UNITS["rsFoundry"][1]
-    if not any(section == "action_smelting" and key == "autoTrigger" for section, key, _ in entries):
-        ERRORS.append("foundry alloy conversion must be automatic")
-    if ("action_smelting", "addResources", "credits=-1, minerals=-2, alloys=1") not in entries:
-        ERRORS.append("foundry must consume credits and minerals when producing alloys")
-    if ("core", "autoTriggerCooldownTime", "2s") not in entries:
+for name, credits, minerals, alloys in (("rsFoundry", 2, 3, 2), ("rsFoundryT2", 4, 7, 5), ("rsFoundryT3", 8, 14, 10)):
+    if name not in UNITS:
+        ERRORS.append(f"missing foundry tier {name}")
+        continue
+    entries = UNITS[name][1]
+    if ("core", "generation_resources", f"credits=-{credits}, minerals=-{minerals}, alloys={alloys}") not in entries:
+        ERRORS.append(f"{name}: foundry must visibly generate alloys and consume inputs")
+    if ("core", "generation_active", f"if self.resource('minerals') >= {minerals} and self.resource('credits') >= {credits}") not in entries:
+        ERRORS.append(f"{name}: foundry must stop when inputs are insufficient")
+    if name == "rsFoundry" and ("core", "generation_delay", "120") not in entries:
         ERRORS.append("foundry automatic smelting must run at the designed two-second interval")
 
 for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoosted", 8, 6), ("rsMiningStationT2", 12, 8), ("rsMiningStationT2Boosted", 12, 12), ("rsMiningStationT3", 16, 16), ("rsMiningStationT3Boosted", 16, 24)):
