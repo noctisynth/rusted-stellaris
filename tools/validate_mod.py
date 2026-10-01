@@ -292,8 +292,22 @@ if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
 overrides = {(name, v) for name, (_, entries) in UNITS.items() for s, k, v in entries if s == "core" and k == "overrideAndReplace"}
-if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor")}:
-    ERRORS.append(f"native replacements must be command center, builder, and extractor: {overrides}")
+if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor"), ("rsNativeGunT3Bridge", "c_turret_t3_gun"), ("rsNativeSamT3Bridge", "c_antiAirTurretT3")}:
+    ERRORS.append(f"native replacements must include capital, builder, extractor, and T3 towers: {overrides}")
+for platform, bridge, action, tech in (
+    ("rsDefensePlatform", "rsNativeGunT3Bridge", "action_upgradeDefensePlatform", "rsTechDestroyer"),
+    ("rsMissilePlatform", "rsNativeSamT3Bridge", "action_upgradeMissilePlatform", "rsTechMissiles"),
+):
+    if platform in UNITS and bridge in UNITS:
+        platform_entries = UNITS[platform][1]
+        bridge_entries = UNITS[bridge][1]
+        for key in ("footprint", "constructionFootprint"):
+            if ("core", key, "0,0,0,1") not in platform_entries:
+                ERRORS.append(f"{platform} must occupy 1x2")
+        if not any(section == "graphics" and key == "image_turret" for section, key, _ in platform_entries):
+            ERRORS.append(f"{platform} must have a rotating turret sprite")
+        if (action, "convertTo", platform) not in bridge_entries or not any(section == action and key == "isLocked" and tech in value for section, key, value in bridge_entries):
+            ERRORS.append(f"{bridge} must upgrade to {platform} after {tech}")
 if "rsPreFtlCommand" in UNITS:
     entries = UNITS["rsPreFtlCommand"][1]
     if any(s == "core" and k.startswith("canBuild_") and v == "rsEngineer" for s, k, v in entries):
