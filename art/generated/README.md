@@ -24,6 +24,8 @@
 | `mineral_plant-source.png` | `mineral_plant.png` | 48×48 | 四座矿石料仓、中央破碎分选核心 |
 | `foundry-source.png` | `foundry.png` | 48×48 | X 形熔炉、橙色熔融合金核心 |
 | `defense_platform-source.png` | `defense_platform.png` | 48×48 | 四向装甲支架、双管动能炮塔与青色节点 |
+| `repair_base-source.png` | `repair_base.png` | 48×48 | 四向停泊臂、中央纳米维修核心 |
+| `trade_hub-source.png` | `trade_hub.png` | 48×48 | 六向货运泊位、金色交易核心 |
 | `dyson_sphere-source.png` | `dyson_site.png`、`dyson_frame.png`、`dyson_sphere.png` | 96×96 | 中央恒星与逐段展开的集能环 |
 | `matter_decompressor-source.png` | `black_hole.png`、`matter_site.png`、`matter_frame.png`、`matter_decompressor.png` | 96×96 | 黑洞节点与逐段建成的采矿环 |
 | `mega_shipyard-source.png` | `mega_shipyard_site.png`、`mega_shipyard_frame.png`、`mega_shipyard.png` | 96×96 | 六角外环、四向船坞吊臂与中央建造泊位 |
@@ -32,7 +34,7 @@
 
 共同提示词约束：原创科幻设计，严格俯视正投影，主体居中，透明背景；蓝灰色金属装甲、青色能量导管和少量暖金色核心；在游戏小尺寸下有可辨认的外形；无场景、文字、标志或水印。其余几张图使用前一张已生成图作为风格参考，但各自保留不同轮廓。`tools/make_sprites.py` 从源图的非透明区域裁切、等比缩小并居中，同时导出灰暗残骸图；动能护卫舰、动能驱逐舰、导弹巡洋舰和导弹战列舰的变体也基于新图导出。
 
-当前完成表中二十四种主体的原创源图。其他建筑、舰船、阵营外观、炮塔、弹道和音效仍按内容规范继续制作。视觉可读性已在原生贴图尺寸的合成预览中检查；实际对局中的辨识度仍需测试。
+当前完成表中二十六种主体的原创源图。其他建筑、舰船、阵营外观、炮塔、弹道和音效仍按内容规范继续制作。视觉可读性已在原生贴图尺寸的合成预览中检查；实际对局中的辨识度仍需测试。
 
 研究链这两张图由内置 ImageGen 分别生成，透明背景。研究站提示词要求“严格俯视的原创环形轨道研究站，青色中央传感器、四向紧凑实验舱、短天线，蓝灰银金属与少量琥珀灯，缩小到 48×48 后轮廓清晰”。研究所提示词要求“研究站的第二级视觉演进，宽八角科研外环、六向实验与望远镜舱、更明亮的青色观测核心，同样严格俯视与透明背景”。两次均明确排除星球、场景、文字、标志和水印；导出后的原生尺寸并排预览位于测试工作区，不属于交付物。
 
