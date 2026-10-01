@@ -134,6 +134,24 @@ if "rsEngineer" in UNITS:
         ERRORS.append(f"{path.name}: AI must use the engineer as a builder")
     if any(s.startswith("canBuild_") and k == "name" and v == "rsPlanetLab" for s, k, v in entries):
         ERRORS.append("planet lab must upgrade from the research station")
+    if ("action_upgradeArk", "convertTo", "rsArk") not in entries or not any(
+        s == "action_upgradeArk" and k == "isLocked" and "rsTechShields" in v for s, k, v in entries
+    ):
+        ERRORS.append("engineer must upgrade to ark after shield research")
+
+if "rsArk" in UNITS:
+    path, entries = UNITS["rsArk"]
+    if ("core", "copyFrom", "engineer.ini") not in entries:
+        ERRORS.append(f"{path.name}: must inherit the engineer build menu")
+    for expected in (("core", "maxShield", "650"), ("core", "nanoRepairSpeed", "0.65"), ("attack", "canAttackFlyingUnits", "true")):
+        if expected not in entries:
+            ERRORS.append(f"{path.name}: missing ark capability {expected}")
+
+if "rsOutpost" in UNITS:
+    path, entries = UNITS["rsOutpost"]
+    for expected in (("core", "autoRepair", "true"), ("core", "canRepairUnits", "true"), ("core", "maxHp", "2800")):
+        if expected not in entries:
+            ERRORS.append(f"{path.name}: missing frontier support capability {expected}")
 
 for name in ("rsStarbase", "rsStarhold", "rsFortress", "rsCitadel"):
     if name in UNITS:
@@ -435,7 +453,7 @@ if "rsEngineer" in UNITS and any(s == "core" and k.startswith("builtFrom_") and 
     ERRORS.append("engineer must only be produced at a starbase or above")
 for sprite_name, world_size in (
     ("starbase", 64), ("starhold", 96), ("fortress", 96), ("citadel", 96),
-    ("outpost", 48), ("engineer", 32), ("science_ship", 40),
+    ("outpost", 48), ("engineer", 32), ("ark", 40), ("science_ship", 40),
     ("corvette", 32), ("destroyer", 48), ("cruiser", 64),
     ("battleship", 80), ("generator", 48), ("mining_station", 48),
     ("research_station", 48), ("shipyard", 64),

@@ -35,13 +35,13 @@ def save(name, image):
     wreck.save(OUT / f"{name}_dead.png")
 
 
-def source_sprite(name, size):
+def source_sprite(name, size, alpha_bbox_threshold=1):
     """Crop original generated art into a centered game-size canvas."""
     source = GENERATED / f"{name}-source.png"
     if not source.is_file():
         raise FileNotFoundError(f"Missing generated sprite source: {source}")
     original = Image.open(source).convert("RGBA")
-    bbox = original.getchannel("A").getbbox()
+    bbox = original.getchannel("A").point(lambda alpha: 255 if alpha >= alpha_bbox_threshold else 0).getbbox()
     if bbox is None:
         raise ValueError(f"{source} is fully transparent")
     art = original.crop(bbox)
@@ -51,8 +51,8 @@ def source_sprite(name, size):
     return sprite
 
 
-def generated_sprite(name, size):
-    save(name, source_sprite(name, size))
+def generated_sprite(name, size, alpha_bbox_threshold=1):
+    save(name, source_sprite(name, size, alpha_bbox_threshold))
 
 
 def ring_stages(source, names):
@@ -483,6 +483,7 @@ if __name__ == "__main__":
     fortified_starbase("citadel", 3, "#E58CAB")
     for name, size in (("battleship", 80), ("starbase", 64), ("outpost", 48), ("starhold", 96), ("fortress", 96), ("citadel", 96), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("colossus", 96), ("mining_station", 48), ("engineer", 32), ("science_ship", 40), ("juggernaut", 96), ("research_station", 48), ("planet_lab", 48), ("mineral_plant", 48), ("foundry", 48), ("defense_platform", 48), ("repair_base", 48), ("trade_hub", 48), ("missile_platform", 48), ("ion_cannon", 48), ("shield_generator", 48), ("strategic_extractor", 48), ("administration", 48), ("assembly", 48), ("hatchery", 48), ("fleet_academy", 48), ("hyper_relay", 64)):
         generated_sprite(name, size)
+    generated_sprite("ark", 160, alpha_bbox_threshold=16)
     for name, size in (("carrier_cruiser", 64), ("fighter", 32), ("strike_craft", 32)):
         generated_sprite(name, size)
     generator_upgrades()
