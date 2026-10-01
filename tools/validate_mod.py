@@ -231,10 +231,23 @@ if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
 overrides = [name for name, (_, entries) in UNITS.items() if any(s == "core" and k == "overrideAndReplace" and v in {"commandCenter", "builder"} for s, k, v in entries)]
-if overrides != ["rsPreFtlCommand"]:
-    ERRORS.append(f"only pre-FTL command may replace a native unit: {overrides}")
-if "rsEngineer" in UNITS and ("core", "builtFrom_2_name", "commandCenter") not in UNITS["rsEngineer"][1]:
-    ERRORS.append("engineer must be buildable from the pre-FTL command center")
+if set(overrides) != {"rsPreFtlCommand", "rsPreFtlBuilder"}:
+    ERRORS.append(f"only pre-FTL command and builder may replace native units: {overrides}")
+if "rsPreFtlCommand" in UNITS:
+    entries = UNITS["rsPreFtlCommand"][1]
+    if any(s == "core" and k.startswith("canBuild_") and v == "rsEngineer" for s, k, v in entries):
+        ERRORS.append("command center must not produce engineers")
+    if ("action_researchFTL", "addGlobalTeamTags", "rsTechFTL") not in entries:
+        ERRORS.append("command center must research FTL before upgrading")
+    for faction in ("regular", "machine", "hive"):
+        if (f"action_{faction}", "price", "credits=5000, minerals=150") not in entries:
+            ERRORS.append(f"{faction} empire must pay the new entry cost")
+if "rsPreFtlBuilder" in UNITS:
+    entries = UNITS["rsPreFtlBuilder"][1]
+    if ("action_upgradeEngineer", "convertTo", "rsEngineer") not in entries:
+        ERRORS.append("native builder must convert into an engineer")
+if "rsEngineer" in UNITS and any(s == "core" and k.startswith("builtFrom_") and v == "commandCenter" for s, k, v in UNITS["rsEngineer"][1]):
+    ERRORS.append("engineer must only be produced at a starbase or above")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)
