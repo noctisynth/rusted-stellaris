@@ -5,8 +5,7 @@
 
 ## 游戏
 
-- Steam 库：`D:\SteamLibrary`
-- 游戏：`D:\SteamLibrary\steamapps\common\Rusted Warfare`
+- 游戏来源：本机正版 Steam 安装；具体安装目录因贡献者设备而异。
 - Steam App ID：`647960`
 - 安装清单 build ID：`9902063`。现有游戏日志记录的游戏版本为 `1.15`；仍需在游戏界面核对当前启动版本。
 - 内置示例：`assets\builtin_mods\mega_builders`，含 `mod-info.txt`、单位 INI 与贴图。
@@ -14,7 +13,7 @@
 
 ## 已安装创意工坊内容
 
-目录：`D:\SteamLibrary\steamapps\workshop\content\647960`。共发现 11 个订阅目录。其中 `1474414933`（EK - Sylvian Mettle v1.1.1）有 189 个 INI 与大量贴图，适合作为复杂单位组织与配置写法的只读参考；其它大多为地图，可参考 TMX 结构和出生点安排。
+在本机 Steam 创意工坊内容中共发现 11 个订阅模组。其中 `1474414933`（EK - Sylvian Mettle v1.1.1）有 189 个 INI 与大量贴图，适合作为复杂单位组织与配置写法的只读参考；其它大多为地图，可参考 TMX 结构和出生点安排。贡献者不需要安装相同模组才能构建本项目。
 
 ## 使用边界
 
