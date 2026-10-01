@@ -38,6 +38,20 @@ for filename, team_count in EXPECTED.items():
     xml = parse(path).getroot()
     width, height = int(xml.attrib["width"]), int(xml.attrib["height"])
     layers = {layer.attrib["name"]: layer_values(layer, width * height) for layer in xml.findall("layer")}
+    triggers = xml.find("objectgroup")
+    assert triggers is not None
+    for team in range(team_count):
+        detector_id = f"capitalLost{team}"
+        detector = next((obj for obj in triggers.findall("object") if obj.attrib.get("name") == f"Capital lost {team}"), None)
+        surrender = next((obj for obj in triggers.findall("object") if obj.attrib.get("name") == f"Capital surrender {team}"), None)
+        assert detector is not None and surrender is not None
+        assert detector.attrib["type"] == "unitDetect" and surrender.attrib["type"] == "unitRemove"
+        assert detector.attrib["width"] == surrender.attrib["width"] == str(width * 20)
+        assert detector.attrib["height"] == surrender.attrib["height"] == str(height * 20)
+        detector_props = {p.attrib["name"]: p.attrib["value"] for p in detector.findall("./properties/property")}
+        surrender_props = {p.attrib["name"]: p.attrib["value"] for p in surrender.findall("./properties/property")}
+        assert detector_props == {"id": detector_id, "team": str(team), "onlyWithTag": "rsCapital", "maxUnits": "0", "warmup": "1s"}
+        assert surrender_props == {"team": str(team), "activatedBy": detector_id}
     assert set(layers) == {"Ground", "Items", "Units"}
     assert all(gid in (1, 2, 3, 4) for gid in layers["Ground"])
     spawns = []

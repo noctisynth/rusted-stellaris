@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="140" height="140" tilewidth="20" tileheight="20" infinite="0" nextlayerid="4" nextobjectid="2">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="140" height="140" tilewidth="20" tileheight="20" infinite="0" nextlayerid="4" nextobjectid="10">
   <tileset firstgid="1" name="Starfield" tilewidth="20" tileheight="20" tilecount="4" columns="4">
     <properties>
       <property name="embedded_png" value="iVBORw0KGgoAAAANSUhEUgAAAFAAAAAUCAYAAAAa2LrXAAAAnUlEQVR4nGPk4FP4z0BFwMohQE3jGFjYOKhq3o8/X6hqHhNVTRuBYDQAKQSjAUghGA1ACsFoAFIIRgNwqASgY2gO1c209U+hupmuwQUkqWccbQdSBkazMIVgNABJABUNE0dWABbUtFLVvI6G/MEdgCVNvVQ1b0JLNQOtwWglQiEYVClwKILRAKQQjAYghWA0ACkEowFIIRgNQAbKAADL1ReHcyYXvgAAAABJRU5ErkJggg==" />
@@ -210,17 +210,17 @@
   </tileset>
   <layer id="1" name="Ground" width="140" height="140">
     <data encoding="base64" compression="gzip">
-   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
+   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
   </data>
   </layer>
   <layer id="2" name="Items" width="140" height="140">
     <data encoding="base64" compression="gzip">
-   H4sIANlkvWoC/+3bsQ0AMAgDMBZe6f8n9glEQbX3LGSLRAQAAAAAAAAAwH7ZnEMXAAAAAEANm6IuAAAAAAAAAAAAAAAAAAAAAABgguMEAAAAAAAAX8nHeQAAAAAAAHbxfwQAAAAAAAAAAAAAAAAAAAAATJTNOXQBAAAAANSwKeoCAAAAAAAAAGCKC669OlJAMgEA
+   H4sIAOzHvWoC/+3bsQ0AMAgDMBZe6f8n9glEQbX3LGSLRAQAAAAAAAAAwH7ZnEMXAAAAAEANm6IuAAAAAAAAAAAAAAAAAAAAAABgguMEAAAAAAAAX8nHeQAAAAAAAHbxfwQAAAAAAAAAAAAAAAAAAAAATJTNOXQBAAAAANSwKeoCAAAAAAAAAGCKC669OlJAMgEA
   </data>
   </layer>
   <layer id="3" name="Units" width="140" height="140">
     <data encoding="base64" compression="gzip">
-   H4sIANlkvWoC/+3cNw7DMAwFUE/pvZwhdUly/7tFqydNYUThPYADJ1HfMMDFHgYAAAAAAAAAAADgV+aVnjjrSg9ZTUpNO7jHO/n8y1KLBHPOvDLNWNlfsL8AAAAAAAAAAAAA0KGHCAAAAABGXuYDAAAASOUiAgAAAAAAgKbdgs+7Bp9394gBAAAAAACa5vsjAAAAgDH/3wUAAADI5SkCAAAAAAAAAAAAINi+0hPnXOkhq02prRj+7ljqkGDOXSd5fzq4w8n+gv0FAAAAAAAAAAAAmvMF1AhfjUAyAQA=
+   H4sIAOzHvWoC/+3cNw7DMAwFUE/pvZwhdUly/7tFqydNYUThPYADJ1HfMMDFHgYAAAAAAAAAAADgV+aVnjjrSg9ZTUpNO7jHO/n8y1KLBHPOvDLNWNlfsL8AAAAAAAAAAAAA0KGHCAAAAABGXuYDAAAASOUiAgAAAAAAgKbdgs+7Bp9394gBAAAAAACa5vsjAAAAgDH/3wUAAADI5SkCAAAAAAAAAAAAINi+0hPnXOkhq02prRj+7ljqkGDOXSd5fzq4w8n+gv0FAAAAAAAAAAAAmvMF1AhfjUAyAQA=
   </data>
   </layer>
   <objectgroup id="4" name="Triggers" visible="0">
@@ -228,6 +228,66 @@
       <properties>
         <property name="fog" value="map" />
         <property name="type" value="Skirmish" />
+      </properties>
+    </object>
+    <object id="2" name="Capital lost 0" type="unitDetect" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="id" value="capitalLost0" />
+        <property name="team" value="0" />
+        <property name="onlyWithTag" value="rsCapital" />
+        <property name="maxUnits" value="0" />
+        <property name="warmup" value="1s" />
+      </properties>
+    </object>
+    <object id="3" name="Capital surrender 0" type="unitRemove" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="team" value="0" />
+        <property name="activatedBy" value="capitalLost0" />
+      </properties>
+    </object>
+    <object id="4" name="Capital lost 1" type="unitDetect" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="id" value="capitalLost1" />
+        <property name="team" value="1" />
+        <property name="onlyWithTag" value="rsCapital" />
+        <property name="maxUnits" value="0" />
+        <property name="warmup" value="1s" />
+      </properties>
+    </object>
+    <object id="5" name="Capital surrender 1" type="unitRemove" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="team" value="1" />
+        <property name="activatedBy" value="capitalLost1" />
+      </properties>
+    </object>
+    <object id="6" name="Capital lost 2" type="unitDetect" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="id" value="capitalLost2" />
+        <property name="team" value="2" />
+        <property name="onlyWithTag" value="rsCapital" />
+        <property name="maxUnits" value="0" />
+        <property name="warmup" value="1s" />
+      </properties>
+    </object>
+    <object id="7" name="Capital surrender 2" type="unitRemove" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="team" value="2" />
+        <property name="activatedBy" value="capitalLost2" />
+      </properties>
+    </object>
+    <object id="8" name="Capital lost 3" type="unitDetect" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="id" value="capitalLost3" />
+        <property name="team" value="3" />
+        <property name="onlyWithTag" value="rsCapital" />
+        <property name="maxUnits" value="0" />
+        <property name="warmup" value="1s" />
+      </properties>
+    </object>
+    <object id="9" name="Capital surrender 3" type="unitRemove" x="0" y="0" width="2800" height="2800">
+      <properties>
+        <property name="team" value="3" />
+        <property name="activatedBy" value="capitalLost3" />
       </properties>
     </object>
   </objectgroup>

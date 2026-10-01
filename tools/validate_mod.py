@@ -56,6 +56,11 @@ if RESOURCE_TEMPLATE.is_file():
 else:
     ERRORS.append("missing all-units.template")
 
+for filename in ("faction_picker.ini", "starbase.ini", "_starbase_tier_common.ini"):
+    path = ROOT / "units" / filename
+    if ("core", "tags", "rsCapital") not in list(fields(path)):
+        ERRORS.append(f"{filename}: capital unit chain must retain rsCapital tag")
+
 for name, (path, entries) in UNITS.items():
     sections = {s for s, _, _ in entries}
     action_ids = [s.split("_", 1)[1] for s in sections if s.startswith(("action_", "hiddenAction_"))]
