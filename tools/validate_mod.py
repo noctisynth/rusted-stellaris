@@ -199,6 +199,24 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
         entries = UNITS[name][1]
         if ("core", "tags", "rsQuantumFleet") not in entries or ("hiddenAction_receiveQuantumLaunch", "teleportTo", "eventData('exit', type='unit')") not in entries:
             ERRORS.append(f"{name} must receive quantum launch messages")
+    catapult = UNITS["rsQuantumCatapult"][1]
+    if not any(s == "hiddenAction_aiEconomicRaid" and k == "autoTrigger" and "self.isControlledByAI" in v and "rsRaidFleet" in v and "rsEconomicTarget" in v for s, k, v in catapult):
+        ERRORS.append("AI catapult raid must require AI control, an assembled advanced fleet, and an enemy economy target")
+    if ("hiddenAction_sendRaidFleet", "sendMessageWithTags", "rsQuantumRaid") not in catapult:
+        ERRORS.append("AI catapult raid must notify selected ships")
+    if ("hiddenAction_receiveQuantumRaid", "teleportTo", "eventData('target', type='unit')") not in UNITS["rsDestroyer"][1]:
+        ERRORS.append("raid fleet must teleport to the enemy economy target")
+    if ("hiddenAction_raidEconomicTarget", "addWaypoint_type", "attack") not in UNITS["rsDestroyer"][1]:
+        ERRORS.append("raid fleet must attack an economy target after arrival")
+    for name in ("rsGenerator", "rsGeneratorT2", "rsGeneratorT3", "rsResearchStation", "rsPlanetLab", "rsFoundry", "rsTradeHub"):
+        if name in UNITS and ("core", "tags", "rsEconomicTarget") not in UNITS[name][1]:
+            ERRORS.append(f"{name} must be a strategic economy target")
+    for name, section in (("rsQuantumCatapultSite", "action_buildQuantumCatapultFrame"), ("rsQuantumCatapultFrame", "action_completeQuantumCatapult")):
+        if (section, "ai_isHighPriority", "true") not in UNITS[name][1]:
+            ERRORS.append(f"{name} must be able to progress its construction under AI control")
+    for name in ("rsResearchStation", "rsPlanetLab"):
+        if name in UNITS and ("action_researchQuantumCatapult", "ai_isHighPriority", "true") not in UNITS[name][1]:
+            ERRORS.append(f"{name} must prioritize catapult research for AI")
 
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):
