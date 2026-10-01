@@ -316,8 +316,8 @@ for sprite_name, world_size in (
         ERRORS.append(f"missing high-resolution sprite or unit config for {sprite_name}")
         continue
     data = path.read_bytes()[:24]
-    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or min(unpack(">II", data[16:24])) < 500:
-        ERRORS.append(f"{sprite_name}: main sprite must retain high-resolution source detail")
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or not 3 * world_size <= min(unpack(">II", data[16:24])) <= 384:
+        ERRORS.append(f"{sprite_name}: playable sprite must retain zoom detail within the texture budget")
     if ("graphics", "scaleImagesTo", str(world_size)) not in list(fields(ini)):
         ERRORS.append(f"{sprite_name}: world size must remain {world_size}")
 for source in (ROOT.parent.parent / "art" / "generated").glob("*-source.png"):
@@ -327,20 +327,15 @@ for source in (ROOT.parent.parent / "art" / "generated").glob("*-source.png"):
     if not sprite.is_file() or not ini.is_file():
         continue
     data = sprite.read_bytes()[:24]
-    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or min(unpack(">II", data[16:24])) < 500:
-        ERRORS.append(f"{name}: generated source must remain high resolution in the playable sprite")
-    if not any(s == "graphics" and k == "scaleImagesTo" for s, k, _ in fields(ini)):
+    scale = next((int(v) for s, k, v in fields(ini) if s == "graphics" and k == "scaleImagesTo"), None)
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or scale is None or not 3 * scale <= min(unpack(">II", data[16:24])) <= 384:
+        ERRORS.append(f"{name}: generated playable sprite must keep zoom detail within the texture budget")
+    if scale is None:
         ERRORS.append(f"{name}: source sprite requires a fixed world size")
-high_res = set()
 for sprite in (ROOT / "units").glob("*.png"):
     data = sprite.read_bytes()[:24]
-    if len(data) >= 24 and data[:8] == b"\x89PNG\r\n\x1a\n" and min(unpack(">II", data[16:24])) >= 500:
-        high_res.add(sprite.name)
-for ini in FILES:
-    entries = list(fields(ini))
-    if any(s == "graphics" and k == "image" and v in high_res for s, k, v in entries):
-        if not any(s == "graphics" and k == "scaleImagesTo" for s, k, _ in entries):
-            ERRORS.append(f"{ini.name}: high-resolution image needs explicit world size")
+    if len(data) >= 24 and data[:8] == b"\x89PNG\r\n\x1a\n" and max(unpack(">II", data[16:24])) > 384:
+        ERRORS.append(f"{sprite.name}: game sprite exceeds 384px texture budget")
 for name in ("rsTitan", "rsJuggernaut"):
     if name in UNITS and ("core", "experimental", "true") not in UNITS[name][1]:
         ERRORS.append(f"{name}: fourth-era capital ship must use the native experimental AI category")

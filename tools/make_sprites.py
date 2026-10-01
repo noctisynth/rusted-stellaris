@@ -2,7 +2,6 @@
 
 from pathlib import Path
 from math import atan2, hypot, pi
-from shutil import copyfile
 from PIL import Image, ImageDraw, ImageEnhance
 
 OUT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris" / "units"
@@ -498,10 +497,29 @@ if __name__ == "__main__":
     quantum_catapult_stages()
     black_hole_sprite()
     Image.new("RGBA", (20, 20), (0, 0, 0, 0)).save(OUT / "rare_deposit.png")
-    # Keep high-resolution sources for the main playable silhouettes. The game
-    # sets their world size with scaleImagesTo, avoiding a second enlargement
-    # of tiny exported sprites when the camera is zoomed in.
+    # Keep the original generated art in art/generated, but export bounded
+    # game textures. The renderer buffers the full source image even when
+    # scaleImagesTo draws it at 32-96 px, so 1k+ source PNGs can exhaust the
+    # game's image backing store during a large mod load.
     for source in GENERATED.glob("*-source.png"):
-        target = OUT / f"{source.name.removesuffix('-source.png')}.png"
+        name = source.name.removesuffix("-source.png")
+        target = OUT / f"{name}.png"
         if target.is_file():
-            copyfile(source, target)
+            unit_config = OUT / f"{name}.ini"
+            if not unit_config.is_file():
+                unit_config = next(
+                    (path for path in OUT.glob("*.ini") if f"image: {name}.png" in path.read_text(encoding="utf-8")),
+                    None,
+                )
+            if unit_config is None:
+                raise FileNotFoundError(f"Missing unit config for generated sprite: {name}")
+            display_size = next((
+                int(line.partition(":")[2].strip())
+                for line in unit_config.read_text(encoding="utf-8").splitlines()
+                if line.strip().startswith("scaleImagesTo:")
+            ), None)
+            if display_size is None:
+                with Image.open(target) as current:
+                    display_size = max(current.size)
+            export_size = min(384, display_size * 4)
+            source_sprite(name, export_size).save(target, optimize=True)
