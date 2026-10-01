@@ -188,7 +188,18 @@ if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS[
 for name in ("rsResearchStation", "rsPlanetLab"):
     if name in UNITS:
         research_prices = {s: v for s, k, v in UNITS[name][1] if s.startswith("action_research") and k == "price"}
-        if len(research_prices) != 20 or research_prices.get("action_researchDestroyer") != "science=120, minerals=60" or not research_prices.get("action_researchColossus", "").startswith("science=1400,"):
+        research_science_costs = {
+            "Destroyer": 600, "Cruiser": 2500, "Kinetics": 900, "Missiles": 3000,
+            "Battleship": 5500, "Carrier": 3600, "Starhold": 1400, "Fortress": 4000,
+            "Citadel": 8000, "Shields": 1800, "IonCannon": 6500, "Titan": 13000,
+            "Juggernaut": 16000, "Colossus": 22000, "Dyson": 14000,
+            "Matter": 15000, "MegaShipyard": 16000, "ScienceNexus": 15000,
+            "QuantumCatapult": 18000, "HyperRelay": 2400,
+        }
+        if len(research_prices) != len(research_science_costs) or any(
+            not research_prices.get(f"action_research{action}", "").startswith(f"science={cost},")
+            for action, cost in research_science_costs.items()
+        ):
             ERRORS.append(f"{name}: research reprice incomplete")
 
 if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "rsScienceNexus")):
