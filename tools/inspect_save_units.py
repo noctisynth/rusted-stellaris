@@ -66,6 +66,16 @@ def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int |
         rb"\xff\xfe\x00\x00(?:\x3f\x80\x00\x00|\x00\x00\x00\x00)", raw[start:]
     ))
     if len(markers) != custom_count:
+        # Some unit payloads contain the coordinate signature again within a
+        # record. Genuine records in the observed 1.15 saves start >=400 bytes
+        # apart; discard an inner signature only when it resolves the count.
+        filtered = []
+        for marker in markers:
+            if not filtered or marker.start() - filtered[-1].start() >= 400:
+                filtered.append(marker)
+        if len(filtered) == custom_count:
+            markers = filtered
+    if len(markers) != custom_count:
         raise ValueError(f"expected {custom_count} custom coordinate records, found {len(markers)}")
     result = []
     for marker in markers:
