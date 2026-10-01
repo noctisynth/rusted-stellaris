@@ -81,7 +81,7 @@ for name, (path, entries) in UNITS.items():
                     ERRORS.append(f"{path.name}: unknown unit {target}")
         if section.startswith("canBuild_") and key == "name" and value.startswith("rs") and value not in UNITS:
             ERRORS.append(f"{path.name}: unknown unit {value}")
-        if section.startswith("action_") and key == "convertTo" and value.startswith("rs") and value not in UNITS:
+        if (section.startswith("action_") or section.startswith("hiddenAction_")) and key == "convertTo" and value.startswith("rs") and value not in UNITS:
             ERRORS.append(f"{path.name}: unknown conversion target {value}")
         if section == "core" and key in ("price", "generation_resources") and "=" in value:
             for pair in value.split(","):
