@@ -58,6 +58,9 @@ else:
 
 for name, (path, entries) in UNITS.items():
     sections = {s for s, _, _ in entries}
+    action_ids = [s.split("_", 1)[1] for s in sections if s.startswith(("action_", "hiddenAction_"))]
+    if len(action_ids) != len(set(action_ids)):
+        ERRORS.append(f"{path.name}: visible and hidden actions share an ID")
     inherited = [v for s, k, v in entries if s == "core" and k == "copyFrom"]
     for parent in inherited:
         if not (path.parent / parent).is_file():

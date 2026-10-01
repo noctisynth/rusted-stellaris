@@ -481,7 +481,7 @@ if __name__ == "__main__":
     fortified_starbase("starhold", 1, "#69B8E0")
     fortified_starbase("fortress", 2, "#F2C979")
     fortified_starbase("citadel", 3, "#E58CAB")
-    for name, size in (("battleship", 80), ("starbase", 64), ("outpost", 48), ("starhold", 96), ("fortress", 96), ("citadel", 96), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("colossus", 96), ("mining_station", 48), ("engineer", 32), ("research_station", 48), ("planet_lab", 48), ("mineral_plant", 48), ("foundry", 48), ("defense_platform", 48), ("repair_base", 48), ("trade_hub", 48), ("missile_platform", 48), ("ion_cannon", 48), ("shield_generator", 48), ("strategic_extractor", 48), ("administration", 48), ("assembly", 48), ("hatchery", 48), ("fleet_academy", 48)):
+    for name, size in (("battleship", 80), ("starbase", 64), ("outpost", 48), ("starhold", 96), ("fortress", 96), ("citadel", 96), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("colossus", 96), ("mining_station", 48), ("engineer", 32), ("research_station", 48), ("planet_lab", 48), ("mineral_plant", 48), ("foundry", 48), ("defense_platform", 48), ("repair_base", 48), ("trade_hub", 48), ("missile_platform", 48), ("ion_cannon", 48), ("shield_generator", 48), ("strategic_extractor", 48), ("administration", 48), ("assembly", 48), ("hatchery", 48), ("fleet_academy", 48), ("hyper_relay", 64)):
         generated_sprite(name, size)
     generator_upgrades()
     weapon_variant("corvette", "corvette_kinetic", "#F2C979", [(5, 15, 7, 4), (20, 15, 7, 4)])

@@ -34,6 +34,7 @@
 | `assembly-source.png` | `assembly.png` | 48×48 | 机械装配臂、橙色合成核心与工业平台 |
 | `hatchery-source.png` | `hatchery.png` | 48×48 | 六瓣有机孵化舱、翡翠色中央囊体 |
 | `fleet_academy-source.png` | `fleet_academy.png` | 48×48 | 舰队模拟训练大厅与四向训练泊位 |
+| `hyper_relay-source.png` | `hyper_relay.png` | 64×64 | 蓝灰环形中继框架与青色跃迁核心 |
 | `dyson_sphere-source.png` | `dyson_site.png`、`dyson_frame.png`、`dyson_sphere.png` | 96×96 | 中央恒星与逐段展开的集能环 |
 | `matter_decompressor-source.png` | `black_hole.png`、`matter_site.png`、`matter_frame.png`、`matter_decompressor.png` | 96×96 | 黑洞节点与逐段建成的采矿环 |
 | `mega_shipyard-source.png` | `mega_shipyard_site.png`、`mega_shipyard_frame.png`、`mega_shipyard.png` | 96×96 | 六角外环、四向船坞吊臂与中央建造泊位 |
