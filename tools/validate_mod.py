@@ -216,8 +216,8 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
         if (section, "ai_isHighPriority", "true") not in UNITS[name][1]:
             ERRORS.append(f"{name} must be able to progress its construction under AI control")
     for name in ("rsResearchStation", "rsPlanetLab"):
-        if name in UNITS and ("action_researchQuantumCatapult", "ai_isHighPriority", "true") not in UNITS[name][1]:
-            ERRORS.append(f"{name} must prioritize catapult research for AI")
+        if name in UNITS and ("action_researchQuantumCatapult", "ai_isHighPriority", "if self.resource('rsAiHandicap') >= 1.8") not in UNITS[name][1]:
+            ERRORS.append(f"{name} must prioritize catapult research for high-difficulty AI")
 
 for name in ("rsGenerator", "rsMiningStation", "rsResearchStation", "rsShipyard", "rsFoundry"):
     if name in UNITS and not any(s == "ai" and k == "buildPriority" and float(v) > 0 for s, k, v in UNITS[name][1]):

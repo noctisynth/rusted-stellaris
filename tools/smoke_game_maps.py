@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 from pathlib import Path
 from subprocess import CREATE_NO_WINDOW, Popen, TimeoutExpired
 from time import monotonic, sleep
+import re
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,12 @@ MAPS = (
 
 
 def check_map(game_dir: Path, name: str, width: int, height: int, count: int, timeout: float) -> None:
+    preferences = game_dir / "preferences.ini"
+    if preferences.is_file():
+        settings = preferences.read_text(encoding="utf-8")
+        settings = re.sub(r"numIncompleteLoadAttempts:\d+", "numIncompleteLoadAttempts:0", settings)
+        settings = re.sub(r"numLoadsSinceRunningGameOrNormalExit:\d+", "numLoadsSinceRunningGameOrNormalExit:0", settings)
+        preferences.write_text(settings, encoding="utf-8")
     stem = name.removesuffix(".tmx").replace("[", "").replace("]", "")
     script = WORK / f"smoke-{stem}.debug"
     stdout = WORK / f"smoke-{stem}.stdout.log"

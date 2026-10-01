@@ -35,3 +35,12 @@ hidden: true
 [global_resource_colossusPermit]
 displayName: 巨像建造许可
 hidden: true
+
+[resource_rsAiHandicap]
+displayName: AI 难度倍率
+hidden: true
+
+[hiddenAction_captureAiHandicap]
+autoTriggerOnEvent: created
+requireConditional: if self.isControlledByAI() and self.resource('rsAiHandicap') == 0
+addResourcesScaledByAIHandicaps: rsAiHandicap=1
