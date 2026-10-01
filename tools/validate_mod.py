@@ -234,6 +234,20 @@ for name, credits, minerals, alloys in (("rsFoundry", 2, 3, 2), ("rsFoundryT2", 
     if name == "rsFoundry" and ("core", "generation_delay", "120") not in entries:
         ERRORS.append("foundry automatic smelting must run at the designed two-second interval")
 
+for source, target, action in (("rsCruiser", "rsCruiserT2", "action_upgradeCruiserT2"), ("rsCruiserMissile", "rsCruiserMissileT2", "action_upgradeCruiserT2"), ("rsCarrierCruiser", "rsCarrierCruiserT2", "action_upgradeCruiserT2"), ("rsBattleship", "rsBattleshipT2", "action_upgradeBattleshipT2"), ("rsMissileBattleship", "rsMissileBattleshipT2", "action_upgradeBattleshipT2")):
+    if source not in UNITS or target not in UNITS:
+        ERRORS.append(f"missing T2 ship path: {source} -> {target}")
+        continue
+    if (action, "convertTo", target) not in UNITS[source][1]:
+        ERRORS.append(f"{source}: missing T2 conversion")
+    entries = UNITS[target][1]
+    if not any(s == "core" and k == "maxShield" and int(v) > 0 for s, k, v in entries):
+        ERRORS.append(f"{target}: missing T2 shield")
+    if not any(s == "core" and k == "selfRegenRate" and float(v) > 0 for s, k, v in entries):
+        ERRORS.append(f"{target}: missing T2 hull repair")
+    if "Battleship" in target and not any(s == "turret_laserDefence" and k == "laserDefenceEnergyUse" for s, k, v in entries):
+        ERRORS.append(f"{target}: missing visible native laser defence")
+
 for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoosted", 8, 6), ("rsMiningStationT2", 12, 8), ("rsMiningStationT2Boosted", 12, 12), ("rsMiningStationT3", 16, 16), ("rsMiningStationT3Boosted", 16, 24)):
     if name not in UNITS:
         ERRORS.append(f"missing mining tier {name}")
