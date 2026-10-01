@@ -294,6 +294,23 @@ if not (ROOT / "mod-info.txt").is_file():
 overrides = {(name, v) for name, (_, entries) in UNITS.items() for s, k, v in entries if s == "core" and k == "overrideAndReplace"}
 if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor"), ("rsNativeGunT3Bridge", "c_turret_t3_gun"), ("rsNativeSamT3Bridge", "c_antiAirTurretT3")}:
     ERRORS.append(f"native replacements must include capital, builder, extractor, and T3 towers: {overrides}")
+for tier, target, minerals in (
+    ("rsMiningStationT3", "rsDeepMiningStation", 16),
+    ("rsMiningStationT3Boosted", "rsDeepMiningStationBoosted", 24),
+):
+    if tier in UNITS and target in UNITS:
+        upgrade = UNITS[tier][1]
+        deep = UNITS[target][1]
+        if ("action_upgradeDeepMining", "convertTo", target) not in upgrade:
+            ERRORS.append(f"{tier} must upgrade to {target}")
+        if not any(section == "action_upgradeDeepMining" and key == "isLocked" and "rsTechCruiser" in value and "rsRareDeposit" not in value for section, key, value in upgrade):
+            ERRORS.append(f"{tier} must require cruiser technology and allow ordinary deposits on every map")
+        if ("core", "generation_resources", f"credits=16, minerals={minerals}, strategic=0.25") not in deep:
+            ERRORS.append(f"{target} must preserve mining and add a small strategic byproduct")
+if "rsDeepMiningStation" in UNITS and ("hiddenAction_applyProcessingBonus", "convertTo", "rsDeepMiningStationBoosted") not in UNITS["rsDeepMiningStation"][1]:
+    ERRORS.append("deep mining station must react to mineral processing")
+if "rsDeepMiningStationBoosted" in UNITS and ("hiddenAction_removeProcessingBonus", "convertTo", "rsDeepMiningStation") not in UNITS["rsDeepMiningStationBoosted"][1]:
+    ERRORS.append("boosted deep mining station must revert after processing ends")
 for platform, bridge, action, tech in (
     ("rsDefensePlatform", "rsNativeGunT3Bridge", "action_upgradeDefensePlatform", "rsTechDestroyer"),
     ("rsMissilePlatform", "rsNativeSamT3Bridge", "action_upgradeMissilePlatform", "rsTechMissiles"),
@@ -304,6 +321,8 @@ for platform, bridge, action, tech in (
         for key in ("footprint", "constructionFootprint"):
             if ("core", key, "0,0,0,1") not in platform_entries:
                 ERRORS.append(f"{platform} must occupy 1x2")
+        if ("core", "displayFootprint", "0,0,1,1") not in platform_entries:
+            ERRORS.append(f"{platform} selection frame must match native 2x2 towers")
         if not any(section == "graphics" and key == "image_turret" for section, key, _ in platform_entries):
             ERRORS.append(f"{platform} must have a rotating turret sprite")
         if (action, "convertTo", platform) not in bridge_entries or not any(section == action and key == "isLocked" and tech in value for section, key, value in bridge_entries):
