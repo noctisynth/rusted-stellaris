@@ -241,6 +241,12 @@ if "rsCruiserMissile" in UNITS:
     for expected in (("turret_2", "projectile", "1"), ("projectile_1", "directDamage", "170"), ("projectile_1", "targetSpeed", "7")):
         if expected not in entries:
             ERRORS.append(f"missile cruiser must retain its dual fast-missile salvo: {expected}")
+for name, life, resistance in (("rsCruiserMissile", "300", "6"), ("rsMissileBattleship", "360", "10")):
+    if name in UNITS:
+        entries = UNITS[name][1]
+        for expected in (("projectile_1", "life", life), ("projectile_1", "deflectionPower", resistance), ("projectile_1", "autoTargetingOnDeadTarget", "true")):
+            if expected not in entries:
+                ERRORS.append(f"{name}: heavy missile flight or interception behavior regressed: {expected}")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
