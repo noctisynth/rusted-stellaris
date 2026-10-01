@@ -248,6 +248,9 @@ if "rsPreFtlBuilder" in UNITS:
         ERRORS.append("native builder must convert into an engineer")
 if "rsEngineer" in UNITS and any(s == "core" and k.startswith("builtFrom_") and v == "commandCenter" for s, k, v in UNITS["rsEngineer"][1]):
     ERRORS.append("engineer must only be produced at a starbase or above")
+for name in ("rsTitan", "rsJuggernaut"):
+    if name in UNITS and ("core", "experimental", "true") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: fourth-era capital ship must use the native experimental AI category")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)
