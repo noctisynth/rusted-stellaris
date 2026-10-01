@@ -185,6 +185,21 @@ if "rsJuggernautVeteran" in UNITS and not any(s == "core" and k == "tags" and "r
     ERRORS.append("veteran juggernaut must retain unit cap tag")
 if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS["rsMegaShipyard"][1]:
     ERRORS.append("mega shipyard must build at double factory speed")
+if "rsColossus" in UNITS:
+    colossus = UNITS["rsColossus"][1]
+    for required in (
+        ("action_neutronGround", "fireTurretXAtGround", "5"),
+        ("projectile_5", "buildingDamageMultiplier", "0"),
+        ("projectile_5", "spawnUnit", "rsNeutronPulse"),
+    ):
+        if required not in colossus:
+            ERRORS.append(f"ordinary-map Neutron Sweep missing {required}")
+    if not any(s == "action_neutronGround" and k == "isVisible" and "rsRareDeposit" in v and "== null" in v for s, k, v in colossus):
+        ERRORS.append("ordinary-map Neutron Sweep must be hidden on dedicated planet maps")
+if "rsNeutronPulse" in UNITS:
+    neutron_pulse = UNITS["rsNeutronPulse"][1]
+    if ("core", "createNeutral", "true") not in neutron_pulse or ("projectile_1", "convertHitToSourceTeam", "true") not in neutron_pulse:
+        ERRORS.append("Neutron Sweep pulse must neutralize surviving buildings")
 for name in ("rsResearchStation", "rsPlanetLab"):
     if name in UNITS:
         research_prices = {s: v for s, k, v in UNITS[name][1] if s.startswith("action_research") and k == "price"}
