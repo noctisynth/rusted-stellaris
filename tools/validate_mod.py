@@ -231,11 +231,11 @@ if "rsFoundry" in UNITS:
     if ("core", "autoTriggerCooldownTime", "2s") not in entries:
         ERRORS.append("foundry automatic smelting must run at the designed two-second interval")
 
-for name, expected in (("rsMiningStation", 4), ("rsMiningStationBoosted", 6), ("rsMiningStationT2", 8), ("rsMiningStationT2Boosted", 12), ("rsMiningStationT3", 16), ("rsMiningStationT3Boosted", 24)):
+for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoosted", 8, 6), ("rsMiningStationT2", 12, 8), ("rsMiningStationT2Boosted", 12, 12), ("rsMiningStationT3", 16, 16), ("rsMiningStationT3Boosted", 16, 24)):
     if name not in UNITS:
         ERRORS.append(f"missing mining tier {name}")
-    elif ("core", "generation_resources", f"minerals={expected}") not in UNITS[name][1]:
-        ERRORS.append(f"{name}: expected minerals={expected}")
+    elif ("core", "generation_resources", f"credits={credits}, minerals={expected}") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: expected credits={credits}, minerals={expected}")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
@@ -249,9 +249,9 @@ if "rsEngineer" in UNITS and not any(
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
-overrides = [name for name, (_, entries) in UNITS.items() if any(s == "core" and k == "overrideAndReplace" and v in {"commandCenter", "builder"} for s, k, v in entries)]
-if set(overrides) != {"rsPreFtlCommand", "rsPreFtlBuilder"}:
-    ERRORS.append(f"only pre-FTL command and builder may replace native units: {overrides}")
+overrides = {(name, v) for name, (_, entries) in UNITS.items() for s, k, v in entries if s == "core" and k == "overrideAndReplace"}
+if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor")}:
+    ERRORS.append(f"native replacements must be command center, builder, and extractor: {overrides}")
 if "rsPreFtlCommand" in UNITS:
     entries = UNITS["rsPreFtlCommand"][1]
     if any(s == "core" and k.startswith("canBuild_") and v == "rsEngineer" for s, k, v in entries):
@@ -265,6 +265,14 @@ if "rsPreFtlBuilder" in UNITS:
     entries = UNITS["rsPreFtlBuilder"][1]
     if ("action_upgradeEngineer", "convertTo", "rsEngineer") not in entries:
         ERRORS.append("native builder must convert into an engineer")
+    if ("core", "canBuild_1_name", "extractor") not in entries:
+        ERRORS.append("pre-FTL builder must retain the native extractor menu entry")
+if "rsPreFtlMine" not in UNITS:
+    ERRORS.append("missing pre-FTL extractor replacement")
+else:
+    entries = UNITS["rsPreFtlMine"][1]
+    if ("core", "generation_resources", "credits=8, minerals=2") not in entries or ("action_upgradeMining", "convertTo", "rsMiningStation") not in entries:
+        ERRORS.append("pre-FTL extractor must generate credits and minerals and upgrade into a mining station")
 if "rsEngineer" in UNITS and any(s == "core" and k.startswith("builtFrom_") and v == "commandCenter" for s, k, v in UNITS["rsEngineer"][1]):
     ERRORS.append("engineer must only be produced at a starbase or above")
 for sprite_name, world_size in (
