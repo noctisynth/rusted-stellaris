@@ -102,12 +102,17 @@ for name, (path, entries) in UNITS.items():
         if re.search(r"(?<![A-Za-z_])energy\s*=", value) and not unit_energy_price:
             ERRORS.append(f"{path.name}: obsolete custom energy reference in [{section}] {key}")
 
-for name, expected in (("rsGenerator", "credits=3"), ("rsGeneratorT2", "credits=9"), ("rsGeneratorT3", "credits=24"), ("rsTradeHub", "credits=5")):
+for name, expected in (("rsGenerator", "credits=12"), ("rsGeneratorT2", "credits=24"), ("rsGeneratorT3", "credits=48"), ("rsTradeHub", "credits=16")):
     if name in UNITS:
         path, entries = UNITS[name]
         production = [v for s, k, v in entries if s == "core" and k == "generation_resources"]
         if production != [expected]:
             ERRORS.append(f"{path.name}: expected native energy-credit production {expected}, got {production}")
+
+if "rsFactionPicker" in UNITS:
+    path, entries = UNITS["rsFactionPicker"]
+    if ("core", "price", "2000") not in entries:
+        ERRORS.append(f"{path.name}: expected affordable native-map entry price of 2000 credits")
 
 if "rsEngineer" in UNITS:
     path, entries = UNITS["rsEngineer"]
