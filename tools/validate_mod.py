@@ -143,13 +143,15 @@ if "rsArk" in UNITS:
     path, entries = UNITS["rsArk"]
     if ("core", "copyFrom", "engineer.ini") not in entries:
         ERRORS.append(f"{path.name}: must inherit the engineer build menu")
-    for expected in (("core", "maxShield", "650"), ("core", "nanoRepairSpeed", "0.65"), ("attack", "canAttackFlyingUnits", "true")):
+    for expected in (("core", "maxHp", "2500"), ("core", "maxShield", "2200"), ("core", "nanoRepairSpeed", "0.80"), ("core", "canBuild_5_name", "rsOutpost"), ("attack", "canAttackFlyingUnits", "true")):
         if expected not in entries:
             ERRORS.append(f"{path.name}: missing ark capability {expected}")
+if "rsEngineer" in UNITS and ("core", "canBuild_5_name", "rsOutpost") in UNITS["rsEngineer"][1]:
+    ERRORS.append("ordinary engineer must not build a stellar outpost")
 
 if "rsOutpost" in UNITS:
     path, entries = UNITS["rsOutpost"]
-    for expected in (("core", "autoRepair", "true"), ("core", "canRepairUnits", "true"), ("core", "maxHp", "2800")):
+    for expected in (("core", "tags", "rsCapital"), ("core", "autoRepair", "true"), ("core", "canRepairUnits", "true"), ("core", "maxHp", "4500"), ("core", "builtFrom_1_name", "rsArk"), ("action_upgradeRegular", "convertTo", "rsStarbase"), ("action_upgradeMachine", "convertTo", "rsStarbaseMachine"), ("action_upgradeHive", "convertTo", "rsStarbaseHive")):
         if expected not in entries:
             ERRORS.append(f"{path.name}: missing frontier support capability {expected}")
 

@@ -184,7 +184,7 @@ def create_map(name, width, height, spawns):
         detector_id = f"capitalLost{team}"
         detector = SubElement(group, "object", id=str(2 + team * 2), name=f"Capital lost {team}", type="unitDetect", x="0", y="0", width=str(width * 20), height=str(height * 20))
         detector_props = SubElement(detector, "properties")
-        for key, value in (("id", detector_id), ("team", team), ("onlyWithTag", "rsCapital"), ("maxUnits", 0), ("warmup", "1s")):
+        for key, value in (("id", detector_id), ("team", team), ("onlyWithTag", "rsCapital"), ("maxUnits", 0), ("warmup", "240s")):
             SubElement(detector_props, "property", name=key, value=str(value))
         surrender = SubElement(group, "object", id=str(3 + team * 2), name=f"Capital surrender {team}", type="unitRemove", x="0", y="0", width=str(width * 20), height=str(height * 20))
         surrender_props = SubElement(surrender, "properties")

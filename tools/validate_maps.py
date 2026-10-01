@@ -50,7 +50,7 @@ for filename, team_count in EXPECTED.items():
         assert detector.attrib["height"] == surrender.attrib["height"] == str(height * 20)
         detector_props = {p.attrib["name"]: p.attrib["value"] for p in detector.findall("./properties/property")}
         surrender_props = {p.attrib["name"]: p.attrib["value"] for p in surrender.findall("./properties/property")}
-        assert detector_props == {"id": detector_id, "team": str(team), "onlyWithTag": "rsCapital", "maxUnits": "0", "warmup": "1s"}
+        assert detector_props == {"id": detector_id, "team": str(team), "onlyWithTag": "rsCapital", "maxUnits": "0", "warmup": "240s"}
         assert surrender_props == {"team": str(team), "activatedBy": detector_id}
     assert set(layers) == {"Ground", "Items", "Units"}
     assert all(gid in (1, 2, 3, 4) for gid in layers["Ground"])
