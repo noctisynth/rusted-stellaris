@@ -340,12 +340,14 @@ for platform, bridge, action, tech in (
         platform_entries = UNITS[platform][1]
         bridge_entries = UNITS[bridge][1]
         if platform == "rsDefensePlatform" and ("core", "selfRegenRate", "0.10") not in platform_entries:
-            ERRORS.append("defense platform must retain T3 gun turret self repair")
+            ERRORS.append("planetary defense platform must gain self repair")
+        if platform == "rsDefensePlatform" and any(s == "core" and k == "selfRegenRate" for s, k, _ in bridge_entries):
+            ERRORS.append("basic defense platform must not self repair")
         for key in ("footprint", "constructionFootprint"):
             if ("core", key, "0,0,0,1") not in platform_entries:
                 ERRORS.append(f"{platform} must occupy 1x2")
-        if ("core", "displayFootprint", "0,0,1,1") not in platform_entries:
-            ERRORS.append(f"{platform} selection frame must match native 2x2 towers")
+        if ("core", "displayFootprint", "0,0,0,1") not in platform_entries:
+            ERRORS.append(f"{platform} selection frame must match its 1x2 footprint")
         if not any(section == "graphics" and key == "image_turret" for section, key, _ in platform_entries):
             ERRORS.append(f"{platform} must have a rotating turret sprite")
         if (action, "convertTo", platform) not in bridge_entries or not any(section == action and key == "isLocked" and tech in value for section, key, value in bridge_entries):
