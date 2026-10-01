@@ -32,6 +32,10 @@ displayWhenZero: true
 displayName: 泰坦建造许可
 hidden: true
 
+[global_resource_juggernautPermit]
+displayName: 主宰建造许可
+hidden: true
+
 [global_resource_colossusPermit]
 displayName: 巨像建造许可
 hidden: true

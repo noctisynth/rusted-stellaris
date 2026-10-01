@@ -48,10 +48,12 @@ if RESOURCE_TEMPLATE.is_file():
         for section, _, _ in resource_fields
         if section.startswith("global_resource_")
     }
-    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit", "colossusPermit"}:
+    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit", "juggernautPermit", "colossusPermit"}:
         ERRORS.append(f"resource template has unexpected resources: {sorted(resources)}")
     if ("global_resource_titanPermit", "hidden", "true") not in resource_fields:
         ERRORS.append("technical titan permit must remain hidden from the resource HUD")
+    if ("global_resource_juggernautPermit", "hidden", "true") not in resource_fields:
+        ERRORS.append("technical juggernaut permit must remain hidden from the resource HUD")
     if ("global_resource_colossusPermit", "hidden", "true") not in resource_fields:
         ERRORS.append("technical colossus permit must remain hidden from the resource HUD")
 else:
@@ -169,6 +171,25 @@ if "rsTitan" in UNITS:
         ERRORS.append("titan destruction must return its build permit")
     if not any(s == "core" and k == "price" and "titanPermit=1" in v for s, k, v in titan):
         ERRORS.append("titan production must consume its build permit")
+for name in ("rsResearchStation", "rsPlanetLab"):
+    if name in UNITS and ("action_researchJuggernaut", "addResources", "juggernautPermit=1") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: juggernaut research must grant one build permit")
+if "rsJuggernaut" in UNITS:
+    juggernaut = UNITS["rsJuggernaut"][1]
+    for entry in (("core", "tags", "rsQuantumFleet, rsRaidFleet, rsJuggernaut"), ("hiddenAction_returnJuggernautPermit", "autoTriggerOnEvent", "destroyed"), ("hiddenAction_returnJuggernautPermit", "addResources", "juggernautPermit=1")):
+        if entry not in juggernaut:
+            ERRORS.append(f"juggernaut missing limit contract {entry}")
+    if not any(s == "core" and k == "price" and "juggernautPermit=1" in v for s, k, v in juggernaut):
+        ERRORS.append("juggernaut production must consume its build permit")
+if "rsJuggernautVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsJuggernaut" in v for s, k, v in UNITS["rsJuggernautVeteran"][1]):
+    ERRORS.append("veteran juggernaut must retain unit cap tag")
+if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS["rsMegaShipyard"][1]:
+    ERRORS.append("mega shipyard must build at double factory speed")
+for name in ("rsResearchStation", "rsPlanetLab"):
+    if name in UNITS:
+        research_prices = {s: v for s, k, v in UNITS[name][1] if s.startswith("action_research") and k == "price"}
+        if len(research_prices) != 20 or research_prices.get("action_researchDestroyer") != "science=120, minerals=60" or not research_prices.get("action_researchColossus", "").startswith("science=1400,"):
+            ERRORS.append(f"{name}: research reprice incomplete")
 
 if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "rsScienceNexus")):
     site = UNITS["rsScienceNexusSite"][1]
