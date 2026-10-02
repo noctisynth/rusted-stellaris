@@ -216,7 +216,7 @@ if "rsTitan" in UNITS:
 for capital_name in ("rsCruiser", "rsBattleship", "rsTitan"):
     if capital_name in UNITS and ("projectile_1", "instant", "true") not in UNITS[capital_name][1]:
         ERRORS.append(f"{capital_name} main energy weapon must bypass projectile interception")
-if "rsCruiser" in UNITS and ("turret_pd", "interceptProjectiles_withTags", "rsNoProjectile") not in UNITS["rsCruiser"][1]:
+if "rsCruiser" in UNITS and ("turret_pd", "laserDefenceEnergyUse", "0") not in UNITS["rsCruiser"][1]:
     ERRORS.append("capital ships must not inherit destroyer point defense")
 for missile_name in ("rsCruiserMissile", "rsMissileBattleship"):
     if missile_name in UNITS and ("projectile_1", "instant", "false") not in UNITS[missile_name][1]:
@@ -380,7 +380,7 @@ for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoos
         ERRORS.append(f"{name}: expected credits={credits}, minerals={expected}")
 if "rsCruiserMissile" in UNITS:
     entries = UNITS["rsCruiserMissile"][1]
-    for expected in (("turret_2", "projectile", "1"), ("turret_3", "projectile", "3"), ("projectile_1", "directDamage", "60"), ("projectile_1", "areaDamage", "140"), ("projectile_1", "areaRadius", "34"), ("projectile_1", "targetSpeed", "9")):
+    for expected in (("turret_2", "projectile", "1"), ("turret_2", "limitingRange", "320"), ("turret_2", "delay", "84"), ("turret_3", "projectile", "3"), ("projectile_1", "directDamage", "60"), ("projectile_1", "areaDamage", "140"), ("projectile_1", "areaRadius", "34"), ("projectile_1", "targetSpeed", "9")):
         if expected not in entries:
             ERRORS.append(f"missile cruiser must retain its dual fast-missile salvo: {expected}")
 for name, life, resistance, splash in (("rsCruiserMissile", "600", "2", "140"), ("rsMissileBattleship", "650", "3", "150")):
@@ -393,9 +393,9 @@ if "rsMissileBattleship" in UNITS:
     for expected in (("turret_4", "copyFrom", "1"), ("turret_5", "copyFrom", "1"), ("projectile_1", "directDamage", "70")):
         if expected not in UNITS["rsMissileBattleship"][1]:
             ERRORS.append(f"missile battleship must fire a three-missile salvo: {expected}")
-for name, delay, range_ in (("rsDestroyer", "60", "95"), ("rsDestroyerKinetic", "75", "65"), ("rsDefensePlatform", "60", "95")):
+for name, use, range_ in (("rsDestroyer", "0.55", "95"), ("rsDestroyerKinetic", "0.65", "65"), ("rsDefensePlatform", "0.45", "95")):
     if name in UNITS:
-        for expected in (("turret_pd", "delay", delay), ("turret_pd", "interceptProjectiles_andUnderDistance", range_)):
+        for expected in (("turret_pd", "laserDefenceEnergyUse", use), ("turret_pd", "limitingRange", range_)):
             if expected not in UNITS[name][1]:
                 ERRORS.append(f"{name}: limited missile interception missing {expected}")
 for name, use in (("rsBattleshipT2", "0.25"), ("rsMissileBattleshipT2", "0.25"), ("rsParadoxTitan", "0.16"), ("rsShieldGenerator", "0.20")):

@@ -26,6 +26,7 @@ def check_map(game_dir: Path, name: str, width: int, height: int, count: int, ti
         settings = preferences.read_text(encoding="utf-8")
         settings = re.sub(r"numIncompleteLoadAttempts:\d+", "numIncompleteLoadAttempts:0", settings)
         settings = re.sub(r"numLoadsSinceRunningGameOrNormalExit:\d+", "numLoadsSinceRunningGameOrNormalExit:0", settings)
+        settings = re.sub(r"(risDev\.\.\.\|[^,|]+\|)disabled", r"\1enabled", settings)
         preferences.write_text(settings, encoding="utf-8")
     stem = name.removesuffix(".tmx").replace("[", "").replace("]", "")
     script = WORK / f"smoke-{stem}.debug"
