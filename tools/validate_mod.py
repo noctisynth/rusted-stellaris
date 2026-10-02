@@ -196,7 +196,7 @@ for name in ("rsResearchStation", "rsPlanetLab"):
         ERRORS.append(f"{name}: juggernaut research must grant one build permit")
 if "rsJuggernaut" in UNITS:
     juggernaut = UNITS["rsJuggernaut"][1]
-    for entry in (("core", "tags", "rsQuantumFleet, rsRaidFleet, rsJuggernaut"), ("hiddenAction_returnJuggernautPermit", "autoTriggerOnEvent", "destroyed"), ("hiddenAction_returnJuggernautPermit", "addResources", "juggernautPermit=1")):
+    for entry in (("core", "tags", "rsQuantumFleet, rsRaidFleet, rsJuggernaut"), ("core", "nanoFactorySpeed", "2"), ("hiddenAction_returnJuggernautPermit", "autoTriggerOnEvent", "destroyed"), ("hiddenAction_returnJuggernautPermit", "addResources", "juggernautPermit=1")):
         if entry not in juggernaut:
             ERRORS.append(f"juggernaut missing limit contract {entry}")
     if not any(s == "core" and k == "price" and "juggernautPermit=1" in v for s, k, v in juggernaut):
@@ -210,7 +210,7 @@ for name, upgrade_target in (("rsTitan", "rsParadoxTitan"), ("rsTitanVeteran", "
             ERRORS.append(f"{name} must upgrade without losing veteran status")
 if "rsTitan" in UNITS:
     titan_entries = UNITS["rsTitan"][1]
-    for expected in (("attack", "turretMultiTargeting", "true"), ("attack", "shootDelay", "120"), ("turret_2", "canAttackLandUnits", "false"), ("turret_2", "delay", "14"), ("turret_3", "copyFrom", "2"), ("projectile_1", "directDamage", "1800"), ("projectile_3", "directDamage", "90")):
+    for expected in (("attack", "turretMultiTargeting", "true"), ("attack", "shootDelay", "115"), ("turret_2", "canAttackLandUnits", "false"), ("turret_2", "delay", "13"), ("turret_3", "copyFrom", "2"), ("turret_4", "projectile", "4"), ("turret_4", "limitingRange", "405"), ("projectile_1", "directDamage", "2100"), ("projectile_3", "directDamage", "110"), ("projectile_4", "tags", "rsMissile"), ("projectile_4", "instant", "false"), ("projectile_4", "deflectionPower", "3")):
         if expected not in titan_entries:
             ERRORS.append(f"titan anti-air battery missing {expected}")
 for capital_name in ("rsCruiser", "rsBattleship", "rsTitan"):
@@ -222,16 +222,21 @@ for missile_name in ("rsCruiserMissile", "rsMissileBattleship"):
     if missile_name in UNITS and ("projectile_1", "instant", "false") not in UNITS[missile_name][1]:
         ERRORS.append(f"{missile_name} must retain visible guided missiles")
 if "rsColossus" in UNITS:
+    if ("attack", "maxAttackRange", "900") not in UNITS["rsColossus"][1]:
+        ERRORS.append("colossus strike distance must be at least doubled")
     for number in range(1, 6):
         if (f"projectile_{number}", "deflectionPower", "-1") not in UNITS["rsColossus"][1]:
             ERRORS.append(f"colossus weapon {number} must resist point defense")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
-    for expected in (("core", "maxShield", "9000"), ("core", "shieldRegen", "0.60"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
+    for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
         if expected not in paradox_entries:
             ERRORS.append(f"paradox titan missing {expected}")
 if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
     ERRORS.append("veteran paradox titan must retain titan cap and training tags")
+for name, section, key, value in (("rsPreFtlBuilder", "core", "canBuild_16_name", "rsGenerator"), ("rsPreFtlBuilder", "core", "canBuild_17_name", "rsResearchStation"), ("rsArk", "canBuild_planetDefense", "name", "rsDefensePlatform"), ("rsArk", "canBuild_planetMissile", "name", "rsMissilePlatform"), ("rsArk", "canBuild_repairBaseDirect", "name", "rsRepairBase")):
+    if name in UNITS and (section, key, value) not in UNITS[name][1]:
+        ERRORS.append(f"{name} construction menu missing {value}")
 if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "3") not in UNITS["rsMegaShipyard"][1]:
     ERRORS.append("mega shipyard must build at triple factory speed")
 for site, frame, first_action, final_action in (
