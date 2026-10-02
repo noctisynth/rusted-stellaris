@@ -216,7 +216,7 @@ if "rsTitan" in UNITS:
 for capital_name in ("rsCruiser", "rsBattleship", "rsTitan"):
     if capital_name in UNITS and ("projectile_1", "instant", "true") not in UNITS[capital_name][1]:
         ERRORS.append(f"{capital_name} main energy weapon must bypass projectile interception")
-if "rsCruiser" in UNITS and ("turret_pd", "laserDefenceEnergyUse", "0") not in UNITS["rsCruiser"][1]:
+if "rsCruiser" in UNITS and ("turret_pd", "@copyFrom_skipThisSection", "true") not in UNITS["rsCruiser"][1]:
     ERRORS.append("capital ships must not inherit destroyer point defense")
 for missile_name in ("rsCruiserMissile", "rsMissileBattleship"):
     if missile_name in UNITS and ("projectile_1", "instant", "false") not in UNITS[missile_name][1]:
