@@ -445,6 +445,11 @@ if "rsPreFtlBuilder" in UNITS:
         ERRORS.append("native builder must convert into an engineer")
     if ("core", "canBuild_1_name", "extractor") not in entries:
         ERRORS.append("pre-FTL builder must retain the native extractor menu entry")
+    for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
+        if (section, "name", native_name) not in entries:
+            ERRORS.append(f"pre-FTL builder must retain {native_name} for players and post-FTL AI")
+        if not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.8" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
+            ERRORS.append(f"pre-FTL builder must defer {native_name} for high-difficulty pre-FTL AI")
 if "rsPreFtlMine" not in UNITS:
     ERRORS.append("missing pre-FTL extractor replacement")
 else:
