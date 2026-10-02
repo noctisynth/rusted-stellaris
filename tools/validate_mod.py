@@ -213,6 +213,18 @@ if "rsTitan" in UNITS:
     for expected in (("attack", "turretMultiTargeting", "true"), ("turret_2", "canAttackLandUnits", "false"), ("turret_3", "copyFrom", "2"), ("projectile_3", "directDamage", "45")):
         if expected not in titan_entries:
             ERRORS.append(f"titan anti-air battery missing {expected}")
+for capital_name in ("rsCruiser", "rsBattleship", "rsTitan"):
+    if capital_name in UNITS and ("projectile_1", "instant", "true") not in UNITS[capital_name][1]:
+        ERRORS.append(f"{capital_name} main energy weapon must bypass projectile interception")
+if "rsCruiser" in UNITS and ("turret_pd", "interceptProjectiles_withTags", "rsNoProjectile") not in UNITS["rsCruiser"][1]:
+    ERRORS.append("capital ships must not inherit destroyer point defense")
+for missile_name in ("rsCruiserMissile", "rsMissileBattleship"):
+    if missile_name in UNITS and ("projectile_1", "instant", "false") not in UNITS[missile_name][1]:
+        ERRORS.append(f"{missile_name} must retain visible guided missiles")
+if "rsColossus" in UNITS:
+    for number in range(1, 6):
+        if (f"projectile_{number}", "deflectionPower", "-1") not in UNITS["rsColossus"][1]:
+            ERRORS.append(f"colossus weapon {number} must resist point defense")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
     for expected in (("core", "maxShield", "4500"), ("core", "selfRegenRate", "0.25"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.05"), ("projectile_3", "directDamage", "65"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
@@ -220,8 +232,8 @@ if "rsParadoxTitan" in UNITS:
             ERRORS.append(f"paradox titan missing {expected}")
 if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
     ERRORS.append("veteran paradox titan must retain titan cap and training tags")
-if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "2") not in UNITS["rsMegaShipyard"][1]:
-    ERRORS.append("mega shipyard must build at double factory speed")
+if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "3") not in UNITS["rsMegaShipyard"][1]:
+    ERRORS.append("mega shipyard must build at triple factory speed")
 for site, frame, first_action, final_action in (
     ("rsDysonSite", "rsDysonFrame", "action_buildDysonFrame", "action_completeDyson"),
     ("rsMatterSite", "rsMatterFrame", "action_buildMatterFrame", "action_completeMatter"),
@@ -391,8 +403,16 @@ if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
 
 overrides = {(name, v) for name, (_, entries) in UNITS.items() for s, k, v in entries if s == "core" and k == "overrideAndReplace"}
-if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor"), ("rsNativeGunT3Bridge", "c_turret_t3_gun"), ("rsNativeSamT3Bridge", "c_antiAirTurretT3")}:
-    ERRORS.append(f"native replacements must include capital, builder, extractor, and T3 towers: {overrides}")
+if overrides != {("rsPreFtlCommand", "commandCenter"), ("rsPreFtlBuilder", "builder"), ("rsPreFtlMine", "extractor"), ("rsNativeRepairBay", "repairBay"), ("rsNativeGunT3Bridge", "c_turret_t3_gun"), ("rsNativeSamT3Bridge", "c_antiAirTurretT3")}:
+    ERRORS.append(f"native replacements must include capital, builder, extractor, repair bay, and T3 towers: {overrides}")
+if "rsNativeRepairBay" in UNITS:
+    entries = UNITS["rsNativeRepairBay"][1]
+    if ("action_upgradeRepairBase", "convertTo", "rsRepairBase") not in entries:
+        ERRORS.append("native repair bay must upgrade to the repair base")
+if "rsEngineer" in UNITS:
+    entries = UNITS["rsEngineer"][1]
+    if ("canBuild_repairBase", "name", "rsNativeRepairBay") not in entries:
+        ERRORS.append("engineer must build the native repair bay bridge")
 for tier, target, minerals in (
     ("rsMiningStationT3", "rsDeepMiningStation", 16),
     ("rsMiningStationT3Boosted", "rsDeepMiningStationBoosted", 24),
@@ -436,6 +456,8 @@ if "rsPreFtlCommand" in UNITS:
         ERRORS.append("command center must not produce engineers")
     if ("action_researchFTL", "addGlobalTeamTags", "rsTechFTL") not in entries:
         ERRORS.append("command center must research FTL before upgrading")
+    if ("action_researchFTL", "tags", "rsFtlResearch") not in entries or not any(s == "action_researchFTL" and k == "isVisible" and "queueSize(withActionTag='rsFtlResearch')==0" in v for s, k, v in entries):
+        ERRORS.append("command center must hide FTL research while it is already queued")
     for faction in ("regular", "machine", "hive"):
         if (f"action_{faction}", "price", "credits=5000, minerals=150") not in entries:
             ERRORS.append(f"{faction} empire must pay the new entry cost")
