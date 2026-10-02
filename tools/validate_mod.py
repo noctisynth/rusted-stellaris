@@ -403,6 +403,18 @@ for name, use in (("rsBattleshipT2", "0.25"), ("rsMissileBattleshipT2", "0.25"),
         ERRORS.append(f"{name}: laser defense energy limit missing")
 if "rsIonCannon" in UNITS and ("projectile_1", "instant", "true") not in UNITS["rsIonCannon"][1]:
     ERRORS.append("ion cannon heavy shot must not be missile-interceptable")
+for name, main, secondary, cadence in (("rsBattleship", "750", "85", "15"), ("rsBattleshipT2", "850", "125", "10")):
+    if name in UNITS:
+        entries = UNITS[name][1]
+        for expected in (("projectile_1", "directDamage", main), ("projectile_3", "directDamage", secondary), ("turret_2", "delay", cadence)):
+            if expected not in entries:
+                ERRORS.append(f"{name}: anti-small-ship battery missing {expected}")
+for name in ("rsBattleshipT2", "rsMissileBattleshipT2"):
+    if name in UNITS and ("core", "maxShield", "3000") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: reinforced T2 shield missing")
+for name in ("rsCorvette", "rsDestroyer", "rsCruiser", "rsBattleship", "rsTitan", "rsIonCannon"):
+    if name in UNITS and ("projectile_1", "laserEffect", "true") not in UNITS[name][1]:
+        ERRORS.append(f"{name}: energy main gun should use a beam, not lightning")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
