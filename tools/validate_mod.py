@@ -415,6 +415,14 @@ for name in ("rsBattleshipT2", "rsMissileBattleshipT2"):
 for name in ("rsCorvette", "rsDestroyer", "rsCruiser", "rsBattleship", "rsTitan", "rsIonCannon"):
     if name in UNITS and ("projectile_1", "laserEffect", "true") not in UNITS[name][1]:
         ERRORS.append(f"{name}: energy main gun should use a beam, not lightning")
+for name, life in (("rsCorvetteKinetic", "35"), ("rsDestroyerKinetic", "40")):
+    if name in UNITS:
+        for expected in (("projectile_1", "life", life), ("projectile_1", "laserEffect", "false")):
+            if expected not in UNITS[name][1]:
+                ERRORS.append(f"{name}: projectile flight must survive beam visual tuning: {expected}")
+for name, life in (("rsCorvette", "8"), ("rsDestroyer", "9"), ("rsCruiser", "10"), ("rsBattleship", "11"), ("rsTitan", "12")):
+    if name in UNITS and ("projectile_1", "life", life) not in UNITS[name][1]:
+        ERRORS.append(f"{name}: beam visual lifetime should match hull scale")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
