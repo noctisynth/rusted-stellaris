@@ -183,6 +183,8 @@ if "rsResearchStation" in UNITS and "rsPlanetLab" in UNITS:
 for name in ("rsResearchStation", "rsPlanetLab"):
     if name in UNITS and ("action_researchTitan", "addResources", "titanPermit=1") not in UNITS[name][1]:
         ERRORS.append(f"{name}: titan research must grant one build permit")
+    if name in UNITS and not any(s == "action_researchDestroyer" and k == "isLocked" and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in UNITS[name][1]):
+        ERRORS.append(f"{name}: pre-FTL science must not bypass empire selection")
 if "rsTitan" in UNITS:
     titan = UNITS["rsTitan"][1]
     if ("hiddenAction_returnTitanPermit", "autoTriggerOnEvent", "destroyed") not in titan:
@@ -509,8 +511,23 @@ if "rsPreFtlBuilder" in UNITS:
     for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
         if (section, "name", native_name) not in entries:
             ERRORS.append(f"pre-FTL builder must retain {native_name} for players and post-FTL AI")
-        if not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.8" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
+        if native_name == "experimentalLandFactory":
+            if (section, "isLocked", "if self.isControlledByAI and self.resource('rsAiHandicap') >= 1.8") not in entries:
+                ERRORS.append("high-difficulty AI must not divert resources to native experimental land production")
+        elif not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.8" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
             ERRORS.append(f"pre-FTL builder must defer {native_name} for high-difficulty pre-FTL AI")
+for filename in ("starbase.ini", "_starbase_tier_common.ini"):
+    entries = list(fields(ROOT / "units" / filename))
+    if not any(s == "hiddenAction_aiMassAssault" and k == "autoTrigger" and "rsAiHandicap') >= 1.8" in v and "greaterThan=17, withinRange=700" in v for s, k, v in entries):
+        ERRORS.append(f"{filename}: high-difficulty fleet must assemble at least 18 ships")
+    if ("hiddenAction_aiMassAssault", "takeResources_maxUnits", "28") not in entries:
+        ERRORS.append(f"{filename}: high-difficulty fleet order must include up to 28 ships")
+for name in ("rsResearchStation", "rsPlanetLab"):
+    if name in UNITS:
+        entries = UNITS[name][1]
+        for project in ("Missiles", "Carrier", "Titan", "Juggernaut"):
+            if (f"action_research{project}", "ai_isHighPriority", "if self.resource('rsAiHandicap') >= 1.8") not in entries:
+                ERRORS.append(f"{name}: high-difficulty AI must prioritize {project} research")
 if "rsPreFtlMine" not in UNITS:
     ERRORS.append("missing pre-FTL extractor replacement")
 else:
