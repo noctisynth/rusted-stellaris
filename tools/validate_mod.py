@@ -210,7 +210,7 @@ for name, upgrade_target in (("rsTitan", "rsParadoxTitan"), ("rsTitanVeteran", "
             ERRORS.append(f"{name} must upgrade without losing veteran status")
 if "rsTitan" in UNITS:
     titan_entries = UNITS["rsTitan"][1]
-    for expected in (("attack", "turretMultiTargeting", "true"), ("turret_2", "canAttackLandUnits", "false"), ("turret_3", "copyFrom", "2"), ("projectile_3", "directDamage", "45")):
+    for expected in (("attack", "turretMultiTargeting", "true"), ("attack", "shootDelay", "120"), ("turret_2", "canAttackLandUnits", "false"), ("turret_2", "delay", "14"), ("turret_3", "copyFrom", "2"), ("projectile_1", "directDamage", "1800"), ("projectile_3", "directDamage", "90")):
         if expected not in titan_entries:
             ERRORS.append(f"titan anti-air battery missing {expected}")
 for capital_name in ("rsCruiser", "rsBattleship", "rsTitan"):
@@ -227,7 +227,7 @@ if "rsColossus" in UNITS:
             ERRORS.append(f"colossus weapon {number} must resist point defense")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
-    for expected in (("core", "maxShield", "4500"), ("core", "selfRegenRate", "0.25"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.05"), ("projectile_3", "directDamage", "65"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
+    for expected in (("core", "maxShield", "4500"), ("core", "selfRegenRate", "0.25"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "2100"), ("projectile_3", "directDamage", "100"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
         if expected not in paradox_entries:
             ERRORS.append(f"paradox titan missing {expected}")
 if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
@@ -380,15 +380,29 @@ for name, credits, expected in (("rsMiningStation", 8, 4), ("rsMiningStationBoos
         ERRORS.append(f"{name}: expected credits={credits}, minerals={expected}")
 if "rsCruiserMissile" in UNITS:
     entries = UNITS["rsCruiserMissile"][1]
-    for expected in (("turret_2", "projectile", "1"), ("projectile_1", "directDamage", "50"), ("projectile_1", "areaDamage", "120"), ("projectile_1", "areaRadius", "34"), ("projectile_1", "targetSpeed", "9")):
+    for expected in (("turret_2", "projectile", "1"), ("turret_3", "projectile", "3"), ("projectile_1", "directDamage", "60"), ("projectile_1", "areaDamage", "140"), ("projectile_1", "areaRadius", "34"), ("projectile_1", "targetSpeed", "9")):
         if expected not in entries:
             ERRORS.append(f"missile cruiser must retain its dual fast-missile salvo: {expected}")
-for name, life, resistance, splash in (("rsCruiserMissile", "600", "6", "120"), ("rsMissileBattleship", "650", "10", "430")):
+for name, life, resistance, splash in (("rsCruiserMissile", "600", "2", "140"), ("rsMissileBattleship", "650", "3", "150")):
     if name in UNITS:
         entries = UNITS[name][1]
         for expected in (("projectile_1", "life", life), ("projectile_1", "deflectionPower", resistance), ("projectile_1", "areaDamage", splash)):
             if expected not in entries:
                 ERRORS.append(f"{name}: heavy missile flight or interception behavior regressed: {expected}")
+if "rsMissileBattleship" in UNITS:
+    for expected in (("turret_4", "copyFrom", "1"), ("turret_5", "copyFrom", "1"), ("projectile_1", "directDamage", "70")):
+        if expected not in UNITS["rsMissileBattleship"][1]:
+            ERRORS.append(f"missile battleship must fire a three-missile salvo: {expected}")
+for name, delay, range_ in (("rsDestroyer", "60", "95"), ("rsDestroyerKinetic", "75", "65"), ("rsDefensePlatform", "60", "95")):
+    if name in UNITS:
+        for expected in (("turret_pd", "delay", delay), ("turret_pd", "interceptProjectiles_andUnderDistance", range_)):
+            if expected not in UNITS[name][1]:
+                ERRORS.append(f"{name}: limited missile interception missing {expected}")
+for name, use in (("rsBattleshipT2", "0.25"), ("rsMissileBattleshipT2", "0.25"), ("rsParadoxTitan", "0.16"), ("rsShieldGenerator", "0.20")):
+    if name in UNITS and ("turret_laserDefence", "laserDefenceEnergyUse", use) not in UNITS[name][1]:
+        ERRORS.append(f"{name}: laser defense energy limit missing")
+if "rsIonCannon" in UNITS and ("projectile_1", "instant", "true") not in UNITS["rsIonCannon"][1]:
+    ERRORS.append("ion cannon heavy shot must not be missile-interceptable")
 if "rsMineralPlant" in UNITS:
     entries = UNITS["rsMineralPlant"][1]
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
