@@ -227,7 +227,7 @@ if "rsColossus" in UNITS:
             ERRORS.append(f"colossus weapon {number} must resist point defense")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
-    for expected in (("core", "maxShield", "4500"), ("core", "selfRegenRate", "0.25"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "2100"), ("projectile_3", "directDamage", "100"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
+    for expected in (("core", "maxShield", "9000"), ("core", "shieldRegen", "0.60"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
         if expected not in paradox_entries:
             ERRORS.append(f"paradox titan missing {expected}")
 if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
