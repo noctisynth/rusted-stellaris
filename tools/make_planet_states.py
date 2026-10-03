@@ -47,8 +47,8 @@ def main() -> None:
                 "[action_keepNeutral]\n"
                 "autoTrigger: if self.teamId() != -1\n"
                 "switchToTeam: -1\n\n"
-                + impact_action("worldCrack", "rsWorldCracker", shattered_name, f"{display_name}遭地爆天星击中。地壳崩裂，行星已永久破碎，任何殖民地都无法在此重建。")
-                + impact_action("pacify", "rsPacifier", sealed_name, f"{display_name}已被安乐天使封存。强光退去后，一道无法穿透的屏障将整颗行星与银河隔绝。")
+                + impact_action("worldCrack", "rsWorldCracker", shattered_name, f"{display_name}的地壳已经破裂，磁层也在分解。我们很难理解一颗星球死亡时的壮烈，但当它炽热的核心开始在冰冷宇宙中冷却，那种死亡之美无可争辩。")
+                + impact_action("pacify", "rsPacifier", sealed_name, f"{display_name}上空炫目的光芒已经黯淡，整个世界归于沉寂。也许历史会将这次把一颗行星从大宇宙中完全隔绝的行为视作极端且不合理。也许不会。无论如何，从现在起，这里只剩下一颗行星规模的水晶球。")
                 + "[hiddenAction_purgeColony]\n"
                 "sendMessageTo: thisActionTarget\n"
                 "sendMessageWithTags: rsColossusPurge\n"
@@ -68,7 +68,7 @@ def main() -> None:
                 "[action_markUnclaimed]\n"
                 "autoTrigger: if nearestUnit(withinRange=48, withTag='rsPlanetColony', relation='any', incompleteBuildings=false) == null\n"
                 f"convertTo: {intact_name}\n\n"
-                + impact_action("neutronSweep", "rsNeutronSweep", intact_name, f"{display_name}上空的中子羽流正在散去。殖民地已被清除，行星仍可重新殖民。").rstrip() + "\n"
+                + impact_action("neutronSweep", "rsNeutronSweep", intact_name, f"对{display_name}地表的灭杀已经完成，中子羽流正逐渐散去。扫描显示未发现智慧生命迹象。有人会把这种彻底消灭生命、只留下无机质的做法称为邪恶的战争罪行。执行者称之为高效。").rstrip() + "\n"
             )
             (UNITS / f"planet_{slug}_occupied.ini").write_text(occupied, encoding="utf-8")
             for state, label, image, unit_name in (

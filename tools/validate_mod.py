@@ -261,6 +261,22 @@ if "rsColossus" in UNITS:
                 ERRORS.append(f"AI Colossus charged strike missing {expected}")
     if not any(s == "ai" and k == "buildPriority" for s, k, _ in colossus_entries):
         ERRORS.append("AI must have a production priority for the Colossus")
+    if not any(s == "hiddenAction_announceCompletion" and k == "showMessageToAllEnemyPlayers" for s, k, _ in colossus_entries):
+        ERRORS.append("Colossus completion must give opponents the observer notice")
+    if any(s == "hiddenAction_announceCompletion" and k == "showMessageToAllPlayers" for s, k, _ in colossus_entries):
+        ERRORS.append("Colossus builder must not receive both completion viewpoints")
+    for phrase in ("地壳已经破裂", "中子羽流正逐渐散去", "整个世界归于沉寂"):
+        if not any(phrase in value for _, _, value in UNITS["rsColossus"][1] + sum((entries for name, (_, entries) in UNITS.items() if name.startswith("rsPlanet")), [])):
+            ERRORS.append(f"Stellaris-style Colossus notice missing phrase: {phrase}")
+
+for milestone_name in ("rsTitan", "rsParadoxTitan", "rsJuggernaut", "rsDysonSphere", "rsMatterDecompressor", "rsMegaShipyard", "rsScienceNexus", "rsQuantumCatapult"):
+    if milestone_name in UNITS:
+        milestone_entries = UNITS[milestone_name][1]
+        if any(s == "hiddenAction_announceCompletion" and k == "showMessageToPlayer" for s, k, _ in milestone_entries):
+            if not any(s == "hiddenAction_announceCompletion" and k == "showMessageToAllEnemyPlayers" for s, k, _ in milestone_entries):
+                ERRORS.append(f"{milestone_name} must separate builder and opponent completion notices")
+            if any(s == "hiddenAction_announceCompletion" and k == "showMessageToAllPlayers" for s, k, _ in milestone_entries):
+                ERRORS.append(f"{milestone_name} builder must not receive both completion viewpoints")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
     for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
