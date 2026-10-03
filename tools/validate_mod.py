@@ -56,6 +56,18 @@ if RESOURCE_TEMPLATE.is_file():
         ERRORS.append("technical juggernaut permit must remain hidden from the resource HUD")
     if ("global_resource_colossusPermit", "hidden", "true") not in resource_fields:
         ERRORS.append("technical colossus permit must remain hidden from the resource HUD")
+    for label, minimum, maximum, amounts in (
+        ("Hard", "1.4", "1.8", ("minerals=2", "alloys=1", "science=4", "strategic=0.2")),
+        ("VeryHard", "1.8", "3.7", ("minerals=5", "alloys=3", "science=10", "strategic=0.5")),
+        ("Impossible", "3.7", None, ("minerals=10", "alloys=6", "science=20", "strategic=1")),
+    ):
+        section = f"hiddenAction_aiEconomy{label}"
+        trigger = next((v for s, k, v in resource_fields if s == section and k == "autoTrigger"), "")
+        grant = next((v for s, k, v in resource_fields if s == section and k == "addResourcesWithLogic"), "")
+        if f"rsAiHandicap') >= {minimum}" not in trigger or "self.customTimer > 10" not in trigger or (maximum and f"rsAiHandicap') < {maximum}" not in trigger):
+            ERRORS.append(f"{label} AI economy bonus must use its difficulty and timer gate")
+        if any(amount not in grant for amount in amounts) or "self.numberOfUnitsInTeam(withTag='rsCapital')" not in grant or (section, "resetCustomTimer", "true") not in resource_fields:
+            ERRORS.append(f"{label} AI economy bonus must distribute all four resources once per team")
 else:
     ERRORS.append("missing all-units.template")
 
@@ -63,6 +75,9 @@ for filename in ("pre_ftl_command.ini", "starbase.ini", "_starbase_tier_common.i
     path = ROOT / "units" / filename
     if ("core", "tags", "rsCapital") not in list(fields(path)):
         ERRORS.append(f"{filename}: capital unit chain must retain rsCapital tag")
+for filename in ("pre_ftl_command.ini", "starbase.ini", "_starbase_tier_common.ini", "outpost.ini"):
+    if ("core", "autoTriggerCooldownTime", "2s") not in list(fields(ROOT / "units" / filename)):
+        ERRORS.append(f"{filename}: capital economy actions need a bounded trigger rate")
 
 for name, (path, entries) in UNITS.items():
     sections = {s for s, _, _ in entries}
@@ -511,13 +526,13 @@ if "rsPreFtlBuilder" in UNITS:
     for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
         if (section, "name", native_name) not in entries:
             ERRORS.append(f"pre-FTL builder must retain {native_name} for players")
-        if not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.4" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
-            ERRORS.append(f"pre-FTL builder must defer {native_name} for Hard AI and all post-FTL AI")
+        if (section, "isLocked", "if self.isControlledByAI and self.resource('rsAiHandicap') >= 1.4") not in entries:
+            ERRORS.append(f"pre-FTL builder must reserve {native_name} for players and lower-difficulty AI")
 if "rsEngineer" in UNITS:
     entries = UNITS["rsEngineer"][1]
     for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
-        if (section, "name", native_name) not in entries or (section, "isLocked", "if self.isControlledByAI") not in entries:
-            ERRORS.append(f"engineer must reserve {native_name} for players")
+        if (section, "name", native_name) not in entries or (section, "isLocked", "if self.isControlledByAI and self.resource('rsAiHandicap') >= 1.4") not in entries:
+            ERRORS.append(f"engineer must reserve {native_name} for players and lower-difficulty AI")
 if "rsShipyard" in UNITS and ("ai", "buildPriority", "0.32") not in UNITS["rsShipyard"][1]:
     ERRORS.append("AI shipyard priority must support early fleet production")
 if "rsCorvette" in UNITS and ("ai", "buildPriority", "0.42") not in UNITS["rsCorvette"][1]:
@@ -528,6 +543,15 @@ for filename in ("starbase.ini", "_starbase_tier_common.ini"):
         ERRORS.append(f"{filename}: high-difficulty fleet must assemble at least 18 ships")
     if ("hiddenAction_aiMassAssault", "takeResources_maxUnits", "28") not in entries:
         ERRORS.append(f"{filename}: high-difficulty fleet order must include up to 28 ships")
+    impossible_trigger = next((v for s, k, v in entries if s == "hiddenAction_aiMassAssaultImpossible" and k == "autoTrigger"), "")
+    if "rsAiHandicap') >= 3.7" not in impossible_trigger or "greaterThan=31, withinRange=900" not in impossible_trigger or "greaterThan=11, withinRange=900" not in impossible_trigger:
+        ERRORS.append(f"{filename}: Impossible mass assault must require 32 ships including 12 capital ships")
+    if ("hiddenAction_aiMassAssaultImpossible", "takeResources_maxUnits", "48") not in entries:
+        ERRORS.append(f"{filename}: Impossible mass assault must include up to 48 ships")
+for filename in ("shipyard.ini", "mega_shipyard.ini", "juggernaut.ini"):
+    entries = list(fields(ROOT / "units" / filename))
+    if not any(s == "canBuild_corvette" and k == "isLocked" and "rsAiHandicap') >= 3.7" in v and "rsTechCruiser" in v for s, k, v in entries):
+        ERRORS.append(f"{filename}: Impossible AI must favor higher hulls after cruiser research")
 for name in ("rsResearchStation", "rsPlanetLab"):
     if name in UNITS:
         entries = UNITS[name][1]

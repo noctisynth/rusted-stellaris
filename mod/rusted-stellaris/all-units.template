@@ -48,3 +48,18 @@ hidden: true
 autoTriggerOnEvent: created
 requireConditional: if self.isControlledByAI() and self.resource('rsAiHandicap') == 0
 addResourcesScaledByAIHandicaps: rsAiHandicap=1
+
+[hiddenAction_aiEconomyHard]
+autoTrigger: if self.tags(includes='rsCapital') and self.isControlledByAI() and self.resource('rsAiHandicap') >= 1.4 and self.resource('rsAiHandicap') < 1.8 and self.customTimer > 10
+addResourcesWithLogic: minerals=2/self.numberOfUnitsInTeam(withTag='rsCapital'), alloys=1/self.numberOfUnitsInTeam(withTag='rsCapital'), science=4/self.numberOfUnitsInTeam(withTag='rsCapital'), strategic=0.2/self.numberOfUnitsInTeam(withTag='rsCapital')
+resetCustomTimer: true
+
+[hiddenAction_aiEconomyVeryHard]
+autoTrigger: if self.tags(includes='rsCapital') and self.isControlledByAI() and self.resource('rsAiHandicap') >= 1.8 and self.resource('rsAiHandicap') < 3.7 and self.customTimer > 10
+addResourcesWithLogic: minerals=5/self.numberOfUnitsInTeam(withTag='rsCapital'), alloys=3/self.numberOfUnitsInTeam(withTag='rsCapital'), science=10/self.numberOfUnitsInTeam(withTag='rsCapital'), strategic=0.5/self.numberOfUnitsInTeam(withTag='rsCapital')
+resetCustomTimer: true
+
+[hiddenAction_aiEconomyImpossible]
+autoTrigger: if self.tags(includes='rsCapital') and self.isControlledByAI() and self.resource('rsAiHandicap') >= 3.7 and self.customTimer > 10
+addResourcesWithLogic: minerals=10/self.numberOfUnitsInTeam(withTag='rsCapital'), alloys=6/self.numberOfUnitsInTeam(withTag='rsCapital'), science=20/self.numberOfUnitsInTeam(withTag='rsCapital'), strategic=1/self.numberOfUnitsInTeam(withTag='rsCapital')
+resetCustomTimer: true
