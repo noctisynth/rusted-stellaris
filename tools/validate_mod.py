@@ -114,7 +114,7 @@ for name, (path, entries) in UNITS.items():
                 resource = pair.split("=", 1)[0].strip()
                 if resource not in resources | {"credits"}:
                     ERRORS.append(f"{path.name}: unknown resource {resource}")
-        unit_energy_price = section.startswith("action_") and key == "price" and any(
+        unit_energy_price = (section.startswith("action_") or section.startswith("hiddenAction_")) and key == "price" and any(
             s == "core" and k == "energyMax" for s, k, _ in entries
         )
         if re.search(r"(?<![A-Za-z_])energy\s*=", value) and not unit_energy_price:
@@ -239,11 +239,28 @@ for missile_name in ("rsCruiserMissile", "rsMissileBattleship"):
     if missile_name in UNITS and ("projectile_1", "instant", "false") not in UNITS[missile_name][1]:
         ERRORS.append(f"{missile_name} must retain visible guided missiles")
 if "rsColossus" in UNITS:
-    if ("attack", "maxAttackRange", "900") not in UNITS["rsColossus"][1]:
+    colossus_entries = UNITS["rsColossus"][1]
+    if ("attack", "maxAttackRange", "900") not in colossus_entries:
         ERRORS.append("colossus strike distance must be at least doubled")
     for number in range(1, 6):
-        if (f"projectile_{number}", "deflectionPower", "-1") not in UNITS["rsColossus"][1]:
+        if (f"projectile_{number}", "deflectionPower", "-1") not in colossus_entries:
             ERRORS.append(f"colossus weapon {number} must resist point defense")
+    for queue_section, queued_action, target_tag in (
+        ("hiddenAction_aiQueueNeutronSweep", "aiNeutronSweep", "rsPlanetColony"),
+        ("hiddenAction_aiQueueWorldCrackerEconomic", "aiWorldCrackerEconomic", "rsEconomicTarget"),
+        ("hiddenAction_aiQueueWorldCrackerCapital", "aiWorldCrackerCapital", "rsCapital"),
+    ):
+        trigger = next((v for s, k, v in colossus_entries if s == queue_section and k == "autoTrigger"), "")
+        if "self.isControlledByAI" not in trigger or target_tag not in trigger or "queueSize(withActionTag='rsAiColossusStrike')==0" not in trigger:
+            ERRORS.append(f"AI Colossus queue gate missing for {queued_action}")
+        if (queue_section, "alsoQueueAction", queued_action) not in colossus_entries:
+            ERRORS.append(f"AI Colossus must queue {queued_action} so charging is respected")
+        action_section = f"action_{queued_action}"
+        for expected in ((action_section, "tags", "rsAiColossusStrike"), (action_section, "buildSpeed", "45s")):
+            if expected not in colossus_entries:
+                ERRORS.append(f"AI Colossus charged strike missing {expected}")
+    if not any(s == "ai" and k == "buildPriority" for s, k, _ in colossus_entries):
+        ERRORS.append("AI must have a production priority for the Colossus")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
     for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
