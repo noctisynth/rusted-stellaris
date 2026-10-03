@@ -324,11 +324,27 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
         ERRORS.append("quantum catapult site must convert to frame")
     if ("action_completeQuantumCatapult", "convertTo", "rsQuantumCatapult") not in frame:
         ERRORS.append("quantum catapult frame must convert to complete structure")
-    for action, exit_tag in (("launchA", "rsQuantumExitA"), ("launchB", "rsQuantumExitB")):
-        if (f"action_{action}", "takeResources_excludeUnitsWithoutTags", "rsQuantumFleet") not in complete:
-            ERRORS.append(f"quantum catapult {action} must select only fleet units")
-        if (f"hiddenAction_sendToExit{action[-1]}", "sendMessageWithData", f"exit=globalSearchForFirstUnit(withTag='{exit_tag}', relation='any')") not in complete:
-            ERRORS.append(f"quantum catapult {action} must target its map exit")
+    if ("core", "tags", "rsQuantumCatapultChain, rsQuantumCatapultOnline") not in complete:
+        ERRORS.append("completed catapult must unlock its team's capital-ship jump")
+    if any(s in ("action_launchA", "action_launchB") for s, _, _ in complete):
+        ERRORS.append("catapult must not retain fixed-exit launch actions")
+    engineer = UNITS["rsEngineer"][1]
+    build_lock = next((v for s, k, v in engineer if s == "canBuild_quantumCatapultSite" and k == "isLocked"), "")
+    if not build_lock or "rsQuantumExit" in build_lock:
+        ERRORS.append("ordinary maps must permit catapult construction without fixed exits")
+    cruiser = UNITS["rsCruiser"][1]
+    for expected in (("action_quantumJump", "fireTurretXAtGround", "quantumJump"), ("action_quantumJump", "buildSpeed", "20s"), ("action_quantumJump", "addActionCooldownTime", "150s"), ("projectile_quantumJump", "teleportSource", "true"), ("turret_quantumJump", "limitingRange", "20000")):
+        if expected not in cruiser:
+            ERRORS.append(f"capital ships need a charged long-range jump: {expected}")
+    jump_lock = next((v for s, k, v in cruiser if s == "action_quantumJump" and k == "isLocked"), "")
+    if "rsQuantumCatapultOnline" not in jump_lock:
+        ERRORS.append("capital-ship jump must require a completed team catapult")
+    for name in ("rsCorvette", "rsDestroyer"):
+        if any(s == "action_quantumJump" for s, _, _ in UNITS[name][1]):
+            ERRORS.append(f"{name} must not have a capital-ship jump")
+    for name, cost in (("rsBattleship", "credits=1800, strategic=2"), ("rsTitan", "credits=3000, strategic=3"), ("rsJuggernaut", "credits=3200, strategic=3")):
+        if ("action_quantumJump", "price", cost) not in UNITS[name][1]:
+            ERRORS.append(f"{name} must pay its capital-ship jump cost")
     for name in ("rsCorvette", "rsDestroyer"):
         entries = UNITS[name][1]
         if ("core", "tags", "rsQuantumFleet") not in entries or ("hiddenAction_receiveQuantumLaunch", "teleportTo", "eventData('exit', type='unit')") not in entries:
@@ -391,7 +407,7 @@ if "rsJuggernaut" in UNITS:
     for target in ("rsCruiserT2", "rsCruiserMissileT2", "rsCarrierCruiserT2", "rsBattleshipT2", "rsMissileBattleshipT2"):
         if not any(s.startswith("canBuild_") and k == "name" and v == target for s, k, v in entries):
             ERRORS.append(f"rsJuggernaut: missing direct T2 build {target}")
-for name, expected in (("rsCorvette", "1.65"), ("rsDestroyer", "1.55"), ("rsCruiser", "1.45"), ("rsCarrierCruiser", "1.4"), ("rsBattleship", "1.3")):
+for name, expected in (("rsCorvette", "1.65"), ("rsDestroyer", "1.55"), ("rsCruiser", "1.45"), ("rsCruiserMissile", "1.45"), ("rsCarrierCruiser", "1.45"), ("rsBattleship", "1.4"), ("rsTitan", "1.32"), ("rsJuggernaut", "1.27")):
     if ("movement", "moveSpeed", expected) not in UNITS[name][1]:
         ERRORS.append(f"{name}: mixed-fleet speed should be {expected}")
 
