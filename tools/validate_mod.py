@@ -293,7 +293,8 @@ for name in ("rsResearchStation", "rsPlanetLab"):
             "Destroyer": 600, "Cruiser": 2500, "Kinetics": 900, "Missiles": 3000,
             "Battleship": 5500, "Carrier": 3600, "Starhold": 1400, "Fortress": 4000,
             "Citadel": 8000, "Shields": 1800, "IonCannon": 6500, "Titan": 13000,
-            "Juggernaut": 16000, "Colossus": 22000, "Dyson": 14000,
+            "Juggernaut": 16000, "Colossus": 22000,
+            "ColossusMachine": 22000, "ColossusHive": 22000, "Dyson": 14000,
             "Matter": 15000, "MegaShipyard": 16000, "ScienceNexus": 15000,
             "QuantumCatapult": 18000, "HyperRelay": 2400,
         }

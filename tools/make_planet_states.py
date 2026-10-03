@@ -8,10 +8,11 @@ from make_maps import PLANET_NAMES
 UNITS = Path(__file__).resolve().parents[1] / "mod/rusted-stellaris/units"
 
 
-def impact_action(name: str, tag: str, result: str) -> str:
+def impact_action(name: str, tag: str, result: str, notice: str) -> str:
     return (
         f"[hiddenAction_{name}]\n"
         f"autoTriggerOnEvent: tookDamage(withTag='{tag}')\n"
+        f"showMessageToAllPlayers: {notice}\n"
         f"convertTo: {result}\n"
         "takeResources: credits=0\n"
         "takeResources_includeUnitsWithinRange: 48\n"
@@ -46,8 +47,8 @@ def main() -> None:
                 "[action_keepNeutral]\n"
                 "autoTrigger: if self.teamId() != -1\n"
                 "switchToTeam: -1\n\n"
-                + impact_action("worldCrack", "rsWorldCracker", shattered_name)
-                + impact_action("pacify", "rsPacifier", sealed_name)
+                + impact_action("worldCrack", "rsWorldCracker", shattered_name, f"{display_name}遭地爆天星击中。地壳崩裂，行星已永久破碎，任何殖民地都无法在此重建。")
+                + impact_action("pacify", "rsPacifier", sealed_name, f"{display_name}已被安乐天使封存。强光退去后，一道无法穿透的屏障将整颗行星与银河隔绝。")
                 + "[hiddenAction_purgeColony]\n"
                 "sendMessageTo: thisActionTarget\n"
                 "sendMessageWithTags: rsColossusPurge\n"
@@ -58,7 +59,7 @@ def main() -> None:
                 f"copyFrom: planet_{slug}.ini\n"
                 f"name: {occupied_name}\n"
                 f"displayText: {display_name}（已殖民）\n"
-                f"displayDescription: 编号 {planet_id} 的殖民行星；控制者是邻近殖民地所属队伍。\n"
+                f"displayDescription: 编号 {planet_id} 的殖民行星，控制者是邻近殖民地所属队伍。\n"
                 f"tags: rsPlanetIntact, rsPlanetOccupied, {intact_name}\n\n"
                 "[graphics]\n"
                 "image: planet_occupied.png\n\n"
@@ -67,7 +68,7 @@ def main() -> None:
                 "[action_markUnclaimed]\n"
                 "autoTrigger: if nearestUnit(withinRange=48, withTag='rsPlanetColony', relation='any', incompleteBuildings=false) == null\n"
                 f"convertTo: {intact_name}\n\n"
-                + impact_action("neutronSweep", "rsNeutronSweep", intact_name).rstrip() + "\n"
+                + impact_action("neutronSweep", "rsNeutronSweep", intact_name, f"{display_name}上空的中子羽流正在散去。殖民地已被清除，行星仍可重新殖民。").rstrip() + "\n"
             )
             (UNITS / f"planet_{slug}_occupied.ini").write_text(occupied, encoding="utf-8")
             for state, label, image, unit_name in (
