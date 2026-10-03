@@ -340,6 +340,9 @@ if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFra
     jump_lock = next((v for s, k, v in cruiser if s == "action_quantumJump" and k == "isLocked"), "")
     if "rsQuantumCatapultOnline" not in jump_lock:
         ERRORS.append("capital-ship jump must require a completed team catapult")
+    jump_visibility = next((v for s, k, v in cruiser if s == "action_quantumJump" and k == "isVisible"), "")
+    if "rsTechQuantumCatapult" not in jump_visibility or "rsQuantumCatapultOnline" not in jump_visibility:
+        ERRORS.append("sandbox-built catapult must reveal capital-ship jump without research")
     for name in ("rsCorvette", "rsDestroyer"):
         if any(s == "action_quantumJump" for s, _, _ in UNITS[name][1]):
             ERRORS.append(f"{name} must not have a capital-ship jump")
