@@ -287,8 +287,19 @@ if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and 
 for name, section, key, value in (("rsPreFtlBuilder", "core", "canBuild_16_name", "rsGenerator"), ("rsPreFtlBuilder", "core", "canBuild_17_name", "rsResearchStation"), ("rsArk", "canBuild_planetDefense", "name", "rsDefensePlatform"), ("rsArk", "canBuild_planetMissile", "name", "rsMissilePlatform"), ("rsArk", "canBuild_repairBaseDirect", "name", "rsRepairBase")):
     if name in UNITS and (section, key, value) not in UNITS[name][1]:
         ERRORS.append(f"{name} construction menu missing {value}")
-if "rsMegaShipyard" in UNITS and ("core", "nanoFactorySpeed", "3") not in UNITS["rsMegaShipyard"][1]:
-    ERRORS.append("mega shipyard must build at triple factory speed")
+if "rsMegaShipyard" in UNITS:
+    mega_shipyard = UNITS["rsMegaShipyard"][1]
+    if ("core", "nanoFactorySpeed", "4") not in mega_shipyard:
+        ERRORS.append("mega shipyard must build at quadruple factory speed")
+    for section, unit_name in (
+        ("canBuild_cruiserT2", "rsCruiserT2"),
+        ("canBuild_cruiserMissileT2", "rsCruiserMissileT2"),
+        ("canBuild_carrierCruiserT2", "rsCarrierCruiserT2"),
+        ("canBuild_battleshipT2", "rsBattleshipT2"),
+        ("canBuild_missileBattleshipT2", "rsMissileBattleshipT2"),
+    ):
+        if (section, "name", unit_name) not in mega_shipyard:
+            ERRORS.append(f"mega shipyard must directly build {unit_name}")
 for site, frame, first_action, final_action in (
     ("rsDysonSite", "rsDysonFrame", "action_buildDysonFrame", "action_completeDyson"),
     ("rsMatterSite", "rsMatterFrame", "action_buildMatterFrame", "action_completeMatter"),
@@ -345,10 +356,28 @@ if all(name in UNITS for name in ("rsScienceNexusSite", "rsScienceNexusFrame", "
         ERRORS.append("science nexus site must convert to frame")
     if ("action_completeScienceNexus", "convertTo", "rsScienceNexus") not in frame:
         ERRORS.append("science nexus frame must convert to complete structure")
+    if ("action_completeScienceNexus", "addGlobalTeamTags", "rsScienceNexusCompleted") not in frame:
+        ERRORS.append("science nexus completion must permanently unlock dependent research")
     if any(s == "core" and k == "generation_resources" for s, k, _ in site + frame):
         ERRORS.append("unfinished science nexus must not generate science")
     if ("core", "generation_resources", "science=45") not in complete:
         ERRORS.append("completed science nexus must generate 45 science")
+    if ("core", "tags", "rsScienceNexusChain, rsScienceNexusOnline") not in complete:
+        ERRORS.append("completed science nexus must satisfy sandbox research prerequisites")
+
+for name in ("rsResearchStation", "rsPlanetLab"):
+    if name in UNITS:
+        catapult_lock = next((v for s, k, v in UNITS[name][1] if s == "action_researchQuantumCatapult" and k == "isLocked"), "")
+        if "rsScienceNexusCompleted" not in catapult_lock or "rsScienceNexusOnline" not in catapult_lock:
+            ERRORS.append(f"{name}: quantum catapult research must require a completed science nexus")
+
+for name in ("rsCorvette", "rsDestroyer"):
+    if name in UNITS:
+        training_trigger = next((v for s, k, v in UNITS[name][1] if s == "hiddenAction_academyTraining" and k == "autoTrigger"), "")
+        if "rsConstructionComplete" not in training_trigger:
+            ERRORS.append(f"{name}: academy conversion must wait for ship completion")
+        if ("hiddenAction_markConstructionComplete", "autoTriggerOnEvent", "completeAndActive") not in UNITS[name][1] or ("hiddenAction_markConstructionComplete", "temporarilyAddTags", "rsConstructionComplete") not in UNITS[name][1]:
+            ERRORS.append(f"{name}: completion event must mark the ship before academy conversion")
 
 if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFrame", "rsQuantumCatapult")):
     site = UNITS["rsQuantumCatapultSite"][1]
