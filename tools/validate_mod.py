@@ -510,12 +510,18 @@ if "rsPreFtlBuilder" in UNITS:
         ERRORS.append("pre-FTL builder must retain the native extractor menu entry")
     for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
         if (section, "name", native_name) not in entries:
-            ERRORS.append(f"pre-FTL builder must retain {native_name} for players and post-FTL AI")
-        if native_name == "experimentalLandFactory":
-            if (section, "isLocked", "if self.isControlledByAI and self.resource('rsAiHandicap') >= 1.8") not in entries:
-                ERRORS.append("high-difficulty AI must not divert resources to native experimental land production")
-        elif not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.8" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
-            ERRORS.append(f"pre-FTL builder must defer {native_name} for high-difficulty pre-FTL AI")
+            ERRORS.append(f"pre-FTL builder must retain {native_name} for players")
+        if not any(s == section and k == "isLocked" and "self.isControlledByAI" in v and "rsAiHandicap') >= 1.4" in v and "rsFactionRegular" in v and "rsFactionMachine" in v and "rsFactionHive" in v for s, k, v in entries):
+            ERRORS.append(f"pre-FTL builder must defer {native_name} for Hard AI and all post-FTL AI")
+if "rsEngineer" in UNITS:
+    entries = UNITS["rsEngineer"][1]
+    for section, native_name in (("canBuild_landFactory", "landFactory"), ("canBuild_airFactory", "airFactory"), ("canBuild_seaFactory", "seaFactory"), ("canBuild_mechFactory", "mechFactory"), ("canBuild_experimentalLandFactory", "experimentalLandFactory"), ("canBuild_nukeLauncher", "nukeLauncherC")):
+        if (section, "name", native_name) not in entries or (section, "isLocked", "if self.isControlledByAI") not in entries:
+            ERRORS.append(f"engineer must reserve {native_name} for players")
+if "rsShipyard" in UNITS and ("ai", "buildPriority", "0.32") not in UNITS["rsShipyard"][1]:
+    ERRORS.append("AI shipyard priority must support early fleet production")
+if "rsCorvette" in UNITS and ("ai", "buildPriority", "0.42") not in UNITS["rsCorvette"][1]:
+    ERRORS.append("AI corvette priority must support early fleet production")
 for filename in ("starbase.ini", "_starbase_tier_common.ini"):
     entries = list(fields(ROOT / "units" / filename))
     if not any(s == "hiddenAction_aiMassAssault" and k == "autoTrigger" and "rsAiHandicap') >= 1.8" in v and "greaterThan=17, withinRange=700" in v for s, k, v in entries):
