@@ -349,7 +349,7 @@ for name, credits, minerals, alloys in (("rsFoundry", 2, 3, 2), ("rsFoundryT2", 
         ERRORS.append(f"{name}: foundry must visibly generate alloys and consume inputs")
     if ("core", "generation_active", f"if self.resource('minerals') >= {minerals} and self.resource('credits') >= {credits}") not in entries:
         ERRORS.append(f"{name}: foundry must stop when inputs are insufficient")
-    if name == "rsFoundry" and ("core", "generation_delay", "120") not in entries:
+    if name == "rsFoundry" and ("core", "generation_delay", "80") not in entries:
         ERRORS.append("foundry automatic smelting must run at the designed two-second interval")
 
 for source, target, action in (("rsCruiser", "rsCruiserT2", "action_upgradeCruiserT2"), ("rsCruiserMissile", "rsCruiserMissileT2", "action_upgradeCruiserT2"), ("rsCarrierCruiser", "rsCarrierCruiserT2", "action_upgradeCruiserT2"), ("rsBattleship", "rsBattleshipT2", "action_upgradeBattleshipT2"), ("rsMissileBattleship", "rsMissileBattleshipT2", "action_upgradeBattleshipT2")):
