@@ -300,6 +300,16 @@ if "rsMegaShipyard" in UNITS:
     ):
         if (section, "name", unit_name) not in mega_shipyard:
             ERRORS.append(f"mega shipyard must directly build {unit_name}")
+for name, build_speed in (
+    ("rsCruiser", "0.00082"),
+    ("rsCarrierCruiser", "0.00067"),
+    ("rsBattleship", "0.00052"),
+    ("rsTitan", "0.00026"),
+    ("rsJuggernaut", "0.00021"),
+    ("rsColossus", "0.00019"),
+):
+    if name in UNITS and ("core", "buildSpeed", build_speed) not in UNITS[name][1]:
+        ERRORS.append(f"{name}: capital ship construction baseline must be {build_speed}")
 for site, frame, first_action, final_action in (
     ("rsDysonSite", "rsDysonFrame", "action_buildDysonFrame", "action_completeDyson"),
     ("rsMatterSite", "rsMatterFrame", "action_buildMatterFrame", "action_completeMatter"),
