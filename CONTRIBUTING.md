@@ -4,6 +4,12 @@
 
 模组源文件位于 `mod/rusted-stellaris/`，地图位于 `maps/`，构建与验证脚本位于 `tools/`。
 
+## 许可与素材
+
+仓库根目录的 [MIT 许可证](LICENSE)适用于本项目原创的构建与验证脚本、作曲与贴图生成源码、模组配置（包括单位配置和地图 TMX 配置）。保留版权与许可声明即可按协议复用这些文件。
+
+MIT 许可证不适用于图片、录音、乐器采样及其他第三方素材，也不授予《群星》《铁锈战争》的名称、商标或游戏素材使用权。`tools/music/VSCO2-CC0.txt` 与 `mod/rusted-stellaris/music/VSCO2-CC0.txt` 是 VSCO 2 CE 乐器采样的原有 CC0 声明；曲目的制作与采样来源见 `mod/rusted-stellaris/music/CREDITS.txt`。原创图片和音乐尚未另行公开授权，复用前请联系项目维护者。
+
 ## 构建含原创配乐的开发包
 
 安装 uv 和 FFmpeg（包含 `ffprobe`），在项目根目录执行：
