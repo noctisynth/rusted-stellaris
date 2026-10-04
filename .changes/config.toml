@@ -14,8 +14,6 @@ path = "."
 resolver = "nodejs"
 publish = false
 github-release = true
-channel = "alpha"
-channel-bump = "preserve"
 assets = [
   "build/rusted-stellaris-dev.rwmod",
   "build/SHA256SUMS.txt",
