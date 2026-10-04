@@ -1,0 +1,17 @@
+[b]Rusted Stellaris[/b] brings interstellar expansion and fleet warfare to Rusted Warfare. Build your empire's economy, research technology, establish starbases, and command fleets across the galaxy.
+
+[b]What awaits you[/b]
+• Choose a conventional empire, machine intelligence, or hive mind.
+• Develop energy, mineral, alloy, science, and strategic resource production.
+• Build fleets from corvettes to a juggernaut and defend your territory with upgraded starbases.
+• Pursue megastructures and wield colossus-scale power.
+• Play across three starfield maps: Twin Chokepoints (2 players), Three Arms (4 players), and Shattered Galaxy (8 players).
+• Explore with four original instrumental tracks in the mod's music rotation.
+
+[b]Getting started[/b]
+Subscribe and enable Rusted Stellaris in the in-game mod list. For a first game, try Twin Chokepoints and begin with power, mining, alloy production, and research. For multiplayer, everyone should use the same mod version.
+
+Project and play guide: [url=https://github.com/noctisynth/rusted-stellaris]GitHub[/url]
+Report issues: [url=https://github.com/noctisynth/rusted-stellaris/issues]GitHub Issues[/url]
+
+Rusted Stellaris is an unofficial fan project inspired by Stellaris. It is not affiliated with the developers of Stellaris or Rusted Warfare.
