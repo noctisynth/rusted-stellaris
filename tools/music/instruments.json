@@ -1,0 +1,818 @@
+{
+  "horn": [
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_A#1_v1_1.wav",
+      "root": 46,
+      "lovel": 0,
+      "hivel": 41
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_A2_v1_1.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 41
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_C3_v1_1.wav",
+      "root": 60,
+      "lovel": 0,
+      "hivel": 30
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_D2_v1_1.wav",
+      "root": 50,
+      "lovel": 0,
+      "hivel": 30
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_D4_v1_1.wav",
+      "root": 74,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_F2_v1_1.wav",
+      "root": 53,
+      "lovel": 0,
+      "hivel": 41
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_G1_v1_1.wav",
+      "root": 43,
+      "lovel": 0,
+      "hivel": 41
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_A#1_v2_1.wav",
+      "root": 46,
+      "lovel": 42,
+      "hivel": 83
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_A2_v2_1.wav",
+      "root": 57,
+      "lovel": 42,
+      "hivel": 83
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_C3_v2_1.wav",
+      "root": 60,
+      "lovel": 31,
+      "hivel": 62
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_D2_v2_1.wav",
+      "root": 50,
+      "lovel": 31,
+      "hivel": 62
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_F2_v2_1.wav",
+      "root": 53,
+      "lovel": 42,
+      "hivel": 83
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_G1_v2_1.wav",
+      "root": 43,
+      "lovel": 42,
+      "hivel": 83
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_C3_v3_1.wav",
+      "root": 60,
+      "lovel": 63,
+      "hivel": 94
+    },
+    {
+      "path": "Brass/F Horn/sus/MOHorn_sus_D2_v3_1.wav",
+      "root": 50,
+      "lovel": 63,
+      "hivel": 94
+    }
+  ],
+  "violin": [
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A2_v1.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A3_v1.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B2_v1.wav",
+      "root": 59,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B4_v1.wav",
+      "root": 83,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_C4_v1.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D3_v1.wav",
+      "root": 62,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_E4_v1.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_F#3_v1.wav",
+      "root": 66,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G2_v1.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G4_v1.wav",
+      "root": 79,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A2_v2.wav",
+      "root": 57,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_A3_v2.wav",
+      "root": 69,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B2_v2.wav",
+      "root": 59,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_B4_v2.wav",
+      "root": 83,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_C4_v2.wav",
+      "root": 72,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_D3_v2.wav",
+      "root": 62,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_E4_v2.wav",
+      "root": 76,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_F#3_v2.wav",
+      "root": 66,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G2_v2.wav",
+      "root": 55,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/susVib/VlnEns_susVib_G4_v2.wav",
+      "root": 79,
+      "lovel": 63,
+      "hivel": 127
+    }
+  ],
+  "cello": [
+    {
+      "path": "Strings/Cello Section/susvib/susvib_A2_v1_1.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_B1_v1_1.wav",
+      "root": 47,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_C1_v1_1.wav",
+      "root": 36,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_C3_v1_1.wav",
+      "root": 60,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_D2_v1_1.wav",
+      "root": 50,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_E1_v1_1.wav",
+      "root": 40,
+      "lovel": 0,
+      "hivel": 41
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_E1_v1_2.wav",
+      "root": 40,
+      "lovel": 42,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_F2_v1_1.wav",
+      "root": 53,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Cello Section/susvib/susvib_G1_v1_1.wav",
+      "root": 43,
+      "lovel": 0,
+      "hivel": 62
+    }
+  ],
+  "harp": [
+    {
+      "path": "Strings/Harp/KSHarp_A4_mf.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_B3_mf.wav",
+      "root": 59,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_B5_mf.wav",
+      "root": 83,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_C3_mf.wav",
+      "root": 48,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_C5_mf.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_D4_mf.wav",
+      "root": 62,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_E3_mf.wav",
+      "root": 52,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_E5_mf.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_F4_mf.wav",
+      "root": 65,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_G3_mf.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Harp/KSHarp_G5_mf.wav",
+      "root": 79,
+      "lovel": 0,
+      "hivel": 127
+    }
+  ],
+  "piano": [
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_012.wav",
+      "root": 45,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_014.wav",
+      "root": 49,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_016.wav",
+      "root": 53,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_018.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_020.wav",
+      "root": 61,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_022.wav",
+      "root": 65,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_024.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_026.wav",
+      "root": 73,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_028.wav",
+      "root": 77,
+      "lovel": 0,
+      "hivel": 60
+    },
+    {
+      "path": "Keys/Upright Piano/Player_dyn1_rr1_030.wav",
+      "root": 81,
+      "lovel": 0,
+      "hivel": 60
+    }
+  ],
+  "drum": [
+    {
+      "path": "VSCO 1 Percussion/drums/bass/bdrum3_mp_1.wav",
+      "root": 36
+    }
+  ],
+  "cymbal": [
+    {
+      "path": "VSCO 1 Percussion/varMetal/Cymbals/susp/susp_hit_hardmall_mf.wav",
+      "root": 60
+    }
+  ],
+  "flute": [
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_A3_v1_1.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_A4_v1_1.wav",
+      "root": 81,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_C3_v1_1.wav",
+      "root": 60,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_C4_v1_1.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_C4_v1_2.wav",
+      "root": 72,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_C5_v1_1.wav",
+      "root": 84,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_E3_v1_1.wav",
+      "root": 64,
+      "lovel": 0,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_E4_v1_1.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_E4_v1_2.wav",
+      "root": 76,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_E5_v1_1.wav",
+      "root": 88,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Woodwinds/Flute/susvib/LDFlute_susvib_E5_v1_2.wav",
+      "root": 88,
+      "lovel": 63,
+      "hivel": 127
+    }
+  ],
+  "solo_violin": [
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A3_p.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A4_p.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_A5_p.wav",
+      "root": 81,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C4_p.wav",
+      "root": 60,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C5_p.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_C6_p.wav",
+      "root": 84,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_E4_p.wav",
+      "root": 64,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_E5_p.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G3_p.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G4_p.wav",
+      "root": 67,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Solo Violin/Arco Vib/LLVln_ArcoVib_G5_p.wav",
+      "root": 79,
+      "lovel": 0,
+      "hivel": 62
+    }
+  ],
+  "viola": [
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_A3_v1_1.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_B2_v1_1.wav",
+      "root": 59,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_C2_v1_1.wav",
+      "root": 48,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_C4_v1_1.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_D2_v1_1.wav",
+      "root": 50,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_D3_v1_1.wav",
+      "root": 62,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_E2_v1_1.wav",
+      "root": 52,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_F3_v1_1.wav",
+      "root": 65,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Viola Section/susvib/ViolaEns_susvib_G2_v1_1.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 62
+    }
+  ],
+  "spiccato": [
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A2_v1_rr1.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A3_v1_rr1.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_B2_v1_rr1.wav",
+      "root": 59,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_C4_v1_rr1.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_D3_v1_rr1.wav",
+      "root": 62,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_E4_v1_rr1.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_F#3_v1_rr1.wav",
+      "root": 66,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G2_v1_rr1.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G4_v1_rr1.wav",
+      "root": 79,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A2_v2_rr1.wav",
+      "root": 57,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A3_v2_rr1.wav",
+      "root": 69,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_B2_v2_rr1.wav",
+      "root": 59,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_C4_v2_rr1.wav",
+      "root": 72,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_D3_v2_rr1.wav",
+      "root": 62,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_E4_v2_rr1.wav",
+      "root": 76,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_F#3_v2_rr1.wav",
+      "root": 66,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G2_v2_rr1.wav",
+      "root": 55,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A2_v1_rr2.wav",
+      "root": 57,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A3_v1_rr2.wav",
+      "root": 69,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_B2_v1_rr2.wav",
+      "root": 59,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_C4_v1_rr2.wav",
+      "root": 72,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_D3_v1_rr2.wav",
+      "root": 62,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_E4_v1_rr2.wav",
+      "root": 76,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_F#3_v1_rr2.wav",
+      "root": 66,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G2_v1_rr2.wav",
+      "root": 55,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G4_v1_rr2.wav",
+      "root": 79,
+      "lovel": 0,
+      "hivel": 62
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A2_v2_rr2.wav",
+      "root": 57,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_A3_v2_rr2.wav",
+      "root": 69,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_B2_v2_rr2.wav",
+      "root": 59,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_C4_v2_rr2.wav",
+      "root": 72,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_D3_v2_rr2.wav",
+      "root": 62,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_E4_v2_rr2.wav",
+      "root": 76,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_F#3_v2_rr2.wav",
+      "root": 66,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G2_v2_rr2.wav",
+      "root": 55,
+      "lovel": 63,
+      "hivel": 127
+    },
+    {
+      "path": "Strings/Violin Section/Spic/VlnEns_Spic_G4_v2_rr2.wav",
+      "root": 79,
+      "lovel": 63,
+      "hivel": 127
+    }
+  ]
+}

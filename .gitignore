@@ -3,3 +3,17 @@ work/
 *.rwmod
 __pycache__/
 *.pyc
+
+# Audio is reproducible from tools/music; keep renders and downloaded samples out.
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.sf2
+*.sfz
+
+# Local playback, debugging and export artifacts.
+*.log
+*.rwsave
+*.replay
+.pytest_cache/

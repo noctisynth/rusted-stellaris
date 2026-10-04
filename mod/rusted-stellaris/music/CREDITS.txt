@@ -1,0 +1,17 @@
+Rusted Stellaris — Original Instrumental Soundtrack
+
+Last Light / 最后的星光
+Luminous Departure / 光之航迹
+The Far Shore / 银河彼岸
+Nebula Echoes / 星云回声
+
+Original melodies and arrangements made for this project.
+Instrument recordings: VSCO 2 Community Edition (CC0-1.0).
+Recorded by Sam Gossner and Simon Dalzell.
+Sample cutting by Elan Hickler / Soundemote.
+https://github.com/sgossner/VSCO-2-CE
+https://versilian-studios.com/vsco-community/
+Full instrument license: VSCO2-CC0.txt.
+
+No Stellaris recordings, vocals or transcribed melodies are included.
+Build sources and pinned sample hashes are in tools/music in the source repository.

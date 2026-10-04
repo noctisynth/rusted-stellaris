@@ -19,6 +19,7 @@
 | [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |
 | [行星与巨像](specs/planets-and-colossus.md) | Active Spec | 行星状态、三种终局武器及验收条件 |
 | [舰队对地与平衡](specs/combat-balance.md) | Active Spec | 轨道轰炸与对原版单位的首轮数值基线 |
+| [原创配乐](specs/music.md) | Active Spec | 四首纯音乐、模组专属播放及音频构建边界 |
 | [本机参考资料](spikes/local-references.md) | 已核对 | 游戏安装、内置示例及已安装模组的位置与可用性 |
 | [舰队学院存档实验](spikes/fleet-academy-save.md) | 已核对 | 动态属性训练导致游戏 1.15 存档失败；后续应改验证可保存的机制 |
 | [实施清单索引](TODO.md) | Discovery | 等范围确认后建立分项清单 |

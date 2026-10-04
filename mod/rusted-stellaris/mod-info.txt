@@ -3,3 +3,8 @@ title: Rusted Stellaris (Development)
 description: An unofficial Stellaris-inspired Rusted Warfare total conversion in development.
 minVersion: v1.15p7
 tags: units, starting-units, maps, skirmish
+
+[music]
+sourceFolder: music
+whenUsingUnitsFromThisMod_playExclusively: true
+addToNormalPlaylist: false
