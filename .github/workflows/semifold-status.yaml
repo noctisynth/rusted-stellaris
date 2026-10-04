@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: read
+  issues: write
+  pull-requests: read
 
 jobs:
   status:
@@ -25,7 +27,8 @@ jobs:
         uses: noctisynth/setup-semifold@9dc3b2e2f25d5db332322b29c3d3436c857ca1d9
         with:
           version: '0.3.4'
-      # The status command enters its PR-comment path whenever GITHUB_ACTIONS is set.
-      # Keep this preview read-only, including for the Semifold-generated release PR.
-      - run: env -u GITHUB_ACTIONS semifold status
+      - run: semifold status
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: semifold version --dry-run
