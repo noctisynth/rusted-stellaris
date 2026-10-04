@@ -1,0 +1,28 @@
+[branches]
+base = "main"
+release = "release"
+
+[tags]
+chore = "Chores"
+feat = "New Features"
+fix = "Bug Fixes"
+perf = "Performance Improvements"
+refactor = "Refactors"
+
+[packages.rusted-stellaris]
+path = "."
+resolver = "nodejs"
+publish = false
+github-release = true
+channel = "alpha"
+channel-bump = "preserve"
+assets = [
+  "build/rusted-stellaris-dev.rwmod",
+  "build/SHA256SUMS.txt",
+  "build/BUILD-INFO.txt",
+]
+
+# Use only the built-in JSON version editor. No npm registry or Node runtime.
+[resolver.nodejs]
+publish = []
+post-version = []
