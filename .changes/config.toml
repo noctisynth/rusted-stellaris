@@ -11,7 +11,7 @@ refactor = "Refactors"
 
 [packages.rusted-stellaris]
 path = "."
-resolver = "nodejs"
+resolver = "python"
 publish = false
 github-release = true
 assets = [
@@ -20,7 +20,11 @@ assets = [
   "build/BUILD-INFO.txt",
 ]
 
-# Use only the built-in JSON version editor. No npm registry or Node runtime.
-[resolver.nodejs]
+# Version the Python tooling project; distribute only the mod on GitHub.
+[resolver.python]
 publish = []
-post-version = []
+
+[[resolver.python.post-version]]
+command = "uv"
+args = ["lock"]
+dry-run = false

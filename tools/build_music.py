@@ -70,7 +70,7 @@ def main():
     try:
         import numpy  # noqa: F401
     except ImportError:
-        parser.error("Install NumPy: python -m pip install -r tools/music/requirements.txt")
+        parser.error("Install project dependencies: uv sync --locked")
     WORK.mkdir(parents=True, exist_ok=True)
     OUTPUT.mkdir(parents=True, exist_ok=True)
     # An interrupted rebuild must not leave an old manifest claiming success.

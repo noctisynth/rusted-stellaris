@@ -24,14 +24,16 @@ def digest(path):
 
 def source_digest():
     result = hashlib.sha256()
-    for path in sorted([*SOURCE.iterdir(), ROOT / "tools" / "build_music.py"]):
-        if path.is_file() and path.suffix in {".py", ".json"}:
+    inputs = [path for path in SOURCE.iterdir() if path.suffix in {".py", ".json"}]
+    inputs.extend([ROOT / "tools" / "build_music.py", ROOT / "uv.lock", ROOT / ".python-version"])
+    for path in sorted(inputs):
+        if path.is_file():
             result.update(path.relative_to(ROOT).as_posix().encode("utf-8") + b"\0" + path.read_bytes())
     return result.hexdigest()
 
 
 def verified_audio():
-    instruction = "Run python tools/build_music.py before packaging."
+    instruction = "Run uv run --locked python tools/build_music.py before packaging."
     if not STATE.is_file():
         raise RuntimeError("Soundtrack has not been built. " + instruction)
     state = json.loads(STATE.read_text(encoding="utf-8"))

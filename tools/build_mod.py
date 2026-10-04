@@ -4,6 +4,7 @@ from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import hashlib
 import json
+import tomllib
 import os
 import subprocess
 from music.build_support import verified_audio
@@ -12,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "mod" / "rusted-stellaris"
 DEST = ROOT / "build" / "rusted-stellaris-dev.rwmod"
 MUSIC = verified_audio()
-VERSION = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
+VERSION = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 COMMIT = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 DEST.parent.mkdir(parents=True, exist_ok=True)
 

@@ -3,6 +3,7 @@ work/
 *.rwmod
 __pycache__/
 *.pyc
+.venv/
 
 # Audio is reproducible from tools/music; keep renders and downloaded samples out.
 *.wav
