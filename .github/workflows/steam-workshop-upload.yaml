@@ -1,0 +1,103 @@
+name: Upload Steam Workshop
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
+      expected_commit:
+        required: false
+        type: string
+    secrets:
+      STEAM_USERNAME:
+        required: true
+      STEAM_CONFIG_VDF_BASE64:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  upload:
+    runs-on: windows-2025
+    timeout-minutes: 30
+    concurrency:
+      group: steam-workshop-3813493737
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.release_tag }}
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Verify release and download assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          EXPECTED_COMMIT: ${{ inputs.expected_commit }}
+        shell: pwsh
+        run: |
+          if ($env:RELEASE_TAG -notmatch '^rusted-stellaris-v\d+\.\d+\.\d+$') {
+            throw 'Unexpected release tag'
+          }
+          if ($env:EXPECTED_COMMIT -and (git rev-parse HEAD) -ne $env:EXPECTED_COMMIT) {
+            'upload=false' >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          $isDraft = gh release view $env:RELEASE_TAG --json isDraft --jq .isDraft
+          if ($LASTEXITCODE -ne 0 -or $isDraft -ne 'false') {
+            throw 'Published GitHub Release is required'
+          }
+          New-Item -ItemType Directory -Force -Path build | Out-Null
+          gh release download $env:RELEASE_TAG --dir build `
+            --pattern rusted-stellaris-dev.rwmod --pattern SHA256SUMS.txt --pattern BUILD-INFO.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Failed to download release assets' }
+          'upload=true' >> $env:GITHUB_OUTPUT
+        id: release
+      - name: Verify and stage the existing Workshop item
+        if: steps.release.outputs.upload == 'true'
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: uv run --locked python tools/prepare_workshop.py --change-note $env:RELEASE_TAG
+      - name: Install Valve SteamCMD
+        if: steps.release.outputs.upload == 'true'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path build/steamcmd | Out-Null
+          Invoke-WebRequest 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip' `
+            -OutFile build/steamcmd/steamcmd.zip
+          Expand-Archive -LiteralPath build/steamcmd/steamcmd.zip -DestinationPath build/steamcmd -Force
+          Push-Location build/steamcmd
+          try {
+            $PSNativeCommandUseErrorActionPreference = $false
+            & .\steamcmd.exe +quit
+            & .\steamcmd.exe +quit
+            if ($LASTEXITCODE -ne 0) { throw 'SteamCMD initialization failed' }
+          } finally {
+            Pop-Location
+          }
+      - name: Update Workshop item 3813493737
+        if: steps.release.outputs.upload == 'true'
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_CONFIG_VDF_BASE64: ${{ secrets.STEAM_CONFIG_VDF_BASE64 }}
+        shell: pwsh
+        run: |
+          if (-not $env:STEAM_USERNAME -or -not $env:STEAM_CONFIG_VDF_BASE64) {
+            throw 'Steam credentials are missing'
+          }
+          New-Item -ItemType Directory -Force -Path build/steamcmd/config | Out-Null
+          $config = Join-Path $env:GITHUB_WORKSPACE 'build/steamcmd/config/config.vdf'
+          [IO.File]::WriteAllBytes($config, [Convert]::FromBase64String($env:STEAM_CONFIG_VDF_BASE64))
+          $workshop = Join-Path $env:GITHUB_WORKSPACE 'build/workshop/workshop.vdf'
+          Push-Location build/steamcmd
+          try {
+            & .\steamcmd.exe +login $env:STEAM_USERNAME +workshop_build_item $workshop +quit
+            if ($LASTEXITCODE -ne 0) { throw 'Steam Workshop upload failed' }
+          } finally {
+            Pop-Location
+          }

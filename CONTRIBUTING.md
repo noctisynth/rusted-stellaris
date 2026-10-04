@@ -47,8 +47,8 @@ CI 不包含商业游戏程序，也不执行游戏内载入、建造、战斗�
 
 ## Steam 创意工坊更新
 
-`Semifold CI` 的 `publish` output 报告 `rusted-stellaris` 发布成功后，同一次工作流才自动更新 Steam 创意工坊。版本 PR 阶段不会上传。Steam 作业使用 output 中的版本号定位 GitHub Release，从该 Release 下载 `.rwmod`、校验 SHA-256 和包内版本，解压完整模组，再通过 Valve SteamCMD 更新 Rusted Warfare（App ID `647960`）的现有条目 `3813493737`。脚本只在 VDF 中写入固定的现有条目 ID、内容目录和更新说明；封面文件 `mod-thumbnail.png` 存在时才提交封面字段。条目的标题、长篇描述和公开状态由 Steam 网页管理。
+`Semifold CI` 的 `publish` output 报告 `rusted-stellaris` 发布成功后，同一次工作流才自动更新 Steam 创意工坊。版本 PR 阶段不会上传。Steam 作业使用 output 中的版本号定位 GitHub Release，从该 Release 下载 `.rwmod`、校验 SHA-256 和包内版本，解压完整模组，再通过 Valve SteamCMD 更新 Rusted Warfare（App ID `647960`）的现有条目 `3813493737`。作业在 Windows 运行器上使用由 Windows SteamCMD 生成的登录配置。脚本只在 VDF 中写入固定的现有条目 ID、内容目录和更新说明；封面文件 `mod-thumbnail.png` 存在时才提交封面字段。条目的标题、长篇描述和公开状态由 Steam 网页管理。
 
 首次使用时，由拥有该条目的 Steam 账号在本机用 SteamCMD 登录并完成 Steam Guard 验证，确认之后运行 `steamcmd +login <用户名> +quit` 可直接进入。将该 SteamCMD 目录下 `config/config.vdf` 的原始字节编码为 Base64，在 GitHub 仓库配置两个 Actions Secret：`STEAM_USERNAME`（用户名）与 `STEAM_CONFIG_VDF_BASE64`（Base64 编码后的完整文件）。这个配置包含可复用的登录凭据，只保存在 Secret 中，不提交、上传为 artifact 或打印到日志。认证失效时需要在本机重新登录并更新 Secret。GitHub 的临时运行器不保证刷新后的登录配置能自动回写 Secret。
 
-工作流使用官方 SteamCMD。维护者合并版本 PR 后，Semifold 发布 GitHub Release 并顺序触发 Steam 更新；代理不会合并 PR。第一次线上运行时，需确认 SteamCMD 接受该账号授权、`workshop_build_item` 更新原条目且订阅者可以完整载入，并核对页面内容与封面。SteamCMD 运行错误可从 Actions 日志排查；未经过这次实测前，不把云端工坊发布视为已验收。
+工作流使用官方 SteamCMD。维护者合并版本 PR 后，Semifold 发布 GitHub Release 并顺序触发 Steam 更新；代理不会合并 PR。如果 GitHub Release 成功而 Steam 上传失败，可以从 Actions 手动运行 `Retry Steam Workshop`，输入已经发布的标签。重试作业使用同一份已发布附件和校验流程，不重新发布 GitHub Release。第一次线上运行时，需确认 SteamCMD 接受该账号授权、`workshop_build_item` 更新原条目且订阅者可以完整载入，并核对页面内容与封面。SteamCMD 运行错误可从 Actions 日志排查；未经过这次实测前，不把云端工坊发布视为已验收。

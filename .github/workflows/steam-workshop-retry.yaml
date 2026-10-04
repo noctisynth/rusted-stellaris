@@ -1,0 +1,19 @@
+name: Retry Steam Workshop
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published GitHub Release tag to retry
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  retry:
+    uses: ./.github/workflows/steam-workshop-upload.yaml
+    with:
+      release_tag: ${{ inputs.release_tag }}
+    secrets: inherit
