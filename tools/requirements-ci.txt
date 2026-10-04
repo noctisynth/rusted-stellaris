@@ -1,0 +1,2 @@
+# validate_maps imports the map generator, which uses Pillow.
+Pillow>=10,<13
