@@ -1,0 +1,69 @@
+name: Steam Workshop
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published GitHub Release tag to upload
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: steam-workshop-3813493737
+  cancel-in-progress: false
+
+jobs:
+  upload:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.release_tag }}
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          version: '0.12.23'
+      - name: Download published release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        shell: bash
+        run: |
+          [[ "$RELEASE_TAG" =~ ^rusted-stellaris-v[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = false
+          mkdir -p build
+          gh release download "$RELEASE_TAG" --dir build \
+            --pattern rusted-stellaris-dev.rwmod --pattern SHA256SUMS.txt --pattern BUILD-INFO.txt
+      - name: Verify and stage the existing Workshop item
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: uv run --locked python tools/prepare_workshop.py --change-note "$RELEASE_TAG"
+      - name: Install Valve SteamCMD
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes lib32gcc-s1
+          mkdir -p build/steamcmd
+          curl --fail --location --silent --show-error \
+            https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz \
+            -o build/steamcmd/steamcmd_linux.tar.gz
+          tar -xzf build/steamcmd/steamcmd_linux.tar.gz -C build/steamcmd
+      - name: Update Workshop item 3813493737
+        env:
+          STEAM_USERNAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_CONFIG_VDF_BASE64: ${{ secrets.STEAM_CONFIG_VDF_BASE64 }}
+        shell: bash
+        run: |
+          test -n "$STEAM_USERNAME"
+          test -n "$STEAM_CONFIG_VDF_BASE64"
+          mkdir -p build/steamcmd/config
+          printf '%s' "$STEAM_CONFIG_VDF_BASE64" | base64 --decode > build/steamcmd/config/config.vdf
+          chmod 600 build/steamcmd/config/config.vdf
+          cd build/steamcmd
+          ./steamcmd.sh +login "$STEAM_USERNAME" \
+            +workshop_build_item "$GITHUB_WORKSPACE/build/workshop/workshop.vdf" +quit
