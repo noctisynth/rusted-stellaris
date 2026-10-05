@@ -14,6 +14,8 @@
 |---|---|---|
 | [完整模组范围](rfcs/0001-complete-mod-scope.md) | Accepted RFC | 完整交付范围与验收标准 |
 | [普通地图中子灭杀](rfcs/0002-ordinary-map-neutron.md) | Accepted RFC | 地面清除、建筑中立与舰队豁免的目标及验证边界 |
+| [天机研究所](rfcs/0003-tianji-institute.md) | Accepted RFC | 科学枢纽后的天机工程与首批三种失落帝国舰船 |
+| [天机科技与舰船](specs/tianji-institute.md) | Active Spec | 解锁链、随机抽取、原创立绘及首轮战斗数值 |
 | [内容清单](specs/content-roster.md) | Active Spec | 建筑、舰船、阵营和科技的逐项交付清单 |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
 | [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |

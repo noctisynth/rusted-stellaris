@@ -484,6 +484,8 @@ if __name__ == "__main__":
     for name, size in (("battleship", 80), ("starbase", 64), ("outpost", 48), ("starhold", 96), ("fortress", 96), ("citadel", 96), ("corvette", 32), ("generator", 48), ("cruiser", 64), ("shipyard", 64), ("destroyer", 48), ("titan", 96), ("colossus", 96), ("mining_station", 48), ("engineer", 32), ("science_ship", 40), ("juggernaut", 96), ("research_station", 48), ("planet_lab", 48), ("mineral_plant", 48), ("foundry", 48), ("defense_platform", 48), ("repair_base", 48), ("trade_hub", 48), ("missile_platform", 48), ("ion_cannon", 48), ("shield_generator", 48), ("strategic_extractor", 48), ("administration", 48), ("assembly", 48), ("hatchery", 48), ("fleet_academy", 48), ("hyper_relay", 64)):
         generated_sprite(name, size)
     generated_sprite("ark", 160, alpha_bbox_threshold=16)
+    for name, size in (("riddle_escort", 64), ("enigma_battlecruiser", 96), ("fallen_titan", 112), ("tianji_institute", 64)):
+        generated_sprite(name, size, alpha_bbox_threshold=16)
     for name, size in (("carrier_cruiser", 64), ("fighter", 32), ("strike_craft", 32)):
         generated_sprite(name, size)
     generator_upgrades()
@@ -523,4 +525,5 @@ if __name__ == "__main__":
                 with Image.open(target) as current:
                     display_size = max(current.size)
             export_size = min(384, display_size * 4)
-            source_sprite(name, export_size).save(target, optimize=True)
+            alpha_threshold = 16 if name in {"riddle_escort", "enigma_battlecruiser", "fallen_titan", "tianji_institute"} else 1
+            source_sprite(name, export_size, alpha_bbox_threshold=alpha_threshold).save(target, optimize=True)

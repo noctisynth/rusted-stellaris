@@ -346,7 +346,7 @@ for name in ("rsResearchStation", "rsPlanetLab"):
             "Juggernaut": 16000, "Colossus": 22000,
             "ColossusMachine": 22000, "ColossusHive": 22000, "Dyson": 14000,
             "Matter": 15000, "MegaShipyard": 16000, "ScienceNexus": 15000,
-            "QuantumCatapult": 18000, "HyperRelay": 2400,
+            "QuantumCatapult": 18000, "HyperRelay": 2400, "TianjiEngineering": 9000,
         }
         if len(research_prices) != len(research_science_costs) or any(
             not research_prices.get(f"action_research{action}", "").startswith(f"science={cost},")
@@ -732,6 +732,35 @@ for sprite in (ROOT / "units").glob("*.png"):
 for name in ("rsTitan", "rsJuggernaut"):
     if name in UNITS and ("core", "experimental", "true") not in UNITS[name][1]:
         ERRORS.append(f"{name}: fourth-era capital ship must use the native experimental AI category")
+
+# Tianji research must be gated by an actually completed nexus, and each factory
+# must require the matching discovered ship technology.
+for name in ("rsResearchStation", "rsPlanetLab"):
+    entries = UNITS[name][1]
+    for entry in (
+        ("action_researchTianjiEngineering", "isLocked", "if not self.globalTeamTags(includes='rsScienceNexusCompleted')"),
+        ("action_researchTianjiEngineering", "addGlobalTeamTags", "rsTechTianjiEngineering"),
+        ("action_researchTianjiEngineering", "allowMultipleInQueue", "false"),
+    ):
+        if entry not in entries:
+            ERRORS.append(f"{name}: missing Tianji research contract {entry}")
+if ("hiddenAction_announceCompletion", "addGlobalTeamTags", "rsScienceNexusCompleted") not in UNITS["rsScienceNexus"][1]:
+    ERRORS.append("science nexus must record its actual completion for Tianji engineering")
+institute = UNITS["rsTianjiInstitute"][1]
+roll = next(v for s, k, v in institute if s == "hiddenAction_attemptDiscovery" and k == "setUnitMemory")
+if roll.count("rnd(") != 1 or not all(f"{name}Weight=select(" in roll for name in ("escort", "battle", "titan")):
+    ERRORS.append("Tianji discovery must freeze all available weights and sample once")
+for sec, key, value in institute:
+    if sec.startswith("hiddenAction_discover") and key == "requireConditional" and "globalTeamTags" in value:
+        ERRORS.append("Tianji outcome branches must use the frozen pool, not tags changed by an earlier branch")
+for factory in ("rsShipyard", "rsMegaShipyard", "rsJuggernaut"):
+    entries = UNITS[factory][1]
+    for section, tech in (("riddleEscort", "rsTechRiddleEscort"), ("enigmaBattlecruiser", "rsTechEnigmaBattlecruiser"), ("fallenTitan", "rsTechFallenTitan")):
+        if (f"canBuild_{section}", "isLocked", f"if not self.globalTeamTags(includes='{tech}')") not in entries:
+            ERRORS.append(f"{factory}: missing lost-empire ship technology gate {section}")
+fallen = UNITS["rsFallenTitan"][1]
+if "titanPermit" in next(v for s, k, v in fallen if s == "core" and k == "price") or ("hiddenAction_returnTitanPermit", "@copyFrom_skipThisSection", "true") not in fallen:
+    ERRORS.append("fallen titan must neither consume nor refund normal titan permits")
 
 if ERRORS:
     print("\n".join(ERRORS), file=sys.stderr)
