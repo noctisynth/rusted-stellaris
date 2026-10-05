@@ -277,7 +277,7 @@ for milestone_name in ("rsTitan", "rsParadoxTitan", "rsJuggernaut", "rsDysonSphe
                 ERRORS.append(f"{milestone_name} builder must not receive both completion viewpoints")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
-    for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160")):
+    for expected in (("core", "maxShield", "20000"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "4800"), ("projectile_3", "directDamage", "200")):
         if expected not in paradox_entries:
             ERRORS.append(f"paradox titan missing {expected}")
 for name, section, key, value in (("rsPreFtlBuilder", "core", "canBuild_16_name", "rsGenerator"), ("rsPreFtlBuilder", "core", "canBuild_17_name", "rsResearchStation"), ("rsArk", "canBuild_planetDefense", "name", "rsDefensePlatform"), ("rsArk", "canBuild_planetMissile", "name", "rsMissilePlatform"), ("rsArk", "canBuild_repairBaseDirect", "name", "rsRepairBase")):
