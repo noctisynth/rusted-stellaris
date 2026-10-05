@@ -4,6 +4,6 @@
 
 《群星》官方 [开发日志 #163](https://store.steampowered.com/news/posts/?appids=281990&enddate=1582200969)将主宰描述为一对巨大的机翼，同时承担前线船坞与维修基地职责。用户提供的另一张参考图强调中央核心与左右狭长船坞组成的横向轮廓；该图只用于理解结构，没有纳入项目素材。
 
-原有 `juggernaut-source.png` 外轮廓接近方形，内部为两块封闭的矩形船坞。新版用图像生成工具创作独立俯视贴图，改为中央指挥舰体、左右开放式建造轨道与细长外翼，保留项目的钢蓝色舰体、琥珀色作业灯和蓝色尾喷风格。交付物为 `art/generated/juggernaut-source.png` 与其游戏尺寸导出 `mod/rusted-stellaris/units/juggernaut.png`、`juggernaut_dead.png`；没有复制参考图像素或官方模型。
+原有 `juggernaut-source.png` 外轮廓接近方形，内部为两块封闭的矩形船坞。新版用图像生成工具创作独立俯视贴图，改为中央指挥舰体与细长横向双翼。第一次生成的翼部留有大面积透空结构，四个尾部发动机也过于突出。依用户反馈，最终稿把建造轨道融合进实心装甲甲板，尾部改为贴合舰体的小型喷口；保留项目的钢蓝色舰体与琥珀色作业灯。交付物为 `art/generated/juggernaut-source.png` 与其游戏尺寸导出 `mod/rusted-stellaris/units/juggernaut.png`、`juggernaut_dead.png`；没有复制参考图像素或官方模型。
 
 静态单位配置与贴图引用检查通过。将新版贴图装入本机游戏 1.15 沙盒后，三张专用地图均进入运行态并找到初始建造者。主宰在实际战斗画面中的缩放辨识度、建造动画及完整对局仍待实测。
