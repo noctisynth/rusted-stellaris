@@ -2,7 +2,8 @@
 
 This reads the save's compressed block and validates an object-list candidate
 against increasing game-object IDs. Custom units and the built-in type-2 objects
-observed in project test maps are supported; this is not a general save decoder.
+observed in project test maps and the engine's 'missing' custom-unit placeholder
+are supported; this is not a general save decoder.
 The optional position view marks a team as unknown when its serialized layout
 differs from the common custom-unit layout. Built-in objects have no decoded
 position, but do not prevent custom-unit positions being inspected.
@@ -39,7 +40,7 @@ def unit_list(raw: bytes) -> tuple[list[str], int]:
             if raw[pos] == 3:
                 size = int.from_bytes(raw[pos + 1:pos + 3], "big")
                 name = raw[pos + 3:pos + 3 + size]
-                if not 3 <= size <= 100 or not name.startswith(b"rs") or not name.isascii():
+                if not 3 <= size <= 100 or not re.fullmatch(rb"[A-Za-z_][A-Za-z0-9_]*", name):
                     break
                 pos += 3 + size
                 label = name.decode("ascii")
@@ -61,7 +62,7 @@ def unit_list(raw: bytes) -> tuple[list[str], int]:
 
 def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int | None, float, float] | None]:
     """Decode custom-unit positions, leaving built-in objects without coordinates."""
-    custom_count = sum(name.startswith("rs") for name in names)
+    custom_count = sum(not name.startswith("builtin:") for name in names)
     markers = list(re.finditer(
         rb"\xff\xfe\x00\x00(?:\x3f\x80\x00\x00|\x00\x00\x00\x00)", raw[start:]
     ))
@@ -87,7 +88,7 @@ def unit_positions(raw: bytes, names: list[str], start: int) -> list[tuple[int |
             raise ValueError("coordinate record failed bounds validation")
         result.append((team if -1 <= team <= 9 else None, x, y))
     records = iter(result)
-    return [next(records) if name.startswith("rs") else None for name in names]
+    return [next(records) if not name.startswith("builtin:") else None for name in names]
 
 
 def main() -> None:

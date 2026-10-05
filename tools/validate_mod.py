@@ -218,13 +218,11 @@ if "rsJuggernaut" in UNITS:
             ERRORS.append(f"juggernaut missing limit contract {entry}")
     if not any(s == "core" and k == "price" and "juggernautPermit=1" in v for s, k, v in juggernaut):
         ERRORS.append("juggernaut production must consume its build permit")
-if "rsJuggernautVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsJuggernaut" in v for s, k, v in UNITS["rsJuggernautVeteran"][1]):
-    ERRORS.append("veteran juggernaut must retain unit cap tag")
-for name, upgrade_target in (("rsTitan", "rsParadoxTitan"), ("rsTitanVeteran", "rsParadoxTitanVeteran")):
+for name, upgrade_target in (("rsTitan", "rsParadoxTitan"),):
     if name in UNITS:
         entries = UNITS[name][1]
         if ("action_upgradeParadoxTitan", "convertTo", upgrade_target) not in entries:
-            ERRORS.append(f"{name} must upgrade without losing veteran status")
+            ERRORS.append(f"{name} must retain its paradox upgrade target")
 if "rsTitan" in UNITS:
     titan_entries = UNITS["rsTitan"][1]
     for expected in (("attack", "turretMultiTargeting", "true"), ("attack", "shootDelay", "115"), ("turret_2", "canAttackLandUnits", "false"), ("turret_2", "delay", "13"), ("turret_3", "copyFrom", "2"), ("turret_4", "projectile", "4"), ("turret_4", "limitingRange", "405"), ("projectile_1", "directDamage", "2100"), ("projectile_3", "directDamage", "110"), ("projectile_4", "tags", "rsMissile"), ("projectile_4", "instant", "false"), ("projectile_4", "deflectionPower", "3")):
@@ -279,11 +277,9 @@ for milestone_name in ("rsTitan", "rsParadoxTitan", "rsJuggernaut", "rsDysonSphe
                 ERRORS.append(f"{milestone_name} builder must not receive both completion viewpoints")
 if "rsParadoxTitan" in UNITS:
     paradox_entries = UNITS["rsParadoxTitan"][1]
-    for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160"), ("hiddenAction_academyTraining", "convertTo", "rsParadoxTitanVeteran")):
+    for expected in (("core", "maxShield", "10500"), ("core", "shieldRegen", "0.70"), ("core", "selfRegenRate", "0.25"), ("attack", "shootDelay", "90"), ("turret_2", "limitingRange", "300"), ("turret_2", "delay", "10"), ("turret_3", "limitingRange", "300"), ("turret_3", "delay", "10"), ("turret_laserDefence", "laserDefenceEnergyUse", "0.16"), ("projectile_1", "directDamage", "3200"), ("projectile_3", "directDamage", "160")):
         if expected not in paradox_entries:
             ERRORS.append(f"paradox titan missing {expected}")
-if "rsParadoxTitanVeteran" in UNITS and not any(s == "core" and k == "tags" and "rsTitan" in v and "rsVeteran" in v for s, k, v in UNITS["rsParadoxTitanVeteran"][1]):
-    ERRORS.append("veteran paradox titan must retain titan cap and training tags")
 for name, section, key, value in (("rsPreFtlBuilder", "core", "canBuild_16_name", "rsGenerator"), ("rsPreFtlBuilder", "core", "canBuild_17_name", "rsResearchStation"), ("rsArk", "canBuild_planetDefense", "name", "rsDefensePlatform"), ("rsArk", "canBuild_planetMissile", "name", "rsMissilePlatform"), ("rsArk", "canBuild_repairBaseDirect", "name", "rsRepairBase")):
     if name in UNITS and (section, key, value) not in UNITS[name][1]:
         ERRORS.append(f"{name} construction menu missing {value}")
@@ -381,13 +377,55 @@ for name in ("rsResearchStation", "rsPlanetLab"):
         if "rsScienceNexusCompleted" not in catapult_lock or "rsScienceNexusOnline" not in catapult_lock:
             ERRORS.append(f"{name}: quantum catapult research must require a completed science nexus")
 
+# Training is reversible and only provided by an active academy.
+for name, (_, entries) in UNITS.items():
+    training = [(k, v) for section, k, v in entries if section == "hiddenAction_academyTraining"]
+    if "Veteran" in name:
+        ERRORS.append(f"{name}: obsolete veteran identities must be removed")
+    if not training:
+        continue
+    values = dict(training)
+    if "convertTo" in values or "setUnitStats" not in values:
+        ERRORS.append(f"{name}: academy training must apply stats without changing unit identity")
+    trigger = values.get("autoTrigger", "")
+    if not all(part in trigger for part in ("rsConstructionComplete", "rsFleetAcademyActive", "relation='own'", "!= null", "self.hasFlag(id=1)", "self.maxHp!=")):
+        ERRORS.append(f"{name}: training must gate completion, persistence and upgrade reapplication")
+    if values.get("addResources") != "setFlag=1":
+        ERRORS.append(f"{name}: training must persist its reserved unit flag")
+    stats = values.get("setUnitStats", "")
+    if "hp=self.hp*" not in stats or "/self.maxHp" not in stats or "shootDamageMultiplier=1.1" not in stats:
+        ERRORS.append(f"{name}: training must preserve HP ratio and apply the agreed damage bonus")
+
+    revoke = {k: v for section, k, v in entries if section == "hiddenAction_revokeAcademyTraining"}
+    if not all(part in revoke.get("autoTrigger", "") for part in ("self.hasFlag(id=1)", "rsFleetAcademyActive", "relation='own'", "== null")):
+        ERRORS.append(f"{name}: academy loss must revoke training")
+    if revoke.get("addResources") != "unsetFlag=1" or "shootDamageMultiplier=1" not in revoke.get("setUnitStats", "") or "/self.maxHp" not in revoke.get("setUnitStats", ""):
+        ERRORS.append(f"{name}: revocation must restore damage and preserve HP ratio")
+
+academy = UNITS["rsFleetAcademy"][1]
+for entry in (("core", "tags", "rsFleetAcademy"), ("action_trainFleet", "temporarilyAddTags", "rsFleetAcademyActive"), ("action_trainFleet", "allowMultipleInQueue", "false"), ("ai", "maxGlobal", "1")):
+    if entry not in academy:
+        ERRORS.append(f"academy missing facility lifecycle contract {entry}")
+if any(k == "addGlobalTeamTags" and "rsAcademyTraining" in v for _, k, v in academy):
+    ERRORS.append("academy training must not be a permanent team upgrade")
+academy_lock = next(v for sec, k, v in UNITS["rsEngineer"][1] if sec == "canBuild_fleetAcademy" and k == "isLocked")
+if "rsFleetAcademy" not in academy_lock or "incompleteBuildings=true" not in academy_lock:
+    ERRORS.append("academy build limit must include unfinished buildings")
+
 for name in ("rsCorvette", "rsDestroyer"):
     if name in UNITS:
         training_trigger = next((v for s, k, v in UNITS[name][1] if s == "hiddenAction_academyTraining" and k == "autoTrigger"), "")
         if "rsConstructionComplete" not in training_trigger:
-            ERRORS.append(f"{name}: academy conversion must wait for ship completion")
+            ERRORS.append(f"{name}: academy training must wait for ship completion")
         if ("hiddenAction_markConstructionComplete", "autoTriggerOnEvent", "completeAndActive") not in UNITS[name][1] or ("hiddenAction_markConstructionComplete", "temporarilyAddTags", "rsConstructionComplete") not in UNITS[name][1]:
-            ERRORS.append(f"{name}: completion event must mark the ship before academy conversion")
+            ERRORS.append(f"{name}: completion event must mark the ship before academy training")
+
+for name, action in (("rsCruiser", "action_upgradeCruiserT2"), ("rsBattleship", "action_upgradeBattleshipT2"), ("rsTitan", "action_upgradeParadoxTitan")):
+    entries = UNITS[name][1]
+    if (action, "convertTo_keepCurrentTags", "true") not in entries:
+        ERRORS.append(f"{name}: upgrade must preserve completion and training tags")
+    if name != "rsTitan" and (action, "temporarilyAddTags", "rsTier2") not in entries:
+        ERRORS.append(f"{name}: upgraded ship must gain its target tier tag")
 
 if all(name in UNITS for name in ("rsQuantumCatapultSite", "rsQuantumCatapultFrame", "rsQuantumCatapult")):
     site = UNITS["rsQuantumCatapultSite"][1]

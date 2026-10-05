@@ -51,6 +51,18 @@ semifold version --dry-run
 
 CI 不包含商业游戏程序，也不执行游戏内载入、建造、战斗、完整对局或联机测试。这些仍需本机验收，移动端单独记录。工作流配置见 `.github/workflows/quality.yaml`、`semifold-ci.yaml` 和 `semifold-status.yaml`。
 
+## 本机存档回归检查
+
+准备位于仓库 `work/` 内的隔离游戏副本，并将完整模组安装到其 `mods/units/RustedStellarisDev` 后运行：
+
+```text
+uv run --locked python tools/smoke_game_saves.py --game-dir work/game-sandbox
+```
+
+脚本临时给护卫舰增加动态生命上限和火力倍率，检查正常二进制存档、读档后继续运行及再次保存，并核对单位身份、属性和防重复标记。退出时恢复测试配置；存档和日志保留在 `work/`，不提交。测试启动本机游戏与调试端口，结束后关闭测试进程，不能与使用同一隔离目录的其他测试同时运行。
+
+Rusted Warfare 1.15 的文本调试存档写入器缺少 double 写入实现；不要用 `debug.plainTextDebugSave(true)` 判断正常存档是否兼容。存档检查明确使用 `false`，使用唯一文件名，并核对实际文件内容；调试命令回复 `done` 不代表保存成功。根因与验证边界见 `.agents/spikes/fleet-academy-save.md`。
+
 ## Steam 创意工坊更新
 
 `Semifold CI` 的 `publish` output 报告 `rusted-stellaris` 发布成功后，同一次工作流才自动更新 Steam 创意工坊。版本 PR 阶段不会上传。Steam 作业使用 output 中的版本号定位 GitHub Release，从该 Release 下载 `.rwmod`、校验 SHA-256 和包内版本，解压完整模组，再通过 Valve SteamCMD 更新 Rusted Warfare（App ID `647960`）的现有条目 `3813493737`。作业在 Windows 运行器上使用由 Windows SteamCMD 生成的登录配置。脚本只在 VDF 中写入固定的现有条目 ID、内容目录和更新说明；`mod/rusted-stellaris/mod-thumbnail.png` 是随模组包提交的工坊封面，`assets/workshop/` 存放通过 Steam 页面上传的原创展示图。条目的标题、长篇描述和公开状态由 Steam 网页管理。
