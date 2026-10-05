@@ -11,9 +11,9 @@ from music.build_support import verified_audio
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "mod" / "rusted-stellaris"
-DEST = ROOT / "build" / "rusted-stellaris-dev.rwmod"
 MUSIC = verified_audio()
 VERSION = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
+DEST = ROOT / "build" / f"rusted-stellaris-v{VERSION}.rwmod"
 COMMIT = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
 DEST.parent.mkdir(parents=True, exist_ok=True)
 

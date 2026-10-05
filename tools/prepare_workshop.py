@@ -8,7 +8,7 @@ import json
 from pathlib import Path, PurePosixPath
 from zipfile import ZipFile
 
-from verify_release import ROOT  # Verifies hash, version, and source commit on import.
+from verify_release import ROOT, archive as archive_path  # Verifies hash, version, and source commit on import.
 
 APP_ID = "647960"
 ITEM_ID = "3813493737"
@@ -26,7 +26,6 @@ def stage(destination: Path, change_note: str) -> Path:
     content.mkdir(exist_ok=True)
     if any(content.iterdir()):
         raise ValueError("Workshop staging directory must be empty")
-    archive_path = ROOT / "build" / "rusted-stellaris-dev.rwmod"
     with ZipFile(archive_path) as archive:
         names = archive.namelist()
         if len(names) != len(set(names)):

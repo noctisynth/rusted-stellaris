@@ -15,7 +15,7 @@ resolver = "python"
 publish = false
 github-release = true
 assets = [
-  "build/rusted-stellaris-dev.rwmod",
+  "build/rusted-stellaris-v*.rwmod",
   "build/SHA256SUMS.txt",
   "build/BUILD-INFO.txt",
 ]
