@@ -49,6 +49,8 @@ semifold version --dry-run
 
 工作流使用 GitHub 提供的临时令牌，无需配置个人访问令牌或 registry token。Semifold CI 的发布作业具有仓库和 PR 写权限；Semifold Status 有 PR 评论权限；构建、采样、日志均不写回 Git。首次启用需把配置推送到 GitHub，并在仓库 **Settings → Actions → General** 允许 Actions 创建 Pull Request。机器人创建的版本 PR 如显示 CI 等待批准，由维护者在 Actions 页面处理；也可在 Quality 页面选择 `release` 分支手动检查，合并后仍会强制运行主分支质量门禁。
 
+变更集的标签必须匹配 `.changes/config.toml` 的 `[tags]` 键，新功能使用 `feat`，不能写成未配置的 `feature`。遇到 `failed to load changesets` 时运行 `semifold --debug status` 定位读取中断的文件，修正后执行 `semifold status` 和 `semifold version --dry-run` 验证发布计划。
+
 CI 不包含商业游戏程序，也不执行游戏内载入、建造、战斗、完整对局或联机测试。这些仍需本机验收，移动端单独记录。工作流配置见 `.github/workflows/quality.yaml`、`semifold-ci.yaml` 和 `semifold-status.yaml`。
 
 ## 本机存档回归检查
