@@ -44,10 +44,24 @@ hidden: true
 displayName: AI 难度倍率
 hidden: true
 
+[global_resource_rsLastAllyColossusNotice]
+displayName: 盟友巨像通知标记
+hidden: true
+
 [hiddenAction_captureAiHandicap]
 autoTriggerOnEvent: created
 requireConditional: if self.isControlledByAI() and self.resource('rsAiHandicap') == 0
 addResourcesScaledByAIHandicaps: rsAiHandicap=1
+
+[hiddenAction_registerNoticeReceiver]
+autoTrigger: if not self.tags(includes='rsNoticeReceiver')
+temporarilyAddTags: rsNoticeReceiver
+
+[hiddenAction_receiveAllyColossusCompletion]
+autoTriggerOnEvent: newMessage(withTag='rsAllyColossusCompleted')
+requireConditional: if self.resource('rsLastAllyColossusNotice') != eventSource.id
+addResourcesWithLogic: rsLastAllyColossusNotice=eventSource.id-self.resource('rsLastAllyColossusNotice')
+showMessageToPlayer: 我们收到消息，我们的盟友已经完成了巨像的建造并投入服役。这是一种足以彻底毁灭行星的武器平台。一如既往，他们如此超前。
 
 [hiddenAction_aiEconomyHard]
 autoTrigger: if self.tags(includes='rsCapital') and self.isControlledByAI() and self.resource('rsAiHandicap') >= 1.4 and self.resource('rsAiHandicap') < 1.8 and self.customTimer > 10

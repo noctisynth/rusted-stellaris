@@ -263,6 +263,10 @@ if "rsColossus" in UNITS:
         ERRORS.append("Colossus completion must give opponents the observer notice")
     if any(s == "hiddenAction_announceCompletion" and k == "showMessageToAllPlayers" for s, k, _ in colossus_entries):
         ERRORS.append("Colossus builder must not receive both completion viewpoints")
+    if ("hiddenAction_dispatchAllyCompletionNotice", "takeResources_includeUnitsWithinRange_team", "allyNotOwn") not in colossus_entries:
+        ERRORS.append("Colossus ally completion notices must exclude builder and enemies")
+    if ("hiddenAction_sendAllyCompletionNotice", "sendMessageWithTags", "rsAllyColossusCompleted") not in colossus_entries:
+        ERRORS.append("Colossus must send the ally completion event to allied receivers")
     for phrase in ("地壳已经破裂", "中子羽流正逐渐散去", "整个世界归于沉寂"):
         if not any(phrase in value for _, _, value in UNITS["rsColossus"][1] + sum((entries for name, (_, entries) in UNITS.items() if name.startswith("rsPlanet")), [])):
             ERRORS.append(f"Stellaris-style Colossus notice missing phrase: {phrase}")
