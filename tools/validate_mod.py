@@ -48,8 +48,10 @@ if RESOURCE_TEMPLATE.is_file():
         for section, _, _ in resource_fields
         if section.startswith("global_resource_")
     }
-    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit", "juggernautPermit", "colossusPermit"}:
+    if resources != {"minerals", "alloys", "science", "unity", "strategic", "titanPermit", "juggernautPermit", "colossusPermit", "rsLastAllyColossusNotice"}:
         ERRORS.append(f"resource template has unexpected resources: {sorted(resources)}")
+    if ("global_resource_rsLastAllyColossusNotice", "hidden", "true") not in resource_fields:
+        ERRORS.append("ally notice deduplication resource must stay hidden")
     if ("global_resource_titanPermit", "hidden", "true") not in resource_fields:
         ERRORS.append("technical titan permit must remain hidden from the resource HUD")
     if ("global_resource_juggernautPermit", "hidden", "true") not in resource_fields:
