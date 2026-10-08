@@ -15,7 +15,7 @@
 | [完整模组范围](rfcs/0001-complete-mod-scope.md) | Accepted RFC | 完整交付范围与验收标准 |
 | [普通地图中子灭杀](rfcs/0002-ordinary-map-neutron.md) | Accepted RFC | 地面清除、建筑中立与舰队豁免的目标及验证边界 |
 | [天机研究所](rfcs/0003-tianji-institute.md) | Accepted RFC | 科学枢纽后的天机工程与首批三种失落帝国舰船 |
-| [主宰舰队光环](rfcs/0004-juggernaut-auras.md) | Draft RFC | 原作数值、学院动态属性复用与范围光环建议，待确认与专项验证 |
+| [主宰舰队光环](rfcs/0004-juggernaut-auras.md) | Accepted RFC | 650 范围火力指挥光环，伤害与射速各 +10%，与学院组合重算 |
 | [天机科技与舰船](specs/tianji-institute.md) | Active Spec | 解锁链、随机抽取、原创立绘及首轮战斗数值 |
 | [内容清单](specs/content-roster.md) | Active Spec | 建筑、舰船、阵营和科技的逐项交付清单 |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
