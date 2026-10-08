@@ -215,6 +215,16 @@ for name in ("rsResearchStation", "rsPlanetLab"):
         ERRORS.append(f"{name}: juggernaut research must grant one build permit")
 if "rsJuggernaut" in UNITS:
     juggernaut = UNITS["rsJuggernaut"][1]
+    for entry in (("hiddenAction_markConstructionComplete", "temporarilyAddTags", "rsConstructionComplete, rsJuggernautAuraActive"), ("turret_fireCommandRange", "limitingRange", "650"), ("turret_fireCommandRange", "canShoot", "false"), ("turret_fireCommandRange", "showRangeUIGuide", "true")):
+        if entry not in juggernaut:
+            ERRORS.append(f"juggernaut fire command aura missing {entry}")
+    composer = dict((k, v) for s, k, v in resource_fields if s == "hiddenAction_recomputeFleetFirepower")
+    stats = composer.get("setUnitStats", "")
+    for phrase in ("select(self.hasFlag(id=1),1.1,1)", "not self.tags(includes='rsJuggernaut')", "self.numberOfUnitsInTeam", "self.numberOfUnitsInAllyTeam", "rsJuggernautAuraActive", "withinRange=650", "shootDelayMultiplier=", "1/1.1"):
+        if phrase not in stats:
+            ERRORS.append(f"shared fleet firepower composition missing {phrase}")
+    if "rsQuantumFleet" not in composer.get("autoTrigger", "") or "rsConstructionComplete" not in composer.get("autoTrigger", ""):
+        ERRORS.append("fire command aura must only update completed combat ships")
     for entry in (("core", "tags", "rsQuantumFleet, rsRaidFleet, rsJuggernaut"), ("core", "nanoFactorySpeed", "2"), ("hiddenAction_returnJuggernautPermit", "autoTriggerOnEvent", "destroyed"), ("hiddenAction_returnJuggernautPermit", "addResources", "juggernautPermit=1")):
         if entry not in juggernaut:
             ERRORS.append(f"juggernaut missing limit contract {entry}")
@@ -399,14 +409,14 @@ for name, (_, entries) in UNITS.items():
     if values.get("addResources") != "setFlag=1":
         ERRORS.append(f"{name}: training must persist its reserved unit flag")
     stats = values.get("setUnitStats", "")
-    if "hp=self.hp*" not in stats or "/self.maxHp" not in stats or "shootDamageMultiplier=1.1" not in stats:
-        ERRORS.append(f"{name}: training must preserve HP ratio and apply the agreed damage bonus")
+    if "hp=self.hp*" not in stats or "/self.maxHp" not in stats or "shootDamageMultiplier" in stats:
+        ERRORS.append(f"{name}: training must preserve HP ratio and leave firepower to the shared composer")
 
     revoke = {k: v for section, k, v in entries if section == "hiddenAction_revokeAcademyTraining"}
     if not all(part in revoke.get("autoTrigger", "") for part in ("self.hasFlag(id=1)", "rsFleetAcademyActive", "relation='own'", "== null")):
         ERRORS.append(f"{name}: academy loss must revoke training")
-    if revoke.get("addResources") != "unsetFlag=1" or "shootDamageMultiplier=1" not in revoke.get("setUnitStats", "") or "/self.maxHp" not in revoke.get("setUnitStats", ""):
-        ERRORS.append(f"{name}: revocation must restore damage and preserve HP ratio")
+    if revoke.get("addResources") != "unsetFlag=1" or "shootDamageMultiplier" in revoke.get("setUnitStats", "") or "/self.maxHp" not in revoke.get("setUnitStats", ""):
+        ERRORS.append(f"{name}: revocation must clear training and preserve HP ratio without overwriting aura damage")
 
 academy = UNITS["rsFleetAcademy"][1]
 for entry in (("core", "tags", "rsFleetAcademy"), ("action_trainFleet", "temporarilyAddTags", "rsFleetAcademyActive"), ("action_trainFleet", "allowMultipleInQueue", "false"), ("ai", "maxGlobal", "1")):

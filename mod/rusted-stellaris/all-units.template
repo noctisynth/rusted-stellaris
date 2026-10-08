@@ -57,6 +57,12 @@ addResourcesScaledByAIHandicaps: rsAiHandicap=1
 autoTrigger: if not self.tags(includes='rsNoticeReceiver')
 temporarilyAddTags: rsNoticeReceiver
 
+[hiddenAction_recomputeFleetFirepower]
+autoTrigger: if self.tags(includes='rsQuantumFleet') and self.tags(includes='rsConstructionComplete')
+setUnitStats: shootDamageMultiplier=select(self.hasFlag(id=1),1.1,1)*select(not self.tags(includes='rsJuggernaut') and (self.numberOfUnitsInTeam(withTag='rsJuggernautAuraActive', withinRange=650, greaterThan=0) or self.numberOfUnitsInAllyTeam(withTag='rsJuggernautAuraActive', withinRange=650, greaterThan=0)),1.1,1), shootDelayMultiplier=select(not self.tags(includes='rsJuggernaut') and (self.numberOfUnitsInTeam(withTag='rsJuggernautAuraActive', withinRange=650, greaterThan=0) or self.numberOfUnitsInAllyTeam(withTag='rsJuggernautAuraActive', withinRange=650, greaterThan=0)),1/1.1,1)
+
+addActionCooldownTime: 1s
+
 [hiddenAction_receiveAllyColossusCompletion]
 autoTriggerOnEvent: newMessage(withTag='rsAllyColossusCompleted')
 requireConditional: if self.resource('rsLastAllyColossusNotice') != eventSource.id
