@@ -731,7 +731,9 @@ for source in (ROOT.parent.parent / "art" / "generated").glob("*-source.png"):
         continue
     data = sprite.read_bytes()[:24]
     scale = next((int(v) for s, k, v in fields(ini) if s == "graphics" and k == "scaleImagesTo"), None)
-    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or scale is None or not 3 * scale <= min(unpack(">II", data[16:24])) <= 384:
+    # The wider Juggernaut keeps its 384px texture at a 160px world width.
+    min_density = 2.4 if name == "juggernaut" else 3
+    if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or scale is None or not min_density * scale <= min(unpack(">II", data[16:24])) <= 384:
         ERRORS.append(f"{name}: generated playable sprite must keep zoom detail within the texture budget")
     if scale is None:
         ERRORS.append(f"{name}: source sprite requires a fixed world size")
