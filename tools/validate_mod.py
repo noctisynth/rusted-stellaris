@@ -580,10 +580,14 @@ if "rsMineralPlant" in UNITS:
     if ("core", "tags", "rsMineralPlant") not in entries or any(s == "core" and k == "generation_resources" for s, k, _ in entries):
         ERRORS.append("mineral plant must boost stations without directly producing minerals")
 if "rsEngineer" in UNITS and not any(
-    s == "canBuild_mineralPlant" and k == "isLocked" and "incompleteBuildings=true" in v
+    s == "canBuild_mineralPlant" and k == "isLockedAlt" and "rsMineralPlant" in v and "incompleteBuildings=true" in v
     for s, k, v in UNITS["rsEngineer"][1]
 ):
     ERRORS.append("mineral plant cap must count unfinished construction")
+if "rsEngineer" in UNITS:
+    entries = UNITS["rsEngineer"][1]
+    if ("canBuild_mineralPlant", "isLocked", "if not self.globalTeamTags(includes='rsTechDestroyer')") not in entries or ("canBuild_mineralPlant", "isLockedAltMessage", "本队只能拥有一座矿物处理厂（含在建）") not in entries:
+        ERRORS.append("mineral plant technology and team cap must have separate lock messages")
 
 if not (ROOT / "mod-info.txt").is_file():
     ERRORS.append("missing mod-info.txt")
