@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.2.1
+
+### Bug Fixes
+
+- [`dff1d7f`](https://github.com/noctisynth/rusted-stellaris/commit/dff1d7fef42c6041bdf448183b570441e751d622): 主宰服役播报保留标题与分段换行，删除段落间空白行以减少屏幕遮挡
+- [`0555a32`](https://github.com/noctisynth/rusted-stellaris/commit/0555a32be0195a915df86d786b15baa6ec13e4c1): 放大主宰横向移动船坞的显示尺寸，使整体舰体体量明显大于泰坦，保留原贴图与战斗数值
+- [`07d5299`](https://github.com/noctisynth/rusted-stellaris/commit/07d5299a6432433f22fc100c0c5827b6bb1c8150): 矿物处理厂的科技要求与单座数量上限分开提示，修复已有建筑时误报缺少科技
+
+### New Features
+
+- [`7158481`](https://github.com/noctisynth/rusted-stellaris/commit/715848161bb207dda0f0f28e611f8ec589a0eafe): 巨像服役采用建造者、敌对帝国及盟友三种文案，盟友接收内部消息并按队伍去重
+- [`3480057`](https://github.com/noctisynth/rusted-stellaris/commit/348005795b06c60667868bd7120ee455245917e7): 主宰提供650范围火力指挥光环，同队与盟友作战星舰伤害和射速各提高10%，与学院统一计算，支持撤销与正常存读档
+
 ## v0.2.0
 
 ### Bug Fixes
