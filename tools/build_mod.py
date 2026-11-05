@@ -8,9 +8,11 @@ import tomllib
 import os
 import subprocess
 from music.build_support import verified_audio
+from localization import synchronize
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "mod" / "rusted-stellaris"
+synchronize()  # Refuse stale or incomplete translations before packaging.
 MUSIC = verified_audio()
 VERSION = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]["version"]
 DEST = ROOT / "build" / f"rusted-stellaris-v{VERSION}.rwmod"

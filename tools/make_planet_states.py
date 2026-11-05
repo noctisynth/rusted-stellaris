@@ -94,3 +94,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    from localization import synchronize
+    synchronize(write=True)

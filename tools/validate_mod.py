@@ -4,6 +4,9 @@ from pathlib import Path
 import re
 from struct import unpack
 import sys
+from localization import synchronize
+
+synchronize()
 
 ROOT = Path(__file__).resolve().parents[1] / "mod" / "rusted-stellaris"
 FILES = sorted((ROOT / "units").glob("*.ini"))
@@ -602,7 +605,7 @@ if "rsEngineer" in UNITS and not any(
     ERRORS.append("mineral plant cap must count unfinished construction")
 if "rsEngineer" in UNITS:
     entries = UNITS["rsEngineer"][1]
-    if ("canBuild_mineralPlant", "isLocked", "if not self.globalTeamTags(includes='rsTechDestroyer')") not in entries or ("canBuild_mineralPlant", "isLockedAltMessage", "本队只能拥有一座矿物处理厂（含在建）") not in entries:
+    if ("canBuild_mineralPlant", "isLocked", "if not self.globalTeamTags(includes='rsTechDestroyer')") not in entries or ("canBuild_mineralPlant", "isLockedAltMessage_zh", "本队只能拥有一座矿物处理厂（含在建）") not in entries:
         ERRORS.append("mineral plant technology and team cap must have separate lock messages")
 
 if not (ROOT / "mod-info.txt").is_file():

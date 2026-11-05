@@ -30,6 +30,8 @@ jobs:
           version: '0.12.23'
           enable-cache: true
       - run: uv sync --locked
+      - run: uv run --locked python tools/localization.py --check
+      - run: uv run --locked python -m unittest discover -s tests
       - run: uv run --locked python tools/validate_mod.py
       - run: uv run --locked python tools/validate_maps.py
       - name: Check source tree hygiene

@@ -4,6 +4,8 @@
 
 模组源文件位于 `mod/rusted-stellaris/`，地图位于 `maps/`，构建与验证脚本位于 `tools/`。
 
+中英文文案集中维护在 `locales/zh.json`、`locales/en.json`，字段绑定在 `locales/bindings.json`。编辑后运行 `uv run --locked python tools/localization.py --write` 并提交生成结果；CI 和打包会拒绝缺译或过期文案。公告、地图文本与本机验证说明见 [翻译维护指南](locales/README.md)。
+
 ## 许可与素材
 
 仓库根目录的 [MIT 许可证](LICENSE)适用于本项目原创的构建与验证脚本、作曲与贴图生成源码、模组配置（包括单位配置和地图 TMX 配置）。保留版权与许可声明即可按协议复用这些文件。

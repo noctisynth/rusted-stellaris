@@ -18,6 +18,7 @@
 | [主宰舰队光环](rfcs/0004-juggernaut-auras.md) | Accepted RFC | 650 范围火力指挥光环，伤害与射速各 +10%，与学院组合重算 |
 | [天机科技与舰船](specs/tianji-institute.md) | Active Spec | 解锁链、随机抽取、原创立绘及首轮战斗数值 |
 | [内容清单](specs/content-roster.md) | Active Spec | 建筑、舰船、阵营和科技的逐项交付清单 |
+| [中英文本地化](specs/i18n.md) | Active Spec | 集中翻译、原生公告和地图文本支持，见[验证记录](spikes/i18n.md) |
 | [基础生产链](specs/core-loop.md) | Active Spec | 首批可独立验证的生产链，不改变完整目标 |
 | [星域地图基础结构](specs/starfield-maps.md) | Active Spec | 三张地图的地形、出生与基础资源，不代替行星机制 |
 | [行星与巨像](specs/planets-and-colossus.md) | Active Spec | 行星状态、三种终局武器及验收条件 |

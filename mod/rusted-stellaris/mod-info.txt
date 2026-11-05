@@ -1,6 +1,7 @@
+# Text is generated from locales/*.json; run tools/localization.py --write.
 [mod]
 title: Rusted Stellaris
-description: An unofficial Stellaris-inspired space strategy mod for Rusted Warfare.
+description: 受《群星》启发的非官方《铁锈战争》太空战略模组。 / An unofficial Stellaris-inspired space strategy mod for Rusted Warfare.
 minVersion: v1.15p7
 tags: units, starting-units, maps, skirmish
 

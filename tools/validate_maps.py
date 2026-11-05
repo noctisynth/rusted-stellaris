@@ -21,7 +21,7 @@ assert len({display_name for _, display_name in all_planets}) == len(all_planets
 for planet_id, display_name in all_planets:
     source = (UNITS / f"planet_{planet_id.lower()}.ini").read_text(encoding="utf-8")
     assert f"name: rsPlanet{planet_id}\n" in source
-    assert f"displayText: {display_name}\n" in source
+    assert f"displayText_zh: {display_name}\n" in source
     assert f"tags: rsPlanetIntact, rsPlanet{planet_id}\n" in source
 
 

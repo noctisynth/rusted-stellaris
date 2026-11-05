@@ -8,6 +8,7 @@ from struct import pack
 from xml.etree.ElementTree import Element, SubElement, ElementTree, indent
 
 from PIL import Image, ImageDraw
+from localization import load_catalogs
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "maps"
@@ -19,13 +20,11 @@ MAPS = [
     ("[p8]Shattered_Galaxy", 180, 180, [(22, 22), (89, 18), (157, 22), (161, 89), (157, 157), (89, 161), (22, 157), (18, 89)]),
 ]
 
+_catalogs, _ = load_catalogs()
 PLANET_NAMES = {
-    2: [("Twin01", "双星-01 · 晨星"), ("Twin02", "双星-02 · 中庭"), ("Twin03", "双星-03 · 暮星")],
-    4: [("Arms01", "三臂-01 · 核心"), ("Arms02", "三臂-02 · 西环"), ("Arms03", "三臂-03 · 东环"),
-        ("Arms04", "三臂-04 · 北环"), ("Arms05", "三臂-05 · 南环")],
-    8: [("Galaxy01", "破碎-01 · 核心"), ("Galaxy02", "破碎-02 · 西境"), ("Galaxy03", "破碎-03 · 东境"),
-        ("Galaxy04", "破碎-04 · 北境"), ("Galaxy05", "破碎-05 · 南境"), ("Galaxy06", "破碎-06 · 西北"),
-        ("Galaxy07", "破碎-07 · 东北"), ("Galaxy08", "破碎-08 · 西南"), ("Galaxy09", "破碎-09 · 东南")],
+    teams: [(f"{prefix}{i:02}", _catalogs["zh"][f"planet_{prefix.lower()}{i:02}.core.displayText"])
+            for i in range(1, count + 1)]
+    for teams, prefix, count in ((2, "Twin", 3), (4, "Arms", 5), (8, "Galaxy", 9))
 }
 
 
@@ -199,3 +198,5 @@ if __name__ == "__main__":
     images()
     for args in MAPS:
         create_map(*args)
+    from localization import synchronize
+    synchronize(write=True)
