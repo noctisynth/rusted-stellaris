@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.2
+
+### New Features
+
+- [`ef00213`](https://github.com/noctisynth/rusted-stellaris/commit/ef00213bf0cb9609d48b7636d692100916a109d3): 增加集中管理的中英文翻译，覆盖单位、资源、科技、操作提示及事件公告；接入原生地图文本本地化、构建检查和本机双语回归。
+
 ## v0.2.1
 
 ### Bug Fixes
